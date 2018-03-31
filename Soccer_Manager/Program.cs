@@ -22,4 +22,5 @@ namespace Soccer_Manager
                 .UseStartup<Startup>()
                 .Build();
     }
+
 }

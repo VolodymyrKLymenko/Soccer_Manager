@@ -45,6 +45,9 @@ namespace Soccer_Manager
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
+
     }
+
 }
