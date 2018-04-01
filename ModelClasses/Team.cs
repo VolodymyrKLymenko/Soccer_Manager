@@ -9,7 +9,6 @@ namespace ModelClasses
         [Key]
         public int TeamId { get; set; }
         public string Name { get; set; }
-        public int MyProperty { get; set; }
 
         public List<Tournament> Tournaments { get; set; }
         public List<Player> Players { get; set; }

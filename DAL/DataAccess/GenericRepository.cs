@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ModelClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,16 @@ namespace DAL.DataAccess
         private readonly SoccerContext _dataContext;
         private readonly DbSet<TEntity> _dbset;
 
+        private DbSet<Team> _dbsetTeam;
+        private DbSet<Tournament> _dbsetTournament;
+
         public GenericRepository(DataContextProvider dcProvider)
         {
             _dataContext = dcProvider.Get();
             _dbset = _dataContext.Set<TEntity>();
+
+            _dbsetTeam = _dataContext.Set<Team>();
+            _dbsetTournament = _dataContext.Set<Tournament>();
         }
 
         public void Add(TEntity entity)
@@ -60,6 +67,73 @@ namespace DAL.DataAccess
         public IEnumerable<TEntity> GetAll()
         {
             return _dbset.ToList();
+        }
+
+        public IEnumerable<Team> GetTeamsWithDependecies()
+        {
+            return _dbsetTeam.Include(t => t.Players).Include(t => t.Tournaments).ToList();
+        }
+
+        public IEnumerable<Tournament> GetTournamentsWithDependecies()
+        {
+            return _dbsetTournament.Include(t => t.Teams).ToList();
+        }
+
+        public void AddPlayerToTeam (int teamId, Player player)
+        {
+            Team team = _dbsetTeam
+                .Include(t => t.Players)
+                .Where(t => t.TeamId == teamId)
+                .FirstOrDefault();
+
+            team.Players.Add(player);
+        }
+        public void RemovePlayerToTeam(int teamId, Player player)
+        {
+            Team team = _dbsetTeam
+                .Include(t => t.Players)
+                .Where(t => t.TeamId == teamId)
+                .FirstOrDefault();
+
+            team.Players.Remove(player);
+        }
+
+        public void AddTeamToTournaments(int tournamentId, Team team)
+        {
+            Tournament tournament = _dbsetTournament
+                .Include(t => t.Teams)
+                .Where(t => t.TournamentId == tournamentId)
+                .FirstOrDefault();
+
+            tournament.Teams.Add(team);
+        }
+        public void RemoveTeamToTournaments(int tournamentId, Team team)
+        {
+            Tournament tournament = _dbsetTournament
+                .Include(t => t.Teams)
+                .Where(t => t.TournamentId == tournamentId)
+                .FirstOrDefault();
+
+            tournament.Teams.Remove(team);
+        }
+
+        public void AddTournamentToTeams(int teamId, Tournament tournament)
+        {
+            Team team = _dbsetTeam
+                .Include(t => t.Tournaments)
+                .Where(t => t.TeamId == teamId)
+                .FirstOrDefault();
+
+            team.Tournaments.Add(tournament);
+        }
+        public void RemoveTournamentToTeams(int teamId, Tournament tournament)
+        {
+            Team team = _dbsetTeam
+                .Include(t => t.Tournaments)
+                .Where(t => t.TeamId == teamId)
+                .FirstOrDefault();
+
+            team.Tournaments.Remove(tournament);
         }
 
     }

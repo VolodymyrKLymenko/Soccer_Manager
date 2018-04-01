@@ -12,12 +12,12 @@ namespace Services
         void UpdatePlayer(int playerId, Player updatedPlayer);
     }
 
-    public class LowLevelSoccerManagmentService : ILowLevelSoccerManagmentService
+    public class LowLevelSoccerManagmerService : ILowLevelSoccerManagmentService
     {
         private readonly IRepository<Player> _payerRepository;
         private readonly IRepository<Team> _teamRepository;
 
-        public LowLevelSoccerManagmentService(IRepository<Player> playerRepository, IRepository<Team> teamRepository)
+        public LowLevelSoccerManagmerService(IRepository<Player> playerRepository, IRepository<Team> teamRepository)
         {
             _payerRepository = playerRepository;
             _teamRepository = teamRepository;

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ModelClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace DAL.DataAccess
 {
@@ -15,5 +15,9 @@ namespace DAL.DataAccess
         TEntity Get(Expression<Func<TEntity, bool>> where);
         IEnumerable<TEntity> GetMany(Expression<Func<TEntity, bool>> where);
         IEnumerable<TEntity> GetAll();
+
+        IEnumerable<Tournament> GetTournamentsWithDependecies();
+        IEnumerable<Team> GetTeamsWithDependecies();
+
     }
 }
