@@ -6,20 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Soccer_Manager.Models;
 
-using ModelClasses;
-using Services;
+using Soccer_Manager.ModelClasses;
 
 namespace Soccer_Manager.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IHighLevelSoccerManagerService highLevelService;
-        private readonly ILowLevelSoccerManagmentService lowLevelService;
+        private readonly DataProvicer dataProvider;
 
-        public HomeController(ILowLevelSoccerManagmentService lowService, IHighLevelSoccerManagerService highService)
+        public HomeController(DataProvicer provider)
         {
-            highLevelService = highService;
-            lowLevelService = lowService;
+            dataProvider = provider;
         }
 
         public IActionResult Index()
@@ -48,7 +45,9 @@ namespace Soccer_Manager.Controllers
 
         public IActionResult SoccerManager()
         {
-            return View();
+            Team t = dataProvider.teams.First();
+
+            return View(t);
         }
 
         //public IActionResult SoccerManager()

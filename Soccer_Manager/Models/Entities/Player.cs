@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ModelClasses
+namespace Soccer_Manager.ModelClasses
 {
     public class Player
     {

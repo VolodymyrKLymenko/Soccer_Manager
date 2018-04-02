@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using ModelClasses;
+using Soccer_Manager.ModelClasses;
 
-namespace Soccer_Manager.Models
+namespace Soccer_Manager.ModelClasses
 {
     public class DataProvicer
     {
-        private readonly List<Team> teams;
-        private readonly List<Tournament> tournaments;
-        private readonly List<Player> players;
+        public List<Team> teams = new List<Team>();
+        public List<Tournament> tournaments = new List<Tournament>();
+        public List<Player> players = new List<Player>();
 
         public DataProvicer()
         {

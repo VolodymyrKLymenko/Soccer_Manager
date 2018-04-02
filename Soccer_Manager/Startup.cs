@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Soccer_Manager.ModelClasses;
 
-using ModelClasses;
-using Services;
-using DAL.DataAccess;
-using Microsoft.EntityFrameworkCore;
+//using ModelClasses;
+//using Services;
+//using DAL.DataAccess;
+//using Microsoft.EntityFrameworkCore;
 
 namespace Soccer_Manager
 { 
@@ -31,11 +32,14 @@ namespace Soccer_Manager
 
             string connnection = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<SoccerContext>(options => options.UseSqlServer("safasf"));
+            services.AddTransient<DataProvicer>();
+
+            /*services.AddDbContext<SoccerContext>(options => options.UseSqlServer("safasf"));
+            services.AddTransient<>
             services.AddTransient<DataContextProvider>();
             services.AddTransient(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IHighLevelSoccerManagerService, HighLevelSoccerManagerService>();
-            services.AddTransient<ILowLevelSoccerManagmentService, LowLevelSoccerManagmerService>();
+            services.AddTransient<ILowLevelSoccerManagmentService, LowLevelSoccerManagmerService>();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
