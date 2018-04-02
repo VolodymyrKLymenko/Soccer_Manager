@@ -48,7 +48,12 @@ namespace Soccer_Manager.Controllers
 
         public IActionResult SoccerManager()
         {
-            return View(highLevelService.GetAllTeam());
+            return View();
         }
+
+        //public IActionResult SoccerManager()
+        //{
+        //    return View(highLevelService.GetAllTeam());
+        //}
     }
 }
