@@ -4,20 +4,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ModelClasses
 {
-    public class Tournament
+    public class Team
     {
         [Key]
-        public int TournamentId { get; set; }
+        public int TeamId { get; set; }
         public string Name { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public int MaxCountTeams { get; set; }
 
         public List<TeamTournament> TeamTournaments { get; set; }
+        public List<Tournament> Tournaments { get; set; }
+        public List<Player> Players { get; set; }
 
-        public Tournament()
+        public Team()
         {
             TeamTournaments = new List<TeamTournament>();
+            Tournaments = new List<Tournament>();
         }
 
     }
