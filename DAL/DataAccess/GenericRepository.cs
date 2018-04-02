@@ -66,19 +66,26 @@ namespace DAL.DataAccess
 
         public IEnumerable<TEntity> GetAll()
         {
-            return _dbset.ToList();
+            var lst = _dbset.ToList();
+            return lst;
         }
 
         public IEnumerable<Team> GetTeamsWithDependecies()
         {
-            return _dbsetTeam.Include(t => t.Players).Include(t => t.Tournaments).ToList();
+            return _dbsetTeam
+                .Include(t => t.Players)
+                .Include(t => t.TeamTournaments).ThenInclude(ts => ts.Tournaments)
+                .ToList();
         }
 
         public IEnumerable<Tournament> GetTournamentsWithDependecies()
         {
-            return _dbsetTournament.Include(t => t.Teams).ToList();
+            return _dbsetTournament
+                .Include(t => t.TeamTournaments).ThenInclude(ts => ts.Teams)
+                .ToList();
         }
 
+        /*
         public void AddPlayerToTeam (int teamId, Player player)
         {
             Team team = _dbsetTeam
@@ -134,7 +141,7 @@ namespace DAL.DataAccess
                 .FirstOrDefault();
 
             team.Tournaments.Remove(tournament);
-        }
+        }*/
 
     }
 

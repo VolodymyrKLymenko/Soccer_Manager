@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+using ModelClasses;
+using Services;
+
 namespace Soccer_Manager
 {
     public class Program

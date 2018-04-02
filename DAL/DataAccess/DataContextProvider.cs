@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace DAL.DataAccess
 {
@@ -6,9 +7,16 @@ namespace DAL.DataAccess
     {
         private SoccerContext _dataContext;
 
+        private DbContextOptions<SoccerContext> options;
+
+        public DataContextProvider(DbContextOptions<SoccerContext> _options)
+        {
+            options = _options;
+        }
+
         public SoccerContext Get()
         {
-            return _dataContext ?? (_dataContext = new SoccerContext());
+            return _dataContext ?? (_dataContext = new SoccerContext(options));
         }
 
         private bool _isDisposed;

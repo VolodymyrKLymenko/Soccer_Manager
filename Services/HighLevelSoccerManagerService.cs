@@ -1,22 +1,25 @@
 ﻿using System;
 using ModelClasses;
 using DAL.DataAccess;
+using System.Collections.Generic;
 
 namespace Services
 {
 
-    public interface IHighLevelTestManagementService
+    public interface IHighLevelSoccerManagerService
     {
         void CreateTeam(Team team);
         void UpdateTeam(int teamId, Team updatedTeam);
         void RemoveTeam(int teamId);
+        Team GetTeam(int teamId);
+        IEnumerable<Team> GetAllTeam();
 
         void CreateTournament(Tournament tournament);
         void UpdateTournament(int tournamentId, Tournament updatedTournament);
         void RemoveTournament(int tournamentId);
     }
 
-    public class HighLevelSoccerManagerService : IHighLevelTestManagementService
+    public class HighLevelSoccerManagerService : IHighLevelSoccerManagerService
     {
         private readonly IRepository<Tournament> _tournamentRepository;
         private readonly IRepository<Team> _teamRepository;
@@ -36,6 +39,16 @@ namespace Services
         public void CreateTournament(Tournament tournament)
         {
             _tournamentRepository.Add(tournament);
+        }
+
+        public IEnumerable<Team> GetAllTeam()
+        {
+            return _teamRepository.GetAll();
+        }
+
+        public Team GetTeam(int teamId)
+        {
+            return _teamRepository.Get(teamId);
         }
 
         public void RemoveTeam(int teamId)

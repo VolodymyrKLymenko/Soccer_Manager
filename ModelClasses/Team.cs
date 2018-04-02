@@ -10,12 +10,12 @@ namespace ModelClasses
         public int TeamId { get; set; }
         public string Name { get; set; }
 
-        public List<Tournament> Tournaments { get; set; }
+        public List<TeamTournament> TeamTournaments { get; set; }
         public List<Player> Players { get; set; }
 
         public Team()
         {
-            Tournaments = new List<Tournament>();
+            TeamTournaments = new List<TeamTournament>();
         }
 
     }
