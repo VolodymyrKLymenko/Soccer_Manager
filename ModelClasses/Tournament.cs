@@ -13,11 +13,13 @@ namespace ModelClasses
         public string EndDate { get; set; }
         public int MaxCountTeams { get; set; }
 
-        public List<TeamTournament> TeamTournaments { get; set; }
+        //public List<TeamTournament> TeamTournaments { get; set; }
+        public List<Team> Teams { get; set; }
 
         public Tournament()
         {
-            TeamTournaments = new List<TeamTournament>();
+            Teams = new List<Team>();
+            //TeamTournaments = new List<TeamTournament>();
         }
 
     }

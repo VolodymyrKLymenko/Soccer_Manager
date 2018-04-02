@@ -6,6 +6,19 @@ namespace ModelClasses
 {
     public class Player
     {
+        public Player()
+        {
+        }
+
+        public Player(string name, string surname, string position, int age, int id)
+        {
+            Name = name;
+            Surname = surname;
+            Position = position;
+            Age = age;
+            PlayerId = id;
+        }
+
         [Key]
         public int PlayerId { get; set; }
 
