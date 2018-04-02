@@ -47,7 +47,7 @@ namespace Soccer_Manager.Controllers
         {
             Team t = dataProvider.teams.First();
 
-            return View(t);
+            return View("SoccerManager", dataProvider.teams);
         }
 
         //public IActionResult SoccerManager()
