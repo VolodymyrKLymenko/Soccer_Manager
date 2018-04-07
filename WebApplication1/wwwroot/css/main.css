@@ -1,0 +1,44 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+}
+
+.infoBlock header {
+    width: 100%;
+    background-color: darkcyan;
+    border-top-left-radius: 27px;
+    border-top-right-radius: 27px;
+    padding: 0.4em;
+    font-size: 2em;
+    color: white;
+}
+
+.infoBlock {
+    width: 30%;
+    border-radius: 29px;
+    border: 2px solid #333;
+    margin: 1em;
+    padding-bottom: 1em;
+}
+
+table {
+    width: 98%;
+    border-collapse: collapse;
+    margin: .5em;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+    td a {
+        cursor: pointer;
+        color: black;
+    }
+    td a:hover {
+        text-decoration: none;
+    }
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

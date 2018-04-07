@@ -1,0 +1,55 @@
+﻿@model GeneralInfo
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div style="margin-left: 4em;">
+
+
+    <div class="infoBlock" style="width: 70%;">
+        <header>Current tournaments</header>
+        <table>
+            <tr>
+                <th>Cup</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Count of Teams</th>
+            </tr>
+            @foreach (Tournament cup in Model.Tournaments)
+            {
+                <tr>
+                    <td><a asp-controller="Home" asp-action="Cup" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
+                    <td>@cup.StartDate</td>
+                    <td>@cup.EndDate</td>
+                    <td>@cup.MaxCountTeams</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+
+    <div class="infoBlock">
+        <header> Best Player </header>
+        <table>
+            <tr>
+                <th>Player</th>
+                <th>Position</th>
+                <th>Age</th>
+                <th>Team</th>
+            </tr>
+            @foreach (Player player in Model.Players)
+            {
+                <tr>
+                    <td>@player.Name @player.Surname</td>
+                    <td>@player.Position</td>
+                    <td>@player.Age</td>
+                    <td>@player.Team.Name</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+</div>
