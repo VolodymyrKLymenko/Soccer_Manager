@@ -48,13 +48,11 @@ namespace DAL.Initializers
             context.SaveChanges();
 
 
-            TeamTournament t1 = new TeamTournament { TeamId = liverpool.TeamId, TournamentId = APL.TournamentId };
-            TeamTournament t2 = new TeamTournament { TeamId = arsenal.TeamId, TournamentId = APL.TournamentId };
-            TeamTournament t3 = new TeamTournament { TeamId = liverpool.TeamId, TournamentId = euroCup.TournamentId };
-            TeamTournament t4 = new TeamTournament { TeamId = arsenal.TeamId, TournamentId = euroCup.TournamentId };
-            TeamTournament t5 = new TeamTournament { TeamId = barcelona.TeamId, TournamentId = euroCup.TournamentId };
-
-            APL.TeamTournaments.AddRange(new List<TeamTournament> { t1, t2, t3, t4, t5 });
+            APL.TeamTournaments.Add(new TeamTournament { Team = liverpool, Tournament = APL });
+            APL.TeamTournaments.Add(new TeamTournament { Team = arsenal, Tournament = APL });
+            euroCup.TeamTournaments.Add(new TeamTournament { Team = liverpool, Tournament = euroCup });
+            euroCup.TeamTournaments.Add(new TeamTournament { Team = arsenal, Tournament = euroCup });
+            euroCup.TeamTournaments.Add(new TeamTournament { Team = barcelona, Tournament = euroCup });
 
             context.SaveChanges();
 

@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-//using WebApplication1.Models;
+
+using Services;
+using DAL.Repository_Realisation;
+using DAL.Model_Classes;
 using DAL;
 
 
@@ -27,6 +30,13 @@ namespace WebApplication1
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<SoccerContext>(options => options.UseSqlServer(connection));
+
+            services.AddTransient<DataContextProvider>();
+            services.AddTransient<IRepository<Team>, TeamRepository>();
+            services.AddTransient<IRepository<Player>, PlayerRepository>();
+            services.AddTransient<IRepository<Tournament>, TournamentRepository>();
+            services.AddTransient<IHighLevelSoccerManagerService, HighLevelSoccerManagerService>();
+            services.AddTransient<ILowLevelSoccerManagmentService, LowLevelSoccerManagerService>();
 
             services.AddMvc();
 

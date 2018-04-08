@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.Entities.Tournament
+﻿@model Tournament
 
 @{
     ViewData["Title"] = "Cup";
@@ -37,13 +37,13 @@
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.Teams)
+                @Html.DisplayNameFor(model => model.TeamTournaments)
             </dt>
             <dd>
                 <ul>
-                    @foreach (Team t in Model.Teams)
+                    @foreach (TeamTournament t in Model.TeamTournaments)
                     {
-                        <li>@t.Name</li>
+                        <li>@t.Team.Name</li>
                     }
                 </ul>
             </dd>

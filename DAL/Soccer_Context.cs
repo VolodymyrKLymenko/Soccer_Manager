@@ -22,12 +22,12 @@ namespace DAL
                 .HasKey(t => new { t.TournamentId, t.TeamId });
 
             modelBuilder.Entity<TeamTournament>()
-                .HasOne(sc => sc.Teams)
+                .HasOne(sc => sc.Team)
                 .WithMany(s => s.TeamTournaments)
                 .HasForeignKey(sc => sc.TournamentId);
 
             modelBuilder.Entity<TeamTournament>()
-                .HasOne(sc => sc.Tournaments)
+                .HasOne(sc => sc.Tournament)
                 .WithMany(c => c.TeamTournaments)
                 .HasForeignKey(sc => sc.TeamId);
         }
