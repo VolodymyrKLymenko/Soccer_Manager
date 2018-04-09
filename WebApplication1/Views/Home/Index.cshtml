@@ -5,7 +5,7 @@
 }
 
 
-<div style="margin-left: 4em;">
+<div class="container">
 
 
     <div class="infoBlock" style="width: 70%;">
@@ -36,16 +36,12 @@
         <table>
             <tr>
                 <th>Player</th>
-                <th>Position</th>
-                <th>Age</th>
                 <th>Team</th>
             </tr>
             @foreach (Player player in Model.Players)
             {
                 <tr>
                     <td>@player.Name @player.Surname</td>
-                    <td>@player.Position</td>
-                    <td>@player.Age</td>
                     <td>@player.Team.Name</td>
                 </tr>
             }

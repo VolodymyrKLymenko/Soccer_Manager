@@ -3,9 +3,17 @@
     padding: 0;
 }
 
+header {
+    background-color: #2a293e;
+    font-size: 2em;
+    padding: .5em;
+    color: white;
+    border-bottom: 2px solid #333;
+}
+
 .infoBlock header {
-    width: 100%;
     background-color: darkcyan;
+    width: 100%;
     border-top-left-radius: 27px;
     border-top-right-radius: 27px;
     padding: 0.4em;
@@ -14,6 +22,7 @@
 }
 
 .infoBlock {
+    min-width: 280px;
     width: 30%;
     border-radius: 29px;
     border: 2px solid #333;
@@ -23,21 +32,22 @@
 
 table {
     width: 98%;
-    border-collapse: collapse;
-    margin: .5em;
+    margin: .5em .2em .5em .2em;
 }
 
 th, td {
     text-align: left;
     padding: 8px;
 }
+
     td a {
         cursor: pointer;
         color: black;
     }
-    td a:hover {
-        text-decoration: none;
-    }
+
+        td a:hover {
+            text-decoration: none;
+        }
 
 tr:nth-child(even) {
     background-color: #f2f2f2;

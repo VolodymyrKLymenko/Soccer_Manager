@@ -11,8 +11,8 @@ using System;
 namespace DAL.Migrations
 {
     [DbContext(typeof(SoccerContext))]
-    [Migration("20180407115228_Initial")]
-    partial class Initial
+    [Migration("20180409192555_new")]
+    partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,7 +48,11 @@ namespace DAL.Migrations
                     b.Property<int>("TeamId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Mail");
+
                     b.Property<string>("Name");
+
+                    b.Property<string>("Password");
 
                     b.HasKey("TeamId");
 
@@ -75,9 +79,13 @@ namespace DAL.Migrations
 
                     b.Property<string>("EndDate");
 
+                    b.Property<string>("Mail");
+
                     b.Property<int>("MaxCountTeams");
 
                     b.Property<string>("Name");
+
+                    b.Property<string>("Password");
 
                     b.Property<string>("StartDate");
 
@@ -95,12 +103,12 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Model_Classes.TeamTournament", b =>
                 {
-                    b.HasOne("DAL.Model_Classes.Tournament", "Tournaments")
+                    b.HasOne("DAL.Model_Classes.Tournament", "Tournament")
                         .WithMany("TeamTournaments")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DAL.Model_Classes.Team", "Teams")
+                    b.HasOne("DAL.Model_Classes.Team", "Team")
                         .WithMany("TeamTournaments")
                         .HasForeignKey("TournamentId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -17,7 +17,12 @@ namespace WebApplication1.Controllers
             provider = dataProvider;
         }
 
-        public IActionResult Index(Tournament tournament = null)
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult All ()
         {
 
             return View(provider.Tournaments.ToList());

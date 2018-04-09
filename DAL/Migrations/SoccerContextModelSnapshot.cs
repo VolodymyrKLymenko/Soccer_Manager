@@ -47,7 +47,11 @@ namespace DAL.Migrations
                     b.Property<int>("TeamId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Mail");
+
                     b.Property<string>("Name");
+
+                    b.Property<string>("Password");
 
                     b.HasKey("TeamId");
 
@@ -74,9 +78,13 @@ namespace DAL.Migrations
 
                     b.Property<string>("EndDate");
 
+                    b.Property<string>("Mail");
+
                     b.Property<int>("MaxCountTeams");
 
                     b.Property<string>("Name");
+
+                    b.Property<string>("Password");
 
                     b.Property<string>("StartDate");
 
@@ -94,12 +102,12 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Model_Classes.TeamTournament", b =>
                 {
-                    b.HasOne("DAL.Model_Classes.Tournament", "Tournaments")
+                    b.HasOne("DAL.Model_Classes.Tournament", "Tournament")
                         .WithMany("TeamTournaments")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DAL.Model_Classes.Team", "Teams")
+                    b.HasOne("DAL.Model_Classes.Team", "Team")
                         .WithMany("TeamTournaments")
                         .HasForeignKey("TournamentId")
                         .OnDelete(DeleteBehavior.Cascade);

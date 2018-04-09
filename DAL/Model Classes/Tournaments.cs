@@ -12,6 +12,8 @@ namespace DAL.Model_Classes
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public int MaxCountTeams { get; set; }
+        public string Password { get; set; }
+        public string Mail { get; set; }
 
         public List<TeamTournament> TeamTournaments { get; set; }
 
