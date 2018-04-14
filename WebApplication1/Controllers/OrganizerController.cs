@@ -56,7 +56,7 @@ namespace WebApplication1.Controllers
             if (tournament != null && tournament.Password == tournament.Password)
             {
                 HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
-            }
+            } 
 
             return RedirectToAction("Index");
         }
