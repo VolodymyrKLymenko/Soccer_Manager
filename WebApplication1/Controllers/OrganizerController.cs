@@ -48,14 +48,14 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Tournament tournament)
+        public IActionResult Create(Tournament _tournament)
         {
-            highProvider.CreateTournament(tournament);
-            var newTournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == tournament.Name);
+            highProvider.CreateTournament(_tournament);
+            var newTournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == _tournament.Name);
 
-            if (tournament != null && tournament.Password == tournament.Password)
+            if (_tournament != null && _tournament.Password == _tournament.Password)
             {
-                HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
+                HttpContext.Session.SetInt32(OrganaizerKey, _tournament.TournamentId);
             } 
 
             return RedirectToAction("Index");
