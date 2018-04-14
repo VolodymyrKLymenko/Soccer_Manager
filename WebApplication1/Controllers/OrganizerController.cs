@@ -18,6 +18,8 @@ namespace WebApplication1.Controllers
         private IHighLevelSoccerManagerService highProvider;
         private ILowLevelSoccerManagmentService lowProvider;
 
+        private Team selectedTeam = null;
+
         private const string OrganaizerKey = "organizer";
 
         public OrganizerController(IHighLevelSoccerManagerService high
@@ -27,18 +29,18 @@ namespace WebApplication1.Controllers
             lowProvider = low;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id = -1)
         {
             var value = HttpContext.Session.GetInt32(OrganaizerKey);
-
             Tournament tournament = value!=null ? highProvider.GetTournament(value.Value) : null;
 
-            return View(tournament);
-        }
+            selectedTeam = id != -1 ? highProvider.GetTeam(id) : null;
 
-        public IActionResult All ()
-        {
-            return View(highProvider.GetAllTournaments().ToList());
+            return View(new OrganaizerMainInfo()
+                {
+                    Tournament = tournament,
+                    SelectedTeam = selectedTeam
+                });
         }
 
         [HttpGet]
@@ -51,14 +53,17 @@ namespace WebApplication1.Controllers
         public IActionResult Create(Tournament _tournament)
         {
             highProvider.CreateTournament(_tournament);
-            var newTournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == _tournament.Name);
 
             if (_tournament != null && _tournament.Password == _tournament.Password)
             {
                 HttpContext.Session.SetInt32(OrganaizerKey, _tournament.TournamentId);
             } 
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new OrganaizerMainInfo()
+                {
+                    Tournament = _tournament,
+                    SelectedTeam = selectedTeam
+                });
         }
 
         [HttpGet]
@@ -75,7 +80,40 @@ namespace WebApplication1.Controllers
         {
             highProvider.UpdateTournament(tournament.TournamentId, tournament);
 
-            return View("Index");
+            return View("Index", new OrganaizerMainInfo()
+                {
+                    Tournament = tournament,
+                    SelectedTeam = selectedTeam,
+                    ShowConfirming = false
+                });
+        }
+
+        [HttpGet]
+        public IActionResult Confirm()
+        {
+            var value = HttpContext.Session.GetInt32(OrganaizerKey);
+            Tournament tournament = value != null ? highProvider.GetTournament(value.Value) : null;
+
+            return View("Index", new OrganaizerMainInfo()
+                {
+                    Tournament = tournament,
+                    SelectedTeam = selectedTeam,
+                    ShowConfirming = true
+                });
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int TournamentId, string Password)
+        {
+            Tournament tournament = highProvider.GetTournament(TournamentId);
+
+            if(tournament.Password == Password)
+            {
+                highProvider.RemoveTournament(TournamentId);
+                HttpContext.Session.Remove(OrganaizerKey);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

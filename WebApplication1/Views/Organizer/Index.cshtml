@@ -1,39 +1,55 @@
-﻿@model Tournament
+﻿@model OrganaizerMainInfo
 
 @{
     ViewData["Title"] = "Index";
 }
 
+@if (Model.ShowConfirming == true)
+{
+    <div class="background-field"></div>
+
+    <div class="middleWindow round-border">
+        <h1 class="text-center">Are you sure!</h1>
+        <div style="width: 100%;  text-align: center;">
+            <a asp-action="Delete" asp-route-TournamentId="@Model.Tournament.TournamentId" asp-route-Password="@Model.Tournament.Password"
+               class="btn btn-success glyphicon glyphicon-ok-circle" style="background-color: steelblue"> </a>
+            
+            <a asp-action="Index" asp-controller="Organizer"
+               class="btn btn-success glyphicon glyphicon-remove-circle" style="background-color: steelblue"> </a>
+        </div>
+    </div>
+}
+
 <div class="container">
 
-    @if (@Model != null)
+    @if (@Model.Tournament != null)
     {
 
-        <div style="position: sticky; top: 0; text-align: right; padding: 2em; background-color: white;">
+        <div style="text-align: right; padding: 2em; background-color: white;">
             <a asp-action="LogOut" asp-controller="Organizer">Log Out</a>
         </div>
 
         <div class="infoBlock" style="width: 100%;">
             <header>
-                <h2 style="display: inline;">Your cup: @Model?.Name</h2>
+                <h2 style="display: inline;">Your cup: @Model.Tournament.Name</h2>
 
                 <div class="buttonBlock">
                     <a asp-action="Edit" asp-controller="Organizer"
                        style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></a>
-                    <a asp-action="Deletes" asp-controller="Organizer"
+                    <a asp-action="Confirm" asp-controller="Organizer"
                        style="background-color: steelblue;" class="btn btn-success glyphicon glyphicon-trash"></a>
                 </div>
             </header>
 
             <ul style="list-style: none; font-size: 2em;">
-                <li>Mail: @Model?.Mail</li>
-                <li>Max count of teams: @Model?.MaxCountTeams</li>
-                <li>Start date: @Model?.StartDate</li>
-                <li>End date: @Model?.EndDate</li>
+                <li>Mail: @Model?.Tournament.Mail</li>
+                <li>Max count of teams: @Model?.Tournament.MaxCountTeams</li>
+                <li>Start date: @Model?.Tournament.StartDate</li>
+                <li>End date: @Model?.Tournament.EndDate</li>
             </ul>
         </div>
 
-        <div class="infoBlock" style="width: 40%">
+        <div class="infoBlock" style="width: 40%; display: inline-block;">
 
             <header>
                 Current registered team
@@ -48,14 +64,14 @@
                     </tr>
                 </thead>
                 @{int i = 1;}
-                @foreach (Team item in Model.TeamTournaments.Select(sc => sc.Team).ToList())
+                @foreach (Team item in Model?.Tournament.TeamTournaments.Select(sc => sc.Team).ToList())
                 {
                     <tr>
                         <td>
                             @i
                         </td>
                         <td>
-                            @item.Name
+                            <a asp-action="Index" asp-controller="Organizer" asp-route-id="@item.TeamId">@item.Name</a>
                         </td>
                         <td>
                             @item.Mail
@@ -64,6 +80,43 @@
                     i++;
                 }
             </table>
+        </div>
+
+        <div class="infoBlock" style="width: 50%; float: right; margin-right: -1.5%;">
+
+            <header>
+                Current registered team
+            </header>
+            @if (Model.SelectedTeam != null)
+            {
+                <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
+                    <thead style="font: bold 1.2em arial, verdana">
+                        <tr>
+                            <td>Position</td>
+                            <td>Name</td>
+                            <td>Age</td>
+                        </tr>
+                    </thead>
+                    @foreach (Player item in Model?.SelectedTeam.Players)
+                    {
+                        <tr>
+                            <td>
+                                @item.Position
+                            </td>
+                            <td>
+                                @item.Name @item.Surname
+                            </td>
+                            <td>
+                                @item.Age
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <h2 class="text-center">Select Team</h2>
+            }
         </div>
     }
     else
