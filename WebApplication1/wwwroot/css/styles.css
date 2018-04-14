@@ -21,6 +21,28 @@ header {
     color: white;
 }
 
+nav ul {
+    position: absolute;
+    height: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 10%;
+    background-color: #f1f1f1;
+}
+    nav li a {
+        display: block;
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 1.5em;
+    }
+        nav li a:hover {
+            background-color: #555;
+            color: white;
+            text-decoration: none;
+        }
+
 .infoBlock {
     min-width: 280px;
     width: 30%;

@@ -12,8 +12,10 @@
     <header>
         SOCCER MANAGER
     </header>
-    @await Component.InvokeAsync("NavigationMenu")
-    <div>
+    <nav>
+        @await Component.InvokeAsync("NavigationMenu")
+    </nav>
+    <div style="margin-left: 10%;">
         @RenderBody()
     </div>
 </body>
