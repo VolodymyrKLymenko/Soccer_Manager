@@ -9,13 +9,19 @@
     @if (@Model != null)
     {
 
+        <div style="position: sticky; top: 0; text-align: right; padding: 2em; background-color: white;">
+            <a asp-action="LogOut" asp-controller="Organizer">Log Out</a>
+        </div>
+
         <div class="infoBlock" style="width: 100%;">
             <header>
                 <h2 style="display: inline;">Your cup: @Model?.Name</h2>
 
                 <div class="buttonBlock">
-                    <button style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></button>
-                    <button style="background-color: steelblue;" class="btn btn-success glyphicon glyphicon-trash"></button>
+                    <a asp-action="Edit" asp-controller="Organizer"
+                       style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></a>
+                    <a asp-action="Deletes" asp-controller="Organizer"
+                       style="background-color: steelblue;" class="btn btn-success glyphicon glyphicon-trash"></a>
                 </div>
             </header>
 

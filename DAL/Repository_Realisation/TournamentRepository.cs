@@ -51,7 +51,7 @@ namespace DAL.Repository_Realisation
         {
             var cups = _dbset.Include(t => t.TeamTournaments).ThenInclude(tt => tt.Team);
 
-            return cups.First(t => t.TournamentId == id);
+            return cups.FirstOrDefault(t => t.TournamentId == id);
         }
 
         public Tournament Get(Expression<Func<Tournament, bool>> where)

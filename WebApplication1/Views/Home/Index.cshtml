@@ -7,7 +7,6 @@
 
 <div class="container">
 
-
     <div class="infoBlock" style="width: 70%;">
         <header>Current tournaments</header>
         <table>
@@ -19,12 +18,13 @@
             </tr>
             @foreach (Tournament cup in Model.Tournaments)
             {
-                <tr>
-                    <td><a asp-controller="Home" asp-action="Cup" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
-                    <td>@cup.StartDate</td>
-                    <td>@cup.EndDate</td>
-                    <td>@cup.MaxCountTeams</td>
-                </tr>
+            <tr>
+                <td>@cup.TournamentId</td>
+                <td><a asp-controller="Home" asp-action="Cup" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
+                <td>@cup.StartDate</td>
+                <td>@cup.EndDate</td>
+                <td>@cup.MaxCountTeams</td>
+            </tr>
             }
         </table>
     </div>

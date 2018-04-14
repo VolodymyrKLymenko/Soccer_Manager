@@ -62,6 +62,23 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
+        public IActionResult Edit()
+        {
+            var value = HttpContext.Session.GetInt32(OrganaizerKey);
+            Tournament tournament = value != null ? highProvider.GetTournament(value.Value) : null;
+
+            return View(tournament);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Tournament tournament)
+        {
+            highProvider.UpdateTournament(tournament.TournamentId, tournament);
+
+            return View("Index");
+        }
+
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -76,6 +93,13 @@ namespace WebApplication1.Controllers
             {
                 HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
             }
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Remove(OrganaizerKey);
 
             return RedirectToAction("Index");
         }
