@@ -52,3 +52,14 @@ th, td {
 tr:nth-child(even) {
     background-color: #f2f2f2;
 }
+
+button {
+    background-color: steelblue;
+}
+
+.buttonBlock {
+    text-align: right;
+    display: inline;
+    float: right;
+    margin-right: .5em;
+}

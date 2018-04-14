@@ -10,8 +10,14 @@ namespace DAL.Initializers
         public static void Initialize(SoccerContext context)
         {
             Team barcelona = new Team("Barcelona");
+            barcelona.Password = "barcelona";
+            barcelona.Mail = "barcelona@gmail.com";
             Team liverpool = new Team("Liverpool");
+            liverpool.Password = "liverpool";
+            liverpool.Mail = "liverpool@gmail.com";
             Team arsenal = new Team("Arsenal");
+            arsenal.Password = "arsenal";
+            arsenal.Mail = "arsenal@gmail.com";
 
             context.Teams.AddRange(new List<Team> { barcelona, liverpool, arsenal });
             context.SaveChanges();
@@ -37,11 +43,15 @@ namespace DAL.Initializers
             APL.MaxCountTeams = 18;
             APL.StartDate = "01.10.2017";
             APL.EndDate = "08.08.2018";
+            APL.Password = "apl";
+            APL.Mail = "englishLeague@gmail.com";
             Tournament euroCup = new Tournament();
             euroCup.Name = "UEFA CUP";
             euroCup.MaxCountTeams = 30;
             euroCup.StartDate = "02.08.2017";
             euroCup.EndDate = "05.05.2018";
+            euroCup.Password = "eurocap";
+            euroCup.Mail = "euro_cup@gmail.com";
 
             context.Add(APL);
             context.Add(euroCup);

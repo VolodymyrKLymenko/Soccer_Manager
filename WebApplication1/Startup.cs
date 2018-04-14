@@ -8,7 +8,8 @@ using Services;
 using DAL.Repository_Realisation;
 using DAL.Model_Classes;
 using DAL;
-
+using WebApplication1.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication1
 {
@@ -33,8 +34,12 @@ namespace WebApplication1
             services.AddTransient<IRepository<Tournament>, TournamentRepository>();
             services.AddTransient<IHighLevelSoccerManagerService, HighLevelSoccerManagerService>();
             services.AddTransient<ILowLevelSoccerManagmentService, LowLevelSoccerManagerService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddMemoryCache();
 
             services.AddMvc();
+            services.AddSession();
+            services.AddDistributedMemoryCache();
 
             //services.AddTransient<DataProvider>();
         }
@@ -53,6 +58,7 @@ namespace WebApplication1
             }
 
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

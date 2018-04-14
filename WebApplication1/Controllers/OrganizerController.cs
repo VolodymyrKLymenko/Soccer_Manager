@@ -5,27 +5,40 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DAL;
 using DAL.Model_Classes;
+using WebApplication1.Models;
+using WebApplication1.Models.ViewModels;
+using Services;
+using WebApplication1.Infrastructure;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication1.Controllers
 {
     public class OrganizerController : Controller
     {
-        private SoccerContext provider;
+        private IHighLevelSoccerManagerService highProvider;
+        private ILowLevelSoccerManagmentService lowProvider;
 
-        public OrganizerController(SoccerContext dataProvider)
+        private const string OrganaizerKey = "organizer";
+
+        public OrganizerController(IHighLevelSoccerManagerService high
+            , ILowLevelSoccerManagmentService low)
         {
-            provider = dataProvider;
+            highProvider = high;
+            lowProvider = low;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var value = HttpContext.Session.GetInt32(OrganaizerKey);
+
+            Tournament tournament = value!=null ? highProvider.GetTournament(value.Value) : null;
+
+            return View(tournament);
         }
 
         public IActionResult All ()
         {
-
-            return View(provider.Tournaments.ToList());
+            return View(highProvider.GetAllTournaments().ToList());
         }
 
         [HttpGet]
@@ -37,10 +50,35 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Create(Tournament tournament)
         {
-            provider.Tournaments.Add(tournament);
-            provider.SaveChanges();
+            highProvider.CreateTournament(tournament);
+            var newTournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == tournament.Name);
 
-            return RedirectToAction("Index", tournament);
+            if (tournament != null && tournament.Password == tournament.Password)
+            {
+                HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
+            }
+
+            return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(LoginCupModel model)
+        {
+            var tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == model.Name);
+
+            if (tournament != null && tournament.Password == model.Password)
+            {
+                HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DAL.Model_Classes
 {
+    [Serializable]
     public class Tournament
     {
         public int TournamentId { get; set; }
