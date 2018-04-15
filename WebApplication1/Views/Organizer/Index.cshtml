@@ -61,6 +61,7 @@
                         <td>№</td>
                         <td>Name</td>
                         <td>Mail</td>
+                        <td>Remove</td>
                     </tr>
                 </thead>
                 @{int i = 1;}
@@ -75,6 +76,10 @@
                         </td>
                         <td>
                             @item.Mail
+                        </td>
+                        <td>
+                            <a asp-action="removeTeam" asp-controller="Organizer" asp-route-teamId="@item.TeamId" asp-route-password="@item.Password" 
+                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
                         </td>
                     </tr>
                     i++;
