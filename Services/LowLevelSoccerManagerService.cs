@@ -26,6 +26,10 @@ namespace Services
         public void CreatePlayerForTeam(int teamId, Player player)
         {
             var team = _teamRepository.Get(t => t.TeamId == teamId);
+            if (team.Players == null)
+            {
+                team.Players = new List<Player>();
+            }
             team.Players.Add(player);
             _teamRepository.Update(team);
         }

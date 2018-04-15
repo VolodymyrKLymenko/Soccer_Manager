@@ -1,0 +1,152 @@
+﻿@model TeamMainInfo
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (Model.ShowConfirming == true)
+{
+    <div class="background-field"></div>
+
+    <div class="middleWindow round-border">
+        <h1 class="text-center">Are you sure!</h1>
+        <div style="width: 100%;  text-align: center;">
+            <a asp-action="Delete" asp-route-TeamId="@Model.Team.TeamId" asp-route-Password="@Model.Team.Password"
+               class="btn btn-success glyphicon glyphicon-ok-circle" style="background-color: steelblue"></a>
+
+            <a asp-action="Index" asp-controller="Team"
+               class="btn btn-success glyphicon glyphicon-remove-circle" style="background-color: steelblue"></a>
+        </div>
+    </div>
+}
+
+<div class="container">
+
+    @if (@Model.Team != null)
+    {
+
+        <div style="text-align: right; padding: 2em; background-color: white;">
+            <a asp-action="LogOut" asp-controller="Team">Log Out</a>
+        </div>
+
+        <div class="infoBlock" style="width: 100%;">
+            <header>
+                <h2 style="display: inline;">Your team: @Model.Team.Name</h2>
+
+                <div class="buttonBlock">
+                    <a asp-action="Edit" asp-controller="Team"
+                       style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></a>
+                    <a asp-action="Confirm" asp-controller="Team"
+                       style="background-color: steelblue;" class="btn btn-success glyphicon glyphicon-trash"></a>
+                </div>
+            </header>
+
+            <ul style="list-style: none; font-size: 2em;">
+                <li>Mail: @Model?.Team.Mail</li>
+            </ul>
+        </div>
+
+        <div class="infoBlock" style="width: 40%; display: inline-block;">
+
+            <header>
+                Players
+                <a asp-action="AddPlayer" asp-controller="Team"
+                   class="btn btn-success glyphicon" style="background-color: steelblue">Add Player</a>
+            </header>
+
+            <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
+                <thead style="font: bold 1.2em arial, verdana">
+                    <tr>
+                        <td>№</td>
+                        <td>Name</td>
+                        <td>Surname</td>
+                        <td>Position</td>
+                        <td>Age</td>
+                        <td>Remove</td>
+                    </tr>
+                </thead>
+                @{int i = 1;}
+                @foreach (Player item in Model?.Team.Players.ToList())
+                {
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            <a asp-action="Index" asp-controller="Team" asp-route-id="@item.PlayerId">@item.Name</a>
+                        </td>
+                        <td>
+                            @item.Surname
+                        </td>
+                        <td>
+                            @item.Position
+                        </td>
+                        <td>
+                            @item.Age
+                        </td>
+                        <td>
+                            <a asp-action="RemovePlayer" asp-controller="Team" asp-route-PlayerId="@item.PlayerId" asp-route-Password="@Model.Team.Password"
+                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </table>
+        </div>
+
+        <div class="infoBlock" style="width: 50%; float: right; margin-right: -1.5%;">
+
+            <header>
+                Current tournament(s)
+            </header>
+            
+            <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
+                <thead style="font: bold 1.2em arial, verdana">
+                    <tr>
+                        <td>№</td>
+                        <td>Name</td>
+                        <td>Mail</td>
+                        <td>Remove</td>
+                    </tr>
+                </thead>
+                @*@{i = 1;}
+                @foreach (Tournament item in Model?.Team.TeamTournaments.Select(sc => sc.Tournament).ToList())
+                {
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            /<a asp-action="Index" asp-controller="Team" asp-route-id="@item.TournamentId">@item.Name</a>
+                        </td>
+                        <td>
+                            @item.Mail
+                        </td>
+                        <td>
+                            <a asp-action="Remove" asp-controller="Team" asp-route-TeamId="@item.TournamentId" asp-route-Password="@Model.Tournament.Password"
+                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
+                        </td>
+                    </tr>
+                    i++;
+                 }*@
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="infoBlock" style="width: 30%; margin-left: 35%;">
+            <header>At first you must: </header>
+
+            <div style="text-align:center">
+                <br />
+                <a class="btn btn-success" asp-action="Login" asp-controller="Team">Log In</a>
+                <br /><span>Or</span><br />
+                <a class="btn btn-success" asp-action="Create" asp-controller="Team">Create Team</a>
+                <br />
+            </div>
+        </div>
+
+    }
+
+
+</div>
