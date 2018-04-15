@@ -126,7 +126,7 @@ namespace WebApplication1.Controllers
                 highProvider.RemoveTeamFromTournament(TeamId, tournament.TournamentId);
             }
 
-            return View("Index", new OrganaizerMainInfo()
+            return View("Index",  new OrganaizerMainInfo()
                 {
                     Tournament = tournament,
                     SelectedTeam = selectedTeam
