@@ -78,7 +78,7 @@
                             @item.Mail
                         </td>
                         <td>
-                            <a asp-action="removeTeam" asp-controller="Organizer" asp-route-TeamId="@item.TeamId" asp-route-Password="@item.Password" 
+                            <a asp-action="RemoveTeam" asp-controller="Organizer" asp-route-TeamId="@item.TeamId" asp-route-Password="@Model.Tournament.Password" 
                                class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
                         </td>
                     </tr>

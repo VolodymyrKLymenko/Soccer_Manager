@@ -46,23 +46,35 @@ namespace DAL.Initializers
             APL.Password = "apl";
             APL.Mail = "englishLeague@gmail.com";
             Tournament euroCup = new Tournament();
-            euroCup.Name = "UEFA CUP";
+            euroCup.Name = "EURO cup";
             euroCup.MaxCountTeams = 30;
             euroCup.StartDate = "02.08.2017";
             euroCup.EndDate = "05.05.2018";
-            euroCup.Password = "eurocap";
+            euroCup.Password = "eurocup";
             euroCup.Mail = "euro_cup@gmail.com";
+            Tournament someCup = new Tournament();
+            someCup.Name = "Some";
+            someCup.MaxCountTeams = 30;
+            someCup.StartDate = "02.08.2017";
+            someCup.EndDate = "05.05.2018";
+            someCup.Password = "some";
+            someCup.Mail = "some_cup@gmail.com";
 
             context.Add(APL);
             context.Add(euroCup);
             context.SaveChanges();
+            context.Add(someCup);
+            context.SaveChanges();
 
 
-            APL.TeamTournaments.Add(new TeamTournament { Team = liverpool, Tournament = APL });
+            APL.TeamTournaments.Add(new TeamTournament { Tournament = APL, Team = liverpool });
             APL.TeamTournaments.Add(new TeamTournament { Team = arsenal, Tournament = APL });
             euroCup.TeamTournaments.Add(new TeamTournament { Team = liverpool, Tournament = euroCup });
             euroCup.TeamTournaments.Add(new TeamTournament { Team = arsenal, Tournament = euroCup });
             euroCup.TeamTournaments.Add(new TeamTournament { Team = barcelona, Tournament = euroCup });
+            someCup.TeamTournaments.Add(new TeamTournament { Team = liverpool, Tournament = someCup });
+            someCup.TeamTournaments.Add(new TeamTournament { Team = arsenal, Tournament = someCup });
+            someCup.TeamTournaments.Add(new TeamTournament { Team = barcelona, Tournament = someCup });
 
             context.SaveChanges();
 

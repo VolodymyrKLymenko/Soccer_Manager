@@ -116,6 +116,23 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult RemoveTeam(int TeamId, string Password)
+        {
+            var value = HttpContext.Session.GetInt32(OrganaizerKey);
+            Tournament tournament = value != null ? highProvider.GetTournament(value.Value) : null;
+
+            if(Password == tournament.Password)
+            {
+                highProvider.RemoveTeamFromTournament(TeamId, tournament.TournamentId);
+            }
+
+            return View("Index", new OrganaizerMainInfo()
+                {
+                    Tournament = tournament,
+                    SelectedTeam = selectedTeam
+                });
+        }
+
         [HttpGet]
         public IActionResult Login()
         {
