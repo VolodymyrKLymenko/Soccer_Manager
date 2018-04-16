@@ -74,11 +74,20 @@ namespace WebApplication1.Controllers
             lowProvider.CreatePlayerForTeam(team.TeamId, player);
             highProvider.UpdateTeam(team.TeamId, team);
 
-            return View("Index", new TeamMainInfo()
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult RemovePlayer(int PlayerId, string Password)
+        {
+            var value = HttpContext.Session.GetInt32(TeamKey);
+            Team team = value != null ? highProvider.GetTeam(value.Value) : null;
+
+            if (Password == team.Password)
             {
-                Team = team,
-                ShowConfirming = false
-            });
+                lowProvider.RemovePlayer(PlayerId);
+            }
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -95,9 +104,12 @@ namespace WebApplication1.Controllers
         {
             highProvider.UpdateTeam(team.TeamId, team);
 
+            var value = HttpContext.Session.GetInt32(TeamKey);
+            Team _team = value != null ? highProvider.GetTeam(value.Value) : null;
+
             return View("Index", new TeamMainInfo()
             {
-                Team = team,
+                Team = _team,
                 ShowConfirming = false
             });
         }
@@ -127,22 +139,6 @@ namespace WebApplication1.Controllers
             }
 
             return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult RemovePlayer(int PlayerId, string Password)
-        {
-            var value = HttpContext.Session.GetInt32(TeamKey);
-            Team team = value != null ? highProvider.GetTeam(value.Value) : null;
-
-            if (Password == team.Password)
-            {
-                lowProvider.RemovePlayer(PlayerId);
-            }
-
-            return View("Index", new TeamMainInfo()
-            {
-                Team = team
-            });
         }
 
         [HttpGet]

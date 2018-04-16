@@ -79,10 +79,13 @@ namespace WebApplication1.Controllers
         public IActionResult Edit(Tournament tournament)
         {
             highProvider.UpdateTournament(tournament.TournamentId, tournament);
+            
+            var value = HttpContext.Session.GetInt32(OrganaizerKey);
+            Tournament _tournament = value != null ? highProvider.GetTournament(value.Value) : null;
 
             return View("Index", new OrganaizerMainInfo()
                 {
-                    Tournament = tournament,
+                    Tournament = _tournament,
                     SelectedTeam = selectedTeam,
                     ShowConfirming = false
                 });

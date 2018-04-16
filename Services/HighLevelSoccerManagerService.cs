@@ -77,6 +77,7 @@ namespace Services
             var teamFromDb = _teamRepository.Get(team => team.TeamId == teamId);
 
             teamFromDb.Name = updatedTeam.Name;
+            teamFromDb.Mail = updatedTeam.Mail;
 
             _teamRepository.Update(teamFromDb);
         }
