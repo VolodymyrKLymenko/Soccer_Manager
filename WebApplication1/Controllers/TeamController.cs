@@ -150,6 +150,10 @@ namespace WebApplication1.Controllers
 
             if (team.Password == Password)
             {
+                foreach(var i in team.Players)
+                {
+                    lowProvider.RemovePlayer(i.PlayerId);
+                }
                 highProvider.RemoveTeam(TeamId);
                 HttpContext.Session.Remove(TeamKey);
             }
