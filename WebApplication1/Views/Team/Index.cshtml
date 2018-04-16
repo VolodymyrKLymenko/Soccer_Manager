@@ -46,7 +46,7 @@
             </ul>
         </div>
 
-        <div class="infoBlock" style="width: 40%; display: inline-block;">
+        <div class="infoBlock" style="width: 48%; display: inline-block;">
 
             <header>
                 Players
@@ -62,6 +62,7 @@
                         <td>Surname</td>
                         <td>Position</td>
                         <td>Age</td>
+                        <td>Edit</td>
                         <td>Remove</td>
                     </tr>
                 </thead>
@@ -85,6 +86,10 @@
                             @item.Age
                         </td>
                         <td>
+                            <a asp-action="EditPlayer" asp-controller="Team" asp-route-playerId="@item.PlayerId"
+                               style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></a>
+                        </td>
+                        <td>
                             <a asp-action="RemovePlayer" asp-controller="Team" asp-route-PlayerId="@item.PlayerId" asp-route-Password="@Model.Team.Password"
                                class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
                         </td>
@@ -94,7 +99,7 @@
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 50%; float: right; margin-right: -1.5%;">
+        <div class="infoBlock" style="width: 48%; float: right; margin-right: -1.5%;">
 
             <header>
                 Current tournament(s)

@@ -77,6 +77,22 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult EditPlayer(int playerId)
+        {
+            Player player = lowProvider.GetPlayer(playerId);
+
+            return View(player);
+        }
+
+        [HttpPost]
+        public IActionResult EditPlayer(Player player)
+        {
+            lowProvider.UpdatePlayer(player.PlayerId, player);
+
+            return RedirectToAction("Index");
+        }
+
         public IActionResult RemovePlayer(int PlayerId, string Password)
         {
             var value = HttpContext.Session.GetInt32(TeamKey);
