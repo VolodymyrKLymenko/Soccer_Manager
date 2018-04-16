@@ -87,6 +87,7 @@ namespace Services
             var tournamentFromDb = _tournamentRepository.Get(t => t.TournamentId == tournamentId);
 
             tournamentFromDb.Name = updatedTournament.Name;
+            tournamentFromDb.Mail = updatedTournament.Mail;
             tournamentFromDb.MaxCountTeams = updatedTournament.MaxCountTeams;
             tournamentFromDb.StartDate = updatedTournament.StartDate;
             tournamentFromDb.EndDate = updatedTournament.EndDate;
