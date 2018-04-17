@@ -20,10 +20,12 @@ namespace DAL
             _dbset = _dataContext.Set<TEntity>();
         }
 
-        public void Add(TEntity entity)
+        public int Add(TEntity entity)
         {
             _dbset.Add(entity);
             _dataContext.SaveChanges();
+
+            return -1;
         }
 
         public void Update(TEntity entity)

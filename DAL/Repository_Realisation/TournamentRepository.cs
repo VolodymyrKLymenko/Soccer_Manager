@@ -22,10 +22,14 @@ namespace DAL.Repository_Realisation
             _dbset = _dataContext.Tournaments;
         }
 
-        public void Add(Tournament item)
+        public int Add(Tournament item)
         {
-            _dbset.Add(item);
+            var t = _dbset.Add(item);
+            var db = _dbset.ToList();
+
             _dataContext.SaveChanges();
+
+            return t.Entity.TournamentId;
         }
 
         public void Update(Tournament item)

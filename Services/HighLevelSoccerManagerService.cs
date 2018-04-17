@@ -6,7 +6,7 @@ namespace Services
 {
     public interface IHighLevelSoccerManagerService
     {
-        void CreateTeam(Team team);
+        int CreateTeam(Team team);
         void UpdateTeam(int teamId, Team updatedTeam);
         void RemoveTeam(int teamId);
         void RemoveTeamFromTournament(int teamId, int tournamentId);
@@ -14,7 +14,7 @@ namespace Services
         IEnumerable<Team> GetAllTeam();
         IEnumerable<Tournament> GetAllTournaments();
 
-        void CreateTournament(Tournament tournament);
+        int CreateTournament(Tournament tournament);
         void UpdateTournament(int tournamentId, Tournament updatedTournament);
         void RemoveTournament(int tournamentId);
         Tournament GetTournament(int id);
@@ -32,14 +32,14 @@ namespace Services
         }
 
 
-        public void CreateTeam(Team team)
+        public int CreateTeam(Team team)
         {
-            _teamRepository.Add(team);
+            return _teamRepository.Add(team);
         }
 
-        public void CreateTournament(Tournament tournament)
+        public int CreateTournament(Tournament tournament)
         {
-            _tournamentRepository.Add(tournament);
+            return _tournamentRepository.Add(tournament);
         }
 
         public IEnumerable<Team> GetAllTeam()
@@ -69,7 +69,8 @@ namespace Services
 
         public void RemoveTournament(int tournamentId)
         {
-            _tournamentRepository.Delete(tournament => tournament.TournamentId == tournamentId);
+            var t = _tournamentRepository.Get(tournamentId);
+            _tournamentRepository.Delete(t);
         }
 
         public void UpdateTeam(int teamId, Team updatedTeam)

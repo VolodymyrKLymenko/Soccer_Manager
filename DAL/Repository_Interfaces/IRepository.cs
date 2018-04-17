@@ -8,7 +8,7 @@ namespace DAL
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        void Add(TEntity entity);
+        int Add(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
         void Delete(Expression<Func<TEntity, bool>> where);

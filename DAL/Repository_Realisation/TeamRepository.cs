@@ -22,10 +22,12 @@ namespace DAL.Repository_Realisation
             _dbset = _dataContext.Teams;
         }
 
-        public void Add(Team team)
+        public int Add(Team team)
         {
-            _dbset.Add(team);
+            var t = _dbset.Add(team);
             _dataContext.SaveChanges();
+
+            return t.Entity.TeamId;
         }
 
         public void Update(Team team)

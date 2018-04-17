@@ -22,10 +22,12 @@ namespace DAL.Repository_Realisation
             _dbset = _dataContext.Players;
         }
 
-        public void Add(Player item)
+        public int Add(Player item)
         {
-            _dbset.Add(item);
+            var t = _dbset.Add(item);
             _dataContext.SaveChanges();
+
+            return t.Entity.PlayerId;
         }
 
         public void Update(Player item)

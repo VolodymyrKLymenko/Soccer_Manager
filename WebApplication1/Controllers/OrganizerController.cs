@@ -52,7 +52,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Create(Tournament _tournament)
         {
-            highProvider.CreateTournament(_tournament);
+            _tournament.TournamentId = highProvider.CreateTournament(_tournament);
 
             if (_tournament != null && _tournament.Password == _tournament.Password)
             {
@@ -79,13 +79,10 @@ namespace WebApplication1.Controllers
         public IActionResult Edit(Tournament tournament)
         {
             highProvider.UpdateTournament(tournament.TournamentId, tournament);
-            
-            var value = HttpContext.Session.GetInt32(OrganaizerKey);
-            Tournament _tournament = value != null ? highProvider.GetTournament(value.Value) : null;
-
+           
             return View("Index", new OrganaizerMainInfo()
                 {
-                    Tournament = _tournament,
+                    Tournament = tournament,
                     SelectedTeam = selectedTeam,
                     ShowConfirming = false
                 });
