@@ -69,7 +69,8 @@ namespace Services
 
         public void RemoveTournament(int tournamentId)
         {
-            _tournamentRepository.Delete(tournament => tournament.TournamentId == tournamentId);
+            var t = _tournamentRepository.Get(tournamentId);
+            _tournamentRepository.Delete(t);
         }
 
         public void UpdateTeam(int teamId, Team updatedTeam)
