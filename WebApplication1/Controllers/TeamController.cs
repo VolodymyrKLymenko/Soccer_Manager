@@ -47,18 +47,27 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Create(Team _team)
         {
-            highProvider.CreateTeam(_team);
-
-            if (_team != null && _team.Password == _team.Password)
+            if (ModelState.IsValid)
             {
-                HttpContext.Session.SetInt32(TeamKey, _team.TeamId);
+                highProvider.CreateTeam(_team);
+
+                if (_team != null && _team.Password == _team.Password)
+                {
+                    HttpContext.Session.SetInt32(TeamKey, _team.TeamId);
+                }
+
+                TempData["message"] = $"{_team.Name} has been created";
+
+                return RedirectToAction("Index", new TeamMainInfo()
+                {
+                    Team = _team,
+                    Cups = highProvider.GetAllTournaments().ToList()
+                });
             }
-
-            return RedirectToAction("Index", new TeamMainInfo()
+            else
             {
-                Team = _team,
-                Cups = highProvider.GetAllTournaments().ToList()
-            });
+                return View();
+            }
         }
 
         [HttpGet]
@@ -73,10 +82,18 @@ namespace WebApplication1.Controllers
             var value = HttpContext.Session.GetInt32(TeamKey);
             Team team = value != null ? highProvider.GetTeam(value.Value) : null;
 
-            lowProvider.CreatePlayerForTeam(team.TeamId, player);
-            highProvider.UpdateTeam(team.TeamId, team);
-
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                lowProvider.CreatePlayerForTeam(team.TeamId, player);
+                highProvider.UpdateTeam(team.TeamId, team);
+                TempData["message"] = $"{player.Name} has been added";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(player);
+            }
         }
 
         [HttpGet]
@@ -90,9 +107,17 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult EditPlayer(Player player)
         {
-            lowProvider.UpdatePlayer(player.PlayerId, player);
-
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                lowProvider.UpdatePlayer(player.PlayerId, player);
+                TempData["message"] = $"{player.Name} has been saved";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(player);
+            }
         }
 
         public IActionResult RemovePlayer(int PlayerId, string Password)
@@ -102,6 +127,7 @@ namespace WebApplication1.Controllers
 
             if (Password == team.Password)
             {
+                TempData["message"] = $"{lowProvider.GetPlayer(PlayerId).Name} was removed";
                 lowProvider.RemovePlayer(PlayerId);
             }
 
@@ -120,17 +146,26 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Edit(Team team)
         {
-            highProvider.UpdateTeam(team.TeamId, team);
-
-            var value = HttpContext.Session.GetInt32(TeamKey);
-            Team _team = value != null ? highProvider.GetTeam(value.Value) : null;
-
-            return View("Index", new TeamMainInfo()
+            if (ModelState.IsValid)
             {
-                Team = _team,
-                ShowConfirming = false,
-                Cups = highProvider.GetAllTournaments().ToList()
-            });
+                highProvider.UpdateTeam(team.TeamId, team);
+
+                var value = HttpContext.Session.GetInt32(TeamKey);
+                Team _team = value != null ? highProvider.GetTeam(value.Value) : null;
+                
+                TempData["message"] = $"{_team.Name} has been saved";
+
+                return View("Index", new TeamMainInfo()
+                {
+                    Team = _team,
+                    ShowConfirming = false,
+                    Cups = highProvider.GetAllTournaments().ToList()
+                });
+            }
+            else
+            {
+                return View(team);
+            }
         }
 
         [HttpGet]
@@ -172,6 +207,7 @@ namespace WebApplication1.Controllers
 
             if (Password == team.Password)
             {
+                TempData["message"] = $"{highProvider.GetTeam(CupId).Name} was removed";
                 highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
             }
 
@@ -201,14 +237,23 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Login(LoginCupModel model)
         {
-            var team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == model.Name);
-
-            if (team != null && team.Password == model.Password)
+            if (ModelState.IsValid)
             {
-                HttpContext.Session.SetInt32(TeamKey, team.TeamId);
-            }
+                var team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == model.Name);
 
-            return RedirectToAction("Index");
+                if (team != null && team.Password == model.Password)
+                {
+                    HttpContext.Session.SetInt32(TeamKey, team.TeamId);
+                }
+
+                TempData["message"] = $"You have been logged as {team.Name}";
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public IActionResult LogOut()

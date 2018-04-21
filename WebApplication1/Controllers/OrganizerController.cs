@@ -52,18 +52,27 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Create(Tournament _tournament)
         {
-            highProvider.CreateTournament(_tournament);
-
-            if (_tournament != null && _tournament.Password == _tournament.Password)
+            if (ModelState.IsValid)
             {
-                HttpContext.Session.SetInt32(OrganaizerKey, _tournament.TournamentId);
-            } 
+                highProvider.CreateTournament(_tournament);
 
-            return RedirectToAction("Index", new OrganaizerMainInfo()
+                if (_tournament != null && _tournament.Password == _tournament.Password)
+                {
+                    HttpContext.Session.SetInt32(OrganaizerKey, _tournament.TournamentId);
+                }
+
+                TempData["message"] = $"{_tournament.Name} has been created";
+
+                return RedirectToAction("Index", new OrganaizerMainInfo()
                 {
                     Tournament = _tournament,
                     SelectedTeam = selectedTeam
                 });
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpGet]
@@ -78,17 +87,26 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Edit(Tournament tournament)
         {
-            highProvider.UpdateTournament(tournament.TournamentId, tournament);
-            
-            var value = HttpContext.Session.GetInt32(OrganaizerKey);
-            Tournament _tournament = value != null ? highProvider.GetTournament(value.Value) : null;
+            if (ModelState.IsValid)
+            {
+                highProvider.UpdateTournament(tournament.TournamentId, tournament);
 
-            return View("Index", new OrganaizerMainInfo()
+                var value = HttpContext.Session.GetInt32(OrganaizerKey);
+                Tournament _tournament = value != null ? highProvider.GetTournament(value.Value) : null;
+
+                TempData["message"] = $"{_tournament.Name} has been saved";
+
+                return View("Index", new OrganaizerMainInfo()
                 {
                     Tournament = _tournament,
                     SelectedTeam = selectedTeam,
                     ShowConfirming = false
                 });
+            }
+            else
+            {
+                return View(tournament);
+            }
         }
 
         [HttpGet]
@@ -126,6 +144,7 @@ namespace WebApplication1.Controllers
 
             if(Password == tournament.Password)
             {
+                TempData["message"] = $"{highProvider.GetTeam(TeamId).Name} was removed";
                 highProvider.RemoveTeamFromTournament(TeamId, tournament.TournamentId);
             }
 
@@ -145,14 +164,23 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Login(LoginCupModel model)
         {
-            var tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == model.Name);
-
-            if (tournament != null && tournament.Password == model.Password)
+            if (ModelState.IsValid)
             {
-                HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
-            }
+                var tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == model.Name);
 
-            return RedirectToAction("Index");
+                if (tournament != null && tournament.Password == model.Password)
+                {
+                    HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
+                }
+
+                TempData["message"] = $"You have been logged as {tournament.Name}";
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public IActionResult LogOut()

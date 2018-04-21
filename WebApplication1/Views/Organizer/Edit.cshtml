@@ -16,28 +16,28 @@
 
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
+                <div><span asp-validation-for="Name" class="text-danger"></span></div>
                 <input asp-for="Name" class="form-control" value="@Model.Name"/>
-                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
+                <div><span asp-validation-for="StartDate" class="text-danger"></span></div>
                 <input type="date" asp-for="StartDate" class="form-control" value="@Model.StartDate" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EndDate" class="control-label"></label>
+                <div><span asp-validation-for="EndDate" class="text-danger"></span></div>
                 <input type="date" asp-for="EndDate" class="form-control"  value="@Model.EndDate" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MaxCountTeams" class="control-label"></label>
+                <div><span asp-validation-for="MaxCountTeams" class="text-danger"></span></div>
                 <input asp-for="MaxCountTeams" class="form-control" value="@Model.MaxCountTeams" />
-                <span asp-validation-for="MaxCountTeams" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Mail" class="control-label"></label>
+                <div><span asp-validation-for="Mail" class="text-danger"></span></div>
                 <input type="email" asp-for="Mail" class="form-control" value="@Model.Mail"/>
-                <span asp-validation-for="Mail" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
