@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Model_Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,5 +17,7 @@ namespace DAL
         TEntity Get(Expression<Func<TEntity, bool>> where);
         IEnumerable<TEntity> GetMany(Expression<Func<TEntity, bool>> where);
         IEnumerable<TEntity> GetAll();
+
+        void AddTeamTournaments(Team team, Tournament tournament);
     }
 }

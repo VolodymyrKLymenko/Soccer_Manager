@@ -10,6 +10,7 @@ namespace Services
         void UpdateTeam(int teamId, Team updatedTeam);
         void RemoveTeam(int teamId);
         void RemoveTeamFromTournament(int teamId, int tournamentId);
+        bool AddTeamToTournament(int teamId, int tournamentId);
         Team GetTeam(int teamId);
         IEnumerable<Team> GetAllTeam();
         IEnumerable<Tournament> GetAllTournaments();
@@ -102,7 +103,21 @@ namespace Services
             tournamentFromDb.TeamTournaments.RemoveAll(tt => tt.TournamentId == teamId);
 
             _tournamentRepository.Update(tournamentFromDb);
+        }
 
+
+        public bool AddTeamToTournament(int teamId, int tournamentId)
+        {
+            var tournamentFromDb = _tournamentRepository.Get(t => t.TournamentId == tournamentId);
+            var teamFromDb = _teamRepository.Get(t => t.TeamId == teamId);
+
+            if(teamFromDb.TeamTournaments.Find(tt => { return tt.TeamId == tournamentId && tt.TournamentId == teamId; }) != null)
+            {
+                return false;
+            }
+
+            _tournamentRepository.AddTeamTournaments(teamFromDb, tournamentFromDb);
+            return true;
         }
     }
 

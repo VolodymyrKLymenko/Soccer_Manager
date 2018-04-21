@@ -34,7 +34,7 @@ namespace WebApplication1.Controllers
             var value = HttpContext.Session.GetInt32(OrganaizerKey);
             Tournament tournament = value!=null ? highProvider.GetTournament(value.Value) : null;
 
-            selectedTeam = id != -1 ? highProvider.GetTeam(id) : null;
+            selectedTeam = id != -1 ? highProvider.GetTeam(id) : highProvider.GetAllTeam().FirstOrDefault();
 
             return View(new OrganaizerMainInfo()
                 {

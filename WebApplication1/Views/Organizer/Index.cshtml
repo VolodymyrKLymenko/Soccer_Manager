@@ -26,7 +26,7 @@
     {
 
         <div style="text-align: right; padding: 2em; background-color: white;">
-            <a asp-action="LogOut" asp-controller="Organizer">Log Out</a>
+            <a class="btn btn-default" asp-action="LogOut" asp-controller="Organizer">Log Out</a>
         </div>
 
         <div class="infoBlock" style="width: 100%;">
@@ -41,15 +41,31 @@
                 </div>
             </header>
 
-            <ul style="list-style: none; font-size: 2em;">
-                <li>Mail: @Model?.Tournament.Mail</li>
-                <li>Max count of teams: @Model?.Tournament.MaxCountTeams</li>
-                <li>Start date: @Model?.Tournament.StartDate</li>
-                <li>End date: @Model?.Tournament.EndDate</li>
-            </ul>
+            <table class="detailTabel">
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td><strong>Mail</strong></td>
+                    <td>@Model?.Tournament.Mail</td>
+                </tr>
+                <tr>
+                    <td><strong>Max count of teams</strong></td>
+                    <td>@Model?.Tournament.MaxCountTeams</td>
+                </tr>
+                <tr>
+                    <td><strong>Start date</strong></td>
+                    <td>@Model?.Tournament.StartDate</td>
+                </tr>
+                <tr>
+                    <td><strong>End date</strong></td>
+                    <td>@Model?.Tournament.EndDate</td>
+                </tr>
+            </table>
         </div>
 
-        <div class="infoBlock" style="width: 40%; display: inline-block;">
+        <div class="infoBlock" style="width: 45%; display: inline-block;">
 
             <header>
                 Current registered team
@@ -79,7 +95,7 @@
                         </td>
                         <td>
                             <a asp-action="RemoveTeam" asp-controller="Organizer" asp-route-TeamId="@item.TeamId" asp-route-Password="@Model.Tournament.Password" 
-                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
+                               class="btn btn-default glyphicon glyphicon-remove"></a>
                         </td>
                     </tr>
                     i++;
@@ -90,7 +106,7 @@
         <div class="infoBlock" style="width: 50%; float: right; margin-right: -1.5%;">
 
             <header>
-                Current registered team
+                Players (select team)
             </header>
             @if (Model.SelectedTeam != null)
             {
@@ -127,13 +143,15 @@
     else
     {
         <div class="infoBlock" style="width: 30%; margin-left: 35%;">
-            <header>At first you must: </header>
+            <header>Welcome: </header>
 
             <div style="text-align:center">
                 <br />
-                <a class="btn btn-success" asp-action="Login" asp-controller="Organizer">Log In</a>
-                <br /><span>Or</span><br />
-                <a class="btn btn-success" asp-action="Create" asp-controller="Organizer">Create New</a>
+                <label>Already Register: </label>
+                <a class="btn btn-default" asp-action="Login" asp-controller="Organizer">Log In</a>
+                <br /><br />
+                <label>Create new cup:</label>
+                <a class="btn btn-default" asp-action="Create" asp-controller="Organizer">Register</a>
                 <br />
             </div>
         </div>

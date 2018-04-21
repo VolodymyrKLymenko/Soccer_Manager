@@ -14,12 +14,14 @@ namespace DAL.Repository_Realisation
     {
         private readonly SoccerContext _dataContext;
         private readonly DbSet<Tournament> _dbset;
+        private readonly DbSet<Team> _dbsetTeams;
 
 
         public TournamentRepository(DataContextProvider dcProvider)
         {
             _dataContext = dcProvider.Get();
             _dbset = _dataContext.Tournaments;
+            _dbsetTeams = _dataContext.Teams;
         }
 
         public void Add(Tournament item)
@@ -71,6 +73,18 @@ namespace DAL.Repository_Realisation
         public IEnumerable<Tournament> GetAll()
         {
             return _dbset.Include(t => t.TeamTournaments).ThenInclude(tt => tt.Team).ToList();
+        }
+
+        public void AddTeamTournaments(Team team, Tournament tournament)
+        {
+            Tournament cup = _dbset.Where(t => t.TournamentId == tournament.TournamentId).FirstOrDefault();
+            Team _team = _dbsetTeams.Where(tt => tt.TeamId == team.TeamId).FirstOrDefault();
+
+            if (cup != null)
+            {
+                cup.TeamTournaments.Add(new TeamTournament() { Team = _team, Tournament = cup });
+            }
+            _dataContext.SaveChanges();
         }
     }
 }

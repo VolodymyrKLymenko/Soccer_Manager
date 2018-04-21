@@ -33,7 +33,8 @@ namespace WebApplication1.Controllers
 
             return View(new TeamMainInfo()
             {
-                Team = team
+                Team = team,
+                Cups = highProvider.GetAllTournaments().ToList()
             });
         }
 
@@ -55,7 +56,8 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("Index", new TeamMainInfo()
             {
-                Team = _team
+                Team = _team,
+                Cups = highProvider.GetAllTournaments().ToList()
             });
         }
 
@@ -126,7 +128,8 @@ namespace WebApplication1.Controllers
             return View("Index", new TeamMainInfo()
             {
                 Team = _team,
-                ShowConfirming = false
+                ShowConfirming = false,
+                Cups = highProvider.GetAllTournaments().ToList()
             });
         }
 
@@ -139,7 +142,8 @@ namespace WebApplication1.Controllers
             return View("Index", new TeamMainInfo()
             {
                 Team = team,
-                ShowConfirming = true
+                ShowConfirming = true,
+                Cups = highProvider.GetAllTournaments().ToList()
             });
         }
 
@@ -160,6 +164,33 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult RemoveCup(int CupId, string Password)
+        {
+            var value = HttpContext.Session.GetInt32(TeamKey);
+            Team team = value != null ? highProvider.GetTeam(value.Value) : null;
+
+            if (Password == team.Password)
+            {
+                highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
+            }
+
+            return RedirectToAction("Index", "Team");
+        }
+
+        public IActionResult RegistrToCup(int CupId, string Password)
+        {
+            var value = HttpContext.Session.GetInt32(TeamKey);
+            Team team = value != null ? highProvider.GetTeam(value.Value) : null;
+
+            if (Password == team.Password)
+            {
+                highProvider.AddTeamToTournament(team.TeamId, CupId);
+            }
+
+            return RedirectToAction("Index", "Team");
+        }
+
 
         [HttpGet]
         public IActionResult Login()

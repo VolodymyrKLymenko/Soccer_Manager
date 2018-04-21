@@ -72,6 +72,11 @@ namespace DAL.Repository_Realisation
         {
             return  _dbset.Include(t => t.Team).ToList();
         }
+
+        public void AddTeamTournaments(Team team, Tournament tournament)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

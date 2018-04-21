@@ -26,7 +26,7 @@
     {
 
         <div style="text-align: right; padding: 2em; background-color: white;">
-            <a asp-action="LogOut" asp-controller="Team">Log Out</a>
+            <a class="btn btn-default" asp-action="LogOut" asp-controller="Team">Log Out</a>
         </div>
 
         <div class="infoBlock" style="width: 100%;">
@@ -39,11 +39,23 @@
                     <a asp-action="Confirm" asp-controller="Team"
                        style="background-color: steelblue;" class="btn btn-success glyphicon glyphicon-trash"></a>
                 </div>
+                <h3>Mail: @Model?.Team.Mail</h3>
             </header>
-
-            <ul style="list-style: none; font-size: 2em;">
-                <li>Mail: @Model?.Team.Mail</li>
-            </ul>
+            
+            <table class="detailTabel">
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var cup in Model.Cups)
+                {
+                    <tr>
+                        <td><a asp-action="Cup" asp-controller="Home" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
+                        <td>@cup.Mail</td>
+                        <td><a asp-action="RegistrToCup" asp-route-CupId="@cup.TournamentId" asp-route-Password="@Model.Team.Password" class="btn btn-default">Register</a></td>
+                    </tr>
+                }
+            </table>
         </div>
 
         <div class="infoBlock" style="width: 48%; display: inline-block;">
@@ -87,11 +99,11 @@
                         </td>
                         <td>
                             <a asp-action="EditPlayer" asp-controller="Team" asp-route-playerId="@item.PlayerId"
-                               style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></a>
+                               style="position: inherit;" class="btn btn-default glyphicon glyphicon-wrench"></a>
                         </td>
                         <td>
                             <a asp-action="RemovePlayer" asp-controller="Team" asp-route-PlayerId="@item.PlayerId" asp-route-Password="@Model.Team.Password"
-                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
+                               class="btn btn-default glyphicon glyphicon-remove"></a>
                         </td>
                     </tr>
                     i++;
@@ -114,7 +126,7 @@
                         <td>Remove</td>
                     </tr>
                 </thead>
-                @*@{i = 1;}
+                @{i = 1;}
                 @foreach (Tournament item in Model?.Team.TeamTournaments.Select(sc => sc.Tournament).ToList())
                 {
                     <tr>
@@ -122,31 +134,33 @@
                             @i
                         </td>
                         <td>
-                            /<a asp-action="Index" asp-controller="Team" asp-route-id="@item.TournamentId">@item.Name</a>
+                            <a asp-action="Cup" asp-controller="Home" asp-route-id="@item.TournamentId">@item.Name</a>
                         </td>
                         <td>
                             @item.Mail
                         </td>
                         <td>
-                            <a asp-action="Remove" asp-controller="Team" asp-route-TeamId="@item.TournamentId" asp-route-Password="@Model.Tournament.Password"
-                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
+                            <a asp-action="RemoveCup" asp-controller="Team" asp-route-CupId="@item.TournamentId" asp-route-Password="@Model.Team.Password"
+                               class="btn btn-default glyphicon glyphicon-remove"></a>
                         </td>
                     </tr>
                     i++;
-                 }*@
+                 }
             </table>
         </div>
     }
     else
     {
         <div class="infoBlock" style="width: 30%; margin-left: 35%;">
-            <header>At first you must: </header>
+            <header>Welcome: </header>
 
             <div style="text-align:center">
                 <br />
-                <a class="btn btn-success" asp-action="Login" asp-controller="Team">Log In</a>
-                <br /><span>Or</span><br />
-                <a class="btn btn-success" asp-action="Create" asp-controller="Team">Create Team</a>
+                <label>Already Register:</label>
+                <a class="btn btn-default" asp-action="Login" asp-controller="Team">Log In</a>
+                <br /><br />
+                <label>Create new team:</label>
+                <a class="btn btn-default" asp-action="Create" asp-controller="Team">Register</a>
                 <br />
             </div>
         </div>
