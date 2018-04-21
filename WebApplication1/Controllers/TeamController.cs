@@ -207,7 +207,7 @@ namespace WebApplication1.Controllers
 
             if (Password == team.Password)
             {
-                TempData["message"] = $"{highProvider.GetTeam(CupId).Name} was removed";
+                TempData["message"] = $"{highProvider.GetTournament(CupId).Name} was removed";
                 highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
             }
 
@@ -221,6 +221,7 @@ namespace WebApplication1.Controllers
 
             if (Password == team.Password)
             {
+                TempData["message"] = $"You have been registr for the {highProvider.GetTournament(CupId).Name}";
                 highProvider.AddTeamToTournament(team.TeamId, CupId);
             }
 
