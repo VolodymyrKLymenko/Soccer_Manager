@@ -20,7 +20,7 @@
     </div>
 }
 
-    <div class="container">
+    <div>
 
         @if (@Model.Team != null)
     {
@@ -34,7 +34,7 @@
             <div style="margin-left: 30px;" class="alert alert-success">@TempData["message"]</div>
         }
 
-        <div class="infoBlock" style="width: 100%;">
+        <div class="infoBlock" style="width: 97%;">
             <header>
                 <h2 style="display: inline;">Your team: @Model.Team.Name</h2>
 
@@ -63,7 +63,7 @@
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 48%; display: inline-block;">
+        <div class="infoBlock" style="width: 45%; display: inline-block;">
 
             <header>
                 Players
@@ -81,7 +81,6 @@
                         <td>Name</td>
                         <td>Surname</td>
                         <td>Position</td>
-                        <td>Age</td>
                         <td>Edit</td>
                         <td>Remove</td>
                     </tr>
@@ -103,9 +102,6 @@
                         @item.Position
                     </td>
                     <td>
-                        @item.Age
-                    </td>
-                    <td>
                         <a asp-action="EditPlayer" asp-controller="Team" asp-route-playerId="@item.PlayerId"
                            style="position: inherit;" class="btn btn-default glyphicon glyphicon-wrench"></a>
                     </td>
@@ -119,7 +115,7 @@
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 48%; float: right; margin-right: -1.5%;">
+        <div class="infoBlock" style="width: 45%; float: right;">
 
             <header>
                 Current tournament(s)
@@ -159,7 +155,7 @@
 }
 else
 {
-    <div class="infoBlock" style="width: 30%; margin-left: 35%;">
+    <div class="infoBlock" style="margin: 3em auto;">
         <header>Welcome: </header>
 
         <div style="text-align:center">

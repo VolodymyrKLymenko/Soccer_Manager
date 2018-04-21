@@ -26,6 +26,7 @@ nav {
     margin-right: 2em;
 }
 nav ul {
+    min-width: 120px;
     position: absolute;
     height: 100%;
     list-style-type: none;

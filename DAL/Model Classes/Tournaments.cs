@@ -23,8 +23,6 @@ namespace DAL.Model_Classes
         [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive number")]
         public int MaxCountTeams { get; set; }
 
-        [Required(ErrorMessage = "Please enter a password")]
-        [UIHint("password")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Please enter a mail")]

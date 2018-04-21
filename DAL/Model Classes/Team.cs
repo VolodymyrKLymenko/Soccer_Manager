@@ -14,8 +14,6 @@ namespace DAL.Model_Classes
         [Required(ErrorMessage = "Please enter a mail")]
         public string Mail { get; set; }
 
-        [Required(ErrorMessage = "Please enter a password")]
-        [UIHint("password")]
         public string Password { get; set; }
 
         public List<Player> Players { get; set; }

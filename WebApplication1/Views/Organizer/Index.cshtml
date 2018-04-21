@@ -20,7 +20,7 @@
     </div>
 }
 
-    <div class="container">
+    <div>
 
     @if (@Model.Tournament != null)
     {
@@ -34,7 +34,7 @@
             <div style="margin-left: 30px;" class="alert alert-success">@TempData["message"]</div>
         }
 
-        <div class="infoBlock" style="width: 100%;">
+        <div class="infoBlock" style="width: 97%;">
             <header>
                 <h2 style="display: inline;">Your cup: @Model.Tournament.Name</h2>
 
@@ -108,7 +108,7 @@
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 50%; float: right; margin-right: -1.5%;">
+        <div class="infoBlock" style="width: 45%; float: right;">
 
             <header>
                 Players (select team)
@@ -147,8 +147,8 @@
 }
 else
 {
-    <div class="infoBlock" style="width: 30%; margin-left: 35%;">
-        <header>Welcome: </header>
+    <div class="infoBlock" style="margin: 3em auto;">
+        <header>Welcome organizer: </header>
 
         <div style="text-align:center">
             <br />
