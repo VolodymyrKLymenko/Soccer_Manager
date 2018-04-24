@@ -171,9 +171,9 @@ namespace WebApplication1.Controllers
                 if (tournament != null && tournament.Password == model.Password)
                 {
                     HttpContext.Session.SetInt32(OrganaizerKey, tournament.TournamentId);
+                    TempData["message"] = $"You have been logged as {tournament.Name}";
                 }
 
-                TempData["message"] = $"You have been logged as {tournament.Name}";
 
                 return RedirectToAction("Index");
             }

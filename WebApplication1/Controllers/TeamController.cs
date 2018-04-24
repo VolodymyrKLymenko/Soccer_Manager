@@ -245,9 +245,9 @@ namespace WebApplication1.Controllers
                 if (team != null && team.Password == model.Password)
                 {
                     HttpContext.Session.SetInt32(TeamKey, team.TeamId);
+                    TempData["message"] = $"You have been logged as {team.Name}";
                 }
 
-                TempData["message"] = $"You have been logged as {team.Name}";
 
                 return RedirectToAction("Index");
             }
