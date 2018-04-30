@@ -11,8 +11,8 @@ using System;
 namespace DAL.Migrations
 {
     [DbContext(typeof(SoccerContext))]
-    [Migration("20180417064155_Initial")]
-    partial class Initial
+    [Migration("20180409192555_new")]
+    partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

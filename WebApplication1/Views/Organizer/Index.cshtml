@@ -20,7 +20,7 @@
     </div>
 }
 
-    <div>
+<div class="container">
 
     @if (@Model.Tournament != null)
     {
@@ -29,12 +29,7 @@
             <a class="btn btn-default" asp-action="LogOut" asp-controller="Organizer">Log Out</a>
         </div>
 
-        @if (TempData["message"] != null)
-        {
-            <div style="margin-left: 30px;" class="alert alert-success">@TempData["message"]</div>
-        }
-
-        <div class="infoBlock" style="width: 97%;">
+        <div class="infoBlock" style="width: 100%;">
             <header>
                 <h2 style="display: inline;">Your cup: @Model.Tournament.Name</h2>
 
@@ -46,31 +41,15 @@
                 </div>
             </header>
 
-            <table class="detailTabel">
-                <tr>
-                    <th></th>
-                    <th></th>
-                </tr>
-                <tr>
-                    <td><strong>Mail</strong></td>
-                    <td>@Model?.Tournament.Mail</td>
-                </tr>
-                <tr>
-                    <td><strong>Max count of teams</strong></td>
-                    <td>@Model?.Tournament.MaxCountTeams</td>
-                </tr>
-                <tr>
-                    <td><strong>Start date</strong></td>
-                    <td>@Model?.Tournament.StartDate</td>
-                </tr>
-                <tr>
-                    <td><strong>End date</strong></td>
-                    <td>@Model?.Tournament.EndDate</td>
-                </tr>
-            </table>
+            <ul style="list-style: none; font-size: 2em;">
+                <li>Mail: @Model?.Tournament.Mail</li>
+                <li>Max count of teams: @Model?.Tournament.MaxCountTeams</li>
+                <li>Start date: @Model?.Tournament.StartDate</li>
+                <li>End date: @Model?.Tournament.EndDate</li>
+            </ul>
         </div>
 
-        <div class="infoBlock" style="width: 45%; display: inline-block;">
+        <div class="infoBlock" style="width: 40%; display: inline-block;">
 
             <header>
                 Current registered team
@@ -87,81 +66,79 @@
                 </thead>
                 @{int i = 1;}
                 @foreach (Team item in Model?.Tournament.TeamTournaments.Select(sc => sc.Team).ToList())
-            {
-                <tr>
-                    <td>
-                        @i
-                    </td>
-                    <td>
-                        <a asp-action="Index" asp-controller="Organizer" asp-route-id="@item.TeamId">@item.Name</a>
-                    </td>
-                    <td>
-                        @item.Mail
-                    </td>
-                    <td>
-                        <a asp-action="RemoveTeam" asp-controller="Organizer" asp-route-TeamId="@item.TeamId" asp-route-Password="@Model.Tournament.Password"
-                           class="btn btn-default glyphicon glyphicon-remove"></a>
-                    </td>
-                </tr>
-            i++;
-        }
+                {
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            <a asp-action="Index" asp-controller="Organizer" asp-route-id="@item.TeamId">@item.Name</a>
+                        </td>
+                        <td>
+                            @item.Mail
+                        </td>
+                        <td>
+                            <a asp-action="RemoveTeam" asp-controller="Organizer" asp-route-TeamId="@item.TeamId" asp-route-Password="@Model.Tournament.Password" 
+                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
+                        </td>
+                    </tr>
+                    i++;
+                }
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 45%; float: right;">
+        <div class="infoBlock" style="width: 50%; float: right; margin-right: -1.5%;">
 
             <header>
-                Players (select team)
+                Current registered team
             </header>
             @if (Model.SelectedTeam != null)
-        {
-            <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
-                <thead style="font: bold 1.2em arial, verdana">
-                    <tr>
-                        <td>Position</td>
-                        <td>Name</td>
-                        <td>Age</td>
-                    </tr>
-                </thead>
-                @foreach (Player item in Model?.SelectedTeam.Players)
             {
-                <tr>
-                    <td>
-                        @item.Position
-                    </td>
-                    <td>
-                        @item.Name @item.Surname
-                    </td>
-                    <td>
-                        @item.Age
-                    </td>
-                </tr>
-        }
-            </table>
+                <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
+                    <thead style="font: bold 1.2em arial, verdana">
+                        <tr>
+                            <td>Position</td>
+                            <td>Name</td>
+                            <td>Age</td>
+                        </tr>
+                    </thead>
+                    @foreach (Player item in Model?.SelectedTeam.Players)
+                    {
+                        <tr>
+                            <td>
+                                @item.Position
+                            </td>
+                            <td>
+                                @item.Name @item.Surname
+                            </td>
+                            <td>
+                                @item.Age
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <h2 class="text-center">Select Team</h2>
+            }
+        </div>
     }
     else
     {
-        <h2 class="text-center">Select Team</h2>
-}
+        <div class="infoBlock" style="width: 30%; margin-left: 35%;">
+            <header>At first you must: </header>
+
+            <div style="text-align:center">
+                <br />
+                <a class="btn btn-success" asp-action="Login" asp-controller="Organizer">Log In</a>
+                <br /><span>Or</span><br />
+                <a class="btn btn-success" asp-action="Create" asp-controller="Organizer">Create New</a>
+                <br />
+            </div>
         </div>
-}
-else
-{
-    <div class="infoBlock" style="margin: 3em auto;">
-        <header>Welcome organizer: </header>
 
-        <div style="text-align:center">
-            <br />
-            <label>Already Register: </label>
-            <a class="btn btn-default" asp-action="Login" asp-controller="Organizer">Log In</a>
-            <br /><br />
-            <label>Create new cup:</label>
-            <a class="btn btn-default" asp-action="Create" asp-controller="Organizer">Register</a>
-            <br />
-        </div>
-    </div>
-
-}
+    }
 
 
-    </div>
+</div>
