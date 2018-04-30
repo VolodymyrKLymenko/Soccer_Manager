@@ -10,9 +10,11 @@ using WebApplication1.Models.ViewModels;
 using Services;
 using WebApplication1.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class TeamController : Controller
     {
         private IHighLevelSoccerManagerService highProvider;

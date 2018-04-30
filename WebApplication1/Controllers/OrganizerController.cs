@@ -1,32 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using DAL;
 using DAL.Model_Classes;
-using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
 using Services;
-using WebApplication1.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class OrganizerController : Controller
     {
-        private IHighLevelSoccerManagerService highProvider;
-        private ILowLevelSoccerManagmentService lowProvider;
+        private readonly IHighLevelSoccerManagerService highProvider;
 
         private Team selectedTeam = null;
-
         private const string OrganaizerKey = "organizer";
 
-        public OrganizerController(IHighLevelSoccerManagerService high
-            , ILowLevelSoccerManagmentService low)
+        public OrganizerController(IHighLevelSoccerManagerService high)
         {
             highProvider = high;
-            lowProvider = low;
         }
 
         public IActionResult Index(int id = -1)

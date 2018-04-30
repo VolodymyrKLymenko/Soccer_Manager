@@ -62,15 +62,15 @@ namespace DAL.Repository_Realisation
             return _dbset.Where(where).FirstOrDefault<Team>();
         }
 
-        public IEnumerable<Team> GetMany(Expression<Func<Team, bool>> where)
+        public IQueryable<Team> GetMany(Expression<Func<Team, bool>> where)
         {
-            return _dbset.Where(where).ToList();
+            return _dbset.Where(where);
         }
 
-        public IEnumerable<Team> GetAll()
+        public IQueryable<Team> GetAll()
         {
             var lst = _dbset.Include(t => t.Players)
-                .Include(t => t.TeamTournaments).ThenInclude(tt => tt.Tournament).ToList();
+                .Include(t => t.TeamTournaments).ThenInclude(tt => tt.Tournament);
 
             return lst;
         }

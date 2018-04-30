@@ -57,14 +57,14 @@ namespace DAL
             return _dbset.Where(where).FirstOrDefault<TEntity>();
         }
 
-        public IEnumerable<TEntity> GetMany(Expression<Func<TEntity, bool>> where)
+        public IQueryable<TEntity> GetMany(Expression<Func<TEntity, bool>> where)
         {
-            return _dbset.Where(where).ToList();
+            return _dbset.Where(where);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
-            var lst = _dbset.ToList();
+            var lst = _dbset;
             return lst;
         }
     }

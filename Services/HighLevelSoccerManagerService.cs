@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DAL;
 using DAL.Model_Classes;
 
@@ -11,8 +12,8 @@ namespace Services
         void RemoveTeam(int teamId);
         void RemoveTeamFromTournament(int teamId, int tournamentId);
         Team GetTeam(int teamId);
-        IEnumerable<Team> GetAllTeam();
-        IEnumerable<Tournament> GetAllTournaments();
+        IQueryable<Team> GetAllTeam();
+        IQueryable<Tournament> GetAllTournaments();
 
         int CreateTournament(Tournament tournament);
         void UpdateTournament(int tournamentId, Tournament updatedTournament);
@@ -42,7 +43,7 @@ namespace Services
             return _tournamentRepository.Add(tournament);
         }
 
-        public IEnumerable<Team> GetAllTeam()
+        public IQueryable<Team> GetAllTeam()
         {
             return _teamRepository.GetAll();
         }
@@ -57,7 +58,7 @@ namespace Services
             _teamRepository.Delete(team => team.TeamId == teamId);
         }
 
-        public IEnumerable<Tournament> GetAllTournaments()
+        public IQueryable<Tournament> GetAllTournaments()
         {
             return _tournamentRepository.GetAll();
         }

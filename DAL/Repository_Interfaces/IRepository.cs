@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using DAL.Model_Classes;
 
 namespace DAL
 {
@@ -14,7 +15,7 @@ namespace DAL
         void Delete(Expression<Func<TEntity, bool>> where);
         TEntity Get(long id);
         TEntity Get(Expression<Func<TEntity, bool>> where);
-        IEnumerable<TEntity> GetMany(Expression<Func<TEntity, bool>> where);
-        IEnumerable<TEntity> GetAll();
+        IQueryable<TEntity> GetMany(Expression<Func<TEntity, bool>> where);
+        IQueryable<TEntity> GetAll();
     }
 }

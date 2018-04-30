@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-
+using System.Threading.Tasks;
 using DAL;
 using DAL.Model_Classes;
 using Microsoft.EntityFrameworkCore;
@@ -65,16 +65,16 @@ namespace DAL.Repository_Realisation
             return cups.Where(where).FirstOrDefault<Tournament>();
         }
 
-        public IEnumerable<Tournament> GetMany(Expression<Func<Tournament, bool>> where)
+        public IQueryable<Tournament> GetMany(Expression<Func<Tournament, bool>> where)
         {
             var cups = _dbset.Include(t => t.TeamTournaments).ThenInclude(tt => tt.Team);
 
-            return cups.Where(where).ToList();
+            return cups.Where(where);
         }
 
-        public IEnumerable<Tournament> GetAll()
+        public IQueryable<Tournament> GetAll()
         {
-            return _dbset.Include(t => t.TeamTournaments).ThenInclude(tt => tt.Team).ToList();
+            return _dbset.Include(t => t.TeamTournaments).ThenInclude(tt => tt.Team);
         }
     }
 }

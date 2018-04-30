@@ -63,16 +63,16 @@ namespace DAL.Repository_Realisation
             return players.Where(where).FirstOrDefault<Player>();
         }
 
-        public IEnumerable<Player> GetMany(Expression<Func<Player, bool>> where)
+        public IQueryable<Player> GetMany(Expression<Func<Player, bool>> where)
         {
             var players = _dbset.Include(t => t.Team);
 
-            return players.Where(where).ToList();
+            return players.Where(where);
         }
 
-        public IEnumerable<Player> GetAll()
+        public IQueryable<Player> GetAll()
         {
-            return  _dbset.Include(t => t.Team).ToList();
+            return  _dbset.Include(t => t.Team);
         }
     }
 
