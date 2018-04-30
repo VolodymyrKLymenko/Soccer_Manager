@@ -2,8 +2,14 @@
 
 <ul>
     <li><a asp-action="Index" asp-controller="Home" asp-route-category=""> Home </a></li>
-    <li><a asp-action="Index" asp-controller="Organizer" asp-route-category="">Organizer</a></li>
-    <li><a asp-action="Index" asp-controller="Team" asp-route-category="">Team</a></li>
+    @if (User.IsInRole("Organizer"))
+    {
+        <li><a asp-action="Index" asp-controller="Organizer" asp-route-category="">Organizer</a></li>
+    }
+    @if(User.IsInRole("Team"))
+    {
+        <li><a asp-action="Index" asp-controller="Team" asp-route-category="">Team</a></li>
+    }
     <li><a asp-action="Contact" asp-controller="Home" asp-route-category="">Contact</a></li>
     <li><a asp-action="About" asp-controller="Home" asp-route-category="">About</a></li>
 </ul>

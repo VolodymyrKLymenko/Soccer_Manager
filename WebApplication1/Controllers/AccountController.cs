@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DAL.Model_Classes;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Services;
@@ -16,6 +17,8 @@ namespace WebApplication1.Controllers
 {
     public class AccountController : Controller
     {
+        private static string TeamRole = "Team";
+        private static string OrgRole = "Organizer";
         private readonly IHighLevelSoccerManagerService _highProvider;
 
         public AccountController(IHighLevelSoccerManagerService high)
@@ -39,7 +42,7 @@ namespace WebApplication1.Controllers
                     Tournament user = await _highProvider.GetAllTournaments().FirstOrDefaultAsync(u => u.Name == model.Name);
                     if (user != null)
                     {
-                        await Authenticate(model.Name); // аутентифiкацiя
+                        await Authenticate(model.Name, OrgRole); // аутентифiкацiя
     
                         return RedirectToAction("Index", "Home");
                     }
@@ -50,7 +53,7 @@ namespace WebApplication1.Controllers
                     Team user = await _highProvider.GetAllTeam().FirstOrDefaultAsync(u => u.Name == model.Name);
                     if (user != null)
                     {
-                        await Authenticate(model.Name); // аутентифiкацiя
+                        await Authenticate(model.Name, TeamRole); // аутентифiкацiя
 
                         return RedirectToAction("Index", "Home");
                     }
@@ -89,12 +92,13 @@ namespace WebApplication1.Controllers
             return View(model);*/
         }
 
-        private async Task Authenticate(string userName)
+        private async Task Authenticate(string userName, string role)
         {
             // создаем один claim
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

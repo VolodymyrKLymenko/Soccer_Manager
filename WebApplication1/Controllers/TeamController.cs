@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DAL;
 using DAL.Model_Classes;
-using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
 using Services;
-using WebApplication1.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Team")]
     public class TeamController : Controller
     {
         private IHighLevelSoccerManagerService highProvider;

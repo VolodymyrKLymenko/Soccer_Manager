@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Organizer")]
     public class OrganizerController : Controller
     {
         private readonly IHighLevelSoccerManagerService highProvider;
