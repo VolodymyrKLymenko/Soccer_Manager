@@ -20,16 +20,21 @@
     </div>
 }
 
-<div class="container">
+    <div>
 
-    @if (@Model.Team != null)
+        @if (@Model.Team != null)
     {
 
         <div style="text-align: right; padding: 2em; background-color: white;">
-            <a asp-action="LogOut" asp-controller="Team">Log Out</a>
+            <a class="btn btn-default" asp-action="LogOut" asp-controller="Team">Log Out</a>
         </div>
 
-        <div class="infoBlock" style="width: 100%;">
+        @if (TempData["message"] != null)
+        {
+            <div style="margin-left: 30px;" class="alert alert-success">@TempData["message"]</div>
+        }
+
+        <div class="infoBlock" style="width: 97%;">
             <header>
                 <h2 style="display: inline;">Your team: @Model.Team.Name</h2>
 
@@ -39,19 +44,34 @@
                     <a asp-action="Confirm" asp-controller="Team"
                        style="background-color: steelblue;" class="btn btn-success glyphicon glyphicon-trash"></a>
                 </div>
+                <h3>Mail: @Model?.Team.Mail</h3>
             </header>
 
-            <ul style="list-style: none; font-size: 2em;">
-                <li>Mail: @Model?.Team.Mail</li>
-            </ul>
+            <table class="detailTabel">
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var cup in Model.Cups)
+            {
+                <tr>
+                    <td><a asp-action="Cup" asp-controller="Home" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
+                    <td>@cup.Mail</td>
+                    <td><a asp-action="RegistrToCup" asp-route-CupId="@cup.TournamentId" asp-route-Password="@Model.Team.Password" class="btn btn-default">Register</a></td>
+                </tr>
+        }
+            </table>
         </div>
 
-        <div class="infoBlock" style="width: 40%; display: inline-block;">
+        <div class="infoBlock" style="width: 45%; display: inline-block;">
 
             <header>
                 Players
-                <a asp-action="AddPlayer" asp-controller="Team"
-                   class="btn btn-success glyphicon" style="background-color: steelblue">Add Player</a>
+
+                <div style="float:right; margin-right:30px;">
+                    <a asp-action="AddPlayer" asp-controller="Team"
+                       class="btn btn-success glyphicon" style="background-color: steelblue">Add Player</a>
+                </div>
             </header>
 
             <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
@@ -61,45 +81,46 @@
                         <td>Name</td>
                         <td>Surname</td>
                         <td>Position</td>
-                        <td>Age</td>
+                        <td>Edit</td>
                         <td>Remove</td>
                     </tr>
                 </thead>
                 @{int i = 1;}
                 @foreach (Player item in Model?.Team.Players)
-                {
-                    <tr>
-                        <td>
-                            @i
-                        </td>
-                        <td>
-                            <a asp-action="Index" asp-controller="Team" asp-route-id="@item.PlayerId">@item.Name</a>
-                        </td>
-                        <td>
-                            @item.Surname
-                        </td>
-                        <td>
-                            @item.Position
-                        </td>
-                        <td>
-                            @item.Age
-                        </td>
-                        <td>
-                            <a asp-action="RemovePlayer" asp-controller="Team" asp-route-PlayerId="@item.PlayerId" asp-route-Password="@Model.Team.Password"
-                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
-                        </td>
-                    </tr>
-                    i++;
-                }
+            {
+                <tr>
+                    <td>
+                        @i
+                    </td>
+                    <td>
+                        <a asp-action="Index" asp-controller="Team" asp-route-id="@item.PlayerId">@item.Name</a>
+                    </td>
+                    <td>
+                        @item.Surname
+                    </td>
+                    <td>
+                        @item.Position
+                    </td>
+                    <td>
+                        <a asp-action="EditPlayer" asp-controller="Team" asp-route-playerId="@item.PlayerId"
+                           style="position: inherit;" class="btn btn-default glyphicon glyphicon-wrench"></a>
+                    </td>
+                    <td>
+                        <a asp-action="RemovePlayer" asp-controller="Team" asp-route-PlayerId="@item.PlayerId" asp-route-Password="@Model.Team.Password"
+                           class="btn btn-default glyphicon glyphicon-remove"></a>
+                    </td>
+                </tr>
+            i++;
+        }
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 50%; float: right; margin-right: -1.5%;">
+        <div class="infoBlock" style="width: 45%; float: right;">
 
             <header>
                 Current tournament(s)
             </header>
-            
+
             <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
                 <thead style="font: bold 1.2em arial, verdana">
                     <tr>
@@ -109,44 +130,46 @@
                         <td>Remove</td>
                     </tr>
                 </thead>
-                @*@{i = 1;}
+                @{i = 1;}
                 @foreach (Tournament item in Model?.Team.TeamTournaments.Select(sc => sc.Tournament).ToList())
-                {
-                    <tr>
-                        <td>
-                            @i
-                        </td>
-                        <td>
-                            /<a asp-action="Index" asp-controller="Team" asp-route-id="@item.TournamentId">@item.Name</a>
-                        </td>
-                        <td>
-                            @item.Mail
-                        </td>
-                        <td>
-                            <a asp-action="Remove" asp-controller="Team" asp-route-TeamId="@item.TournamentId" asp-route-Password="@Model.Tournament.Password"
-                               class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
-                        </td>
-                    </tr>
-                    i++;
-                 }*@
+            {
+                <tr>
+                    <td>
+                        @i
+                    </td>
+                    <td>
+                        <a asp-action="Cup" asp-controller="Home" asp-route-id="@item.TournamentId">@item.Name</a>
+                    </td>
+                    <td>
+                        @item.Mail
+                    </td>
+                    <td>
+                        <a asp-action="RemoveCup" asp-controller="Team" asp-route-CupId="@item.TournamentId" asp-route-Password="@Model.Team.Password"
+                           class="btn btn-default glyphicon glyphicon-remove"></a>
+                    </td>
+                </tr>
+            i++;
+        }
             </table>
         </div>
-    }
-    else
-    {
-        <div class="infoBlock" style="width: 30%; margin-left: 35%;">
-            <header>At first you must: </header>
+}
+else
+{
+    <div class="infoBlock" style="margin: 3em auto;">
+        <header>Welcome: </header>
 
-            <div style="text-align:center">
-                <br />
-                <a class="btn btn-success" asp-action="Login" asp-controller="Team">Log In</a>
-                <br /><span>Or</span><br />
-                <a class="btn btn-success" asp-action="Create" asp-controller="Team">Create Team</a>
-                <br />
-            </div>
+        <div style="text-align:center">
+            <br />
+            <label>Already Register:</label>
+            <a class="btn btn-default" asp-action="Login" asp-controller="Team">Log In</a>
+            <br /><br />
+            <label>Create new team:</label>
+            <a class="btn btn-default" asp-action="Create" asp-controller="Team">Register</a>
+            <br />
         </div>
+    </div>
 
-    }
+}
 
 
-</div>
+    </div>

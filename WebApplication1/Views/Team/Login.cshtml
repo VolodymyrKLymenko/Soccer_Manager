@@ -3,23 +3,22 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="infoBlock" style="width: 30%; margin-left: 35%;">
-    <header>Login</header>
+<div class="infoBlock" style="margin: 3em auto;">
+    <header>Login as team</header>
 
-    <div class="row">
-        <div class="col-md-4" style="width: 90%; margin-left: 5%; margin-top: 2em;">
+    <div style="padding: 1em;">
             <form asp-action="Login">
 
                 <div class="form-group">
                     <label asp-for="Name" class="control-label"></label>
+                    <div><span asp-validation-for="Name" class="text-danger"></span></div>
                     <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Password" class="control-label"></label>
+                    <div><span asp-validation-for="Password" class="text-danger"></span></div>
                     <input type="password" asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
@@ -28,7 +27,6 @@
                     <a asp-action="Index" class="btn btn-default">Cancel</a>
                 </div>
             </form>
-        </div>
     </div>
 
 </div>

@@ -67,6 +67,11 @@ namespace DAL
             var lst = _dbset;
             return lst;
         }
+
+        public void AddTeamTournaments(Team team, Tournament tournament)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
