@@ -7,29 +7,36 @@
 
 <a asp-action="Register" asp-controller="Account">Регистрация</a>
 
-<form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
-    <div class="validation" asp-validation-summary="ModelOnly" />
-    <div class="container">
-        <div class="form-group">
-            <label asp-for="UserType">Enter UserType</label>
-            <select asp-for="UserType">
-                <option value=@UserType.Team>Team</option>
-                <option value=@UserType.Organizer>Organizer</option>
-            </select>
-            <span asp-validation-for="UserType"/>
-        </div>
-        <div class="form-group">
-            <label asp-for="Name">Enter Email</label>
-            <input type="text" asp-for="Name"/>
-            <span asp-validation-for="Name"/>
-        </div>
-        <div class="form-group">
-            <label asp-for="Password">Enter Password</label>
-            <input asp-for="Password"/>
-            <span asp-validation-for="Password"/>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Войти" class="btn"/>
+<div class="infoBlock" style="width: 30%; margin-left: 35%;">
+    <header>Login</header>
+    
+    <div class="row">
+        <div class="col-md-4" style="    width: 90%; margin-left: 5%; margin-top: 2em;">
+            <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
+                <div class="validation" asp-validation-summary="ModelOnly" ></div>
+                    <div class="form-group">
+                        <label asp-for="UserType">Enter UserType</label>
+                        <select asp-for="UserType">
+                            <option value=@UserType.Team>Team</option>
+                            <option value=@UserType.Organizer>Organizer</option>
+                        </select>
+                        <span asp-validation-for="UserType"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name">Enter Email</label>
+                        <input style="float: right" type="text" asp-for="Name"/>
+                        <span asp-validation-for="Name"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password">Enter Password</label>
+                        <input style="float: right" asp-for="Password"/>
+                        <span asp-validation-for="Password"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-default" value="Login"/>
+                    </div>
+            </form>
         </div>
     </div>
-</form>
+
+</div>

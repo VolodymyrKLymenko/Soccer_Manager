@@ -11,7 +11,7 @@
     <div class="middleWindow round-border">
         <h1 class="text-center">Are you sure!</h1>
         <div style="width: 100%;  text-align: center;">
-            <a asp-action="Delete" asp-route-TournamentId="@Model.Tournament.TournamentId" asp-route-Password="@Model.Tournament.Password"
+            <a asp-action="Delete"
                class="btn btn-success glyphicon glyphicon-ok-circle" style="background-color: steelblue"> </a>
             
             <a asp-action="Index" asp-controller="Organizer"
@@ -26,7 +26,7 @@
     {
 
         <div style="text-align: right; padding: 2em; background-color: white;">
-            <a class="btn btn-default" asp-action="LogOut" asp-controller="Organizer">Log Out</a>
+            <a class="btn btn-default" asp-action="Logout" asp-controller="Account">Log Out</a>
         </div>
 
         <div class="infoBlock" style="width: 100%;">
@@ -78,7 +78,7 @@
                             @item.Mail
                         </td>
                         <td>
-                            <a asp-action="RemoveTeam" asp-controller="Organizer" asp-route-TeamId="@item.TeamId" asp-route-Password="@Model.Tournament.Password" 
+                            <a asp-action="RemoveTeam" asp-controller="Organizer" asp-route-TeamId="@item.TeamId"
                                class="btn btn-success glyphicon glyphicon-remove" style="background-color: steelblue"></a>
                         </td>
                     </tr>
@@ -127,15 +127,7 @@
     else
     {
         <div class="infoBlock" style="width: 30%; margin-left: 35%;">
-            <header>At first you must: </header>
-
-            <div style="text-align:center">
-                <br />
-                <a class="btn btn-success" asp-action="Login" asp-controller="Organizer">Log In</a>
-                <br /><span>Or</span><br />
-                <a class="btn btn-success" asp-action="Create" asp-controller="Organizer">Create New</a>
-                <br />
-            </div>
+            <h1>At first you must login: </h1>
         </div>
 
     }

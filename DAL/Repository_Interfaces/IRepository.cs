@@ -17,5 +17,7 @@ namespace DAL
         TEntity Get(Expression<Func<TEntity, bool>> where);
         IQueryable<TEntity> GetMany(Expression<Func<TEntity, bool>> where);
         IQueryable<TEntity> GetAll();
+
+        void AddTeamTournaments(Team team, Tournament tournament);
     }
 }

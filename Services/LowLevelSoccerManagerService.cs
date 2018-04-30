@@ -8,6 +8,7 @@ namespace Services
     {
         void CreatePlayerForTeam(int teamId, Player player);
         void RemovePlayer(int playerId);
+        Player GetPlayer(int playerId);
         void UpdatePlayer(int playerId, Player updatedPlayer);
         IEnumerable<Player> GetAllPlayers();
     }
@@ -34,6 +35,11 @@ namespace Services
             _teamRepository.Update(team);
         }
 
+        public Player GetPlayer(int playerId)
+        {
+            return _payerRepository.Get(playerId);
+        }
+
         public void RemovePlayer(int playerId)
         {
             var player = _payerRepository.Get(p => p.PlayerId == playerId);
@@ -48,6 +54,7 @@ namespace Services
             player.Name = updatedPlayer.Name;
             player.Position = updatedPlayer.Position;
             player.Surname = updatedPlayer.Surname;
+            player.Age = updatedPlayer.Age;
 
             _payerRepository.Update(player);
         }

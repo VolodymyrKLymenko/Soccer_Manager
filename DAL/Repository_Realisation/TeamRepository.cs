@@ -74,6 +74,11 @@ namespace DAL.Repository_Realisation
 
             return lst;
         }
+
+        public void AddTeamTournaments(Team team, Tournament tournament)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

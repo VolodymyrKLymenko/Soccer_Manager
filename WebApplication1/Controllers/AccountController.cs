@@ -44,7 +44,7 @@ namespace WebApplication1.Controllers
                     {
                         await Authenticate(model.Name, OrgRole); // аутентифiкацiя
     
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Organizer");
                     }
                     ModelState.AddModelError("", "Incorrect login or password");
                 }
@@ -55,7 +55,7 @@ namespace WebApplication1.Controllers
                     {
                         await Authenticate(model.Name, TeamRole); // аутентифiкацiя
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Team");
                     }
                     ModelState.AddModelError("", "Incorrect login or password");
                 }
@@ -64,34 +64,51 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult RegisterTeam()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public /*async Task<IActionResult>*/void Register(RegisterModel model)
+        public async Task<IActionResult> RegisterTeam(WebApplication1.Models.ViewModels.TeamModels.RegisterModel model)
         {
-           /* if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                if(model.)
-                User user = await _highProvider.GetAllTournaments().FirstOrDefaultAsync(u => u.Email == model.Email);
+                Team user = await _highProvider.GetAllTeam().FirstOrDefaultAsync(u => u.Name == model.Name);
                 if (user == null)
                 {
-                    // добавляем пользователя в бд
-                    db.Users.Add(new User { Email = model.Email, Password = model.Password });
-                    await db.SaveChangesAsync();
+                    _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
 
-                    await Authenticate(model.Email); // аутентификация
+                    await Authenticate(model.Name, "Team");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Team");
                 }
                 else
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    ModelState.AddModelError("", "Incorrect data");
             }
-            return View(model);*/
+            return View(model);
         }
+        /*[HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterCup(WebApplication1.Models.ViewModels.OrganizerModels.RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Team user = await _highProvider.GetAllTeam().FirstOrDefaultAsync(u => u.Name == model.Name);
+                if (user == null)
+                {
+                    _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
 
+                    await Authenticate(model.Name, "Team"); // аутентификация
+
+                    return RedirectToAction("Index", "Team");
+                }
+                else
+                    ModelState.AddModelError("", "Incorrect data");
+            }
+            return View(model);
+        }
+        */
         private async Task Authenticate(string userName, string role)
         {
             // создаем один claim
