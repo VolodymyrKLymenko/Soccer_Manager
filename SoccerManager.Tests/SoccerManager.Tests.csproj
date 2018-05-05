@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
-    <ProjectReference Include="..\Soccer_Manager\WebApplication1.csproj" />
     <ProjectReference Include="..\WebApplication1\WebApplication1.csproj" />
   </ItemGroup>
   

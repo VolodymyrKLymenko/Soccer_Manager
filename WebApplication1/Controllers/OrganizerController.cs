@@ -49,6 +49,8 @@ namespace WebApplication1.Controllers
             highProvider.UpdateTournament(tournament.TournamentId, _tournament);
             tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
 
+            TempData["message"] = $"{_tournament.Name} has been saved";
+
             return View("Index", new OrganaizerMainInfo()
                 {
                     Tournament = tournament,
@@ -83,6 +85,8 @@ namespace WebApplication1.Controllers
         {
             Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
             highProvider.RemoveTeamFromTournament(TeamId, tournament.TournamentId);
+
+            TempData["message"] = $"{highProvider.GetTeam(TeamId).Name} was removed";
 
             return View("Index",  new OrganaizerMainInfo()
                 {

@@ -43,7 +43,9 @@ namespace WebApplication1.Controllers
                     if (user != null)
                     {
                         await Authenticate(model.Name, OrgRole); // аутентифiкацiя
-    
+
+                        TempData["message"] = $"You have been logged as Organizer: {user.Name}";
+
                         return RedirectToAction("Index", "Organizer");
                     }
                     ModelState.AddModelError("", "Incorrect login or password");
@@ -54,6 +56,8 @@ namespace WebApplication1.Controllers
                     if (user != null)
                     {
                         await Authenticate(model.Name, TeamRole); // аутентифiкацiя
+
+                        TempData["message"] = $"You have been logged as Team: {user.Name}";
 
                         return RedirectToAction("Index", "Team");
                     }
@@ -81,6 +85,8 @@ namespace WebApplication1.Controllers
 
                     await Authenticate(model.Name, "Team");
 
+                    TempData["message"] = $"You have been created new team: {model.Name}";
+
                     return RedirectToAction("Index", "Team");
                 }
                 else
@@ -88,38 +94,46 @@ namespace WebApplication1.Controllers
             }
             return View(model);
         }
-        /*[HttpPost]
+
+        [HttpGet]
+        public IActionResult RegisterCup()
+        {
+            return View();
+        }
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterCup(WebApplication1.Models.ViewModels.OrganizerModels.RegisterModel model)
+        public async Task<IActionResult> RegisterCup(WebApplication1.Models.ViewModels.OrganizerModels.RegisterOrganizerModel model)
         {
             if (ModelState.IsValid)
             {
-                Team user = await _highProvider.GetAllTeam().FirstOrDefaultAsync(u => u.Name == model.Name);
+                Tournament user = await _highProvider.GetAllTournaments().FirstOrDefaultAsync(u => u.Name == model.Name);
                 if (user == null)
                 {
-                    _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
+                    _highProvider.CreateTournament(new Tournament { Name = model.Name, Mail = model.Email, Password = model.Password,
+                                                                    StartDate = model.StartDate, EndDate = model.EndDate, MaxCountTeams = model.MaxCountTeam});
 
-                    await Authenticate(model.Name, "Team"); // аутентификация
+                    await Authenticate(model.Name, OrgRole);
 
-                    return RedirectToAction("Index", "Team");
+                    TempData["message"] = $"You have been created new tournament: {model.Name}";
+
+                    return RedirectToAction("Index", "Organizer");
                 }
                 else
                     ModelState.AddModelError("", "Incorrect data");
             }
             return View(model);
         }
-        */
+
         private async Task Authenticate(string userName, string role)
         {
-            // создаем один claim
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
             };
-            // создаем объект ClaimsIdentity
+
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            // установка аутентификационных куки
+
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
