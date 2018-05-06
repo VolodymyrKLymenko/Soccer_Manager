@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using DAL.Model_Classes;
 using WebApplication1.Models.ViewModels;
 using Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
@@ -15,6 +14,8 @@ namespace WebApplication1.Controllers
 
         private Team selectedTeam = null;
         private const string OrganaizerKey = "organizer";
+
+        public Team SelectedTeam { get { return selectedTeam; } }
 
         public OrganizerController(IHighLevelSoccerManagerService high)
         {
@@ -45,6 +46,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Edit(Tournament _tournament)
         {
+            var name = User.Identity;
             Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
             highProvider.UpdateTournament(tournament.TournamentId, _tournament);
             tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);

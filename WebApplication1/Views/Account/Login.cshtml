@@ -3,36 +3,33 @@
     ViewData["Title"] = "Login";
 }
 
-<div style="padding: 2em; background-color: white;">
-    <div><h2>Login</h2></div>
-    <div style="float: right; margin-left: 1em;"><a class="btn btn-default" asp-action="RegisterTeam" asp-controller="Account">Create Team</a></div>
-    <div style="float: right; margin-left: 1em;"><a class="btn btn-default" asp-action="RegisterCup" asp-controller="Account">Create Cup</a></div>
-</div>
 
+<div class="wrapper">
+    <div class="partialBlock" style="text-align: center;">
+        <img src="~/images/img-01.png" />
+    </div>
 
-<div class="infoBlock" style="width: 30%; margin-left: 35%;">
-    <header>Login</header>
+    <div class="partialBlock" style="text-align: center;">
 
-    <div class="row">
-        <div class="col-md-4" style="    width: 90%; margin-left: 5%; margin-top: 2em;">
+        <span class="head">
+            Member Login
+        </span>
+        <div class="login-form">
             <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
                 <div class="validation" asp-validation-summary="ModelOnly"></div>
                 <div class="form-group">
-                    <label asp-for="UserType">Enter UserType</label>
-                    <select asp-for="UserType">
+                    <select asp-for="UserType" class="styled-select semi-square">
                         <option value=@UserType.Team>Team</option>
                         <option value=@UserType.Organizer>Organizer</option>
                     </select>
                     <span asp-validation-for="UserType" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Name">Enter Email</label>
-                    <input style="float: right" type="text" asp-for="Name" />
+                    <input type="text" asp-for="Name" placeholder="Name" />
                     <span asp-validation-for="Name" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Password">Enter Password</label>
-                    <input style="float: right" asp-for="Password" />
+                    <input type="password" asp-for="Password" placeholder="Password" />
                     <span asp-validation-for="Password" />
                 </div>
                 <div class="form-group">
@@ -41,5 +38,4 @@
             </form>
         </div>
     </div>
-
 </div>

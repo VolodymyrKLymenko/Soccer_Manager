@@ -7,12 +7,14 @@ using System.Collections.Generic;
 using DAL.Model_Classes;
 using WebApplication1.Models.ViewModels;
 using System.Linq;
-
-//Fact - test
+using System.Threading.Tasks;
+using System.Security.Principal;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace SoccerManager.Tests
 {
-    public class HomeControllerTests
+    public class OrganizerControllerTests
     {
         private IEnumerable<Player> GetTestPlayers()
         {
@@ -193,130 +195,30 @@ namespace SoccerManager.Tests
         }
 
         [Fact]
-        public void IndexReturnsAViewResultWithALists()
+        public void EditCupReturnsViewResultWithCupModel()
         {
             // Arrange
-            var moqLowService = new Mock<ILowLevelSoccerManagmentService>();
-            var moqHighService = new Mock<IHighLevelSoccerManagerService>();
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            mockHighService.Setup(service => service.GetAllTournaments()).Returns(GetTestCups());
+            OrganizerController controller = new OrganizerController(mockHighService.Object);
+            AccountController accountController = new AccountController(mockHighService.Object);
 
-            moqLowService.Setup(service => service.GetAllPlayers()).Returns(GetTestPlayers());
-            moqHighService.Setup(service => service.GetAllTeam()).Returns(GetTestTeams());
-            moqHighService.Setup(service => service.GetAllTournaments()).Returns(GetTestCups());
+            //accountController.Login(new LoginModel() { Name = "EURO cup", Password = "eurocup", UserType = UserType.Organizer });
+            accountController.Authenticate("EURO cup", "Organizer");
 
-            HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
+
+            controller.ModelState.AddModelError("Name", "Required");
+
+            Tournament newCup = new Tournament();
 
             // Act
-            var result = controller.Index();
+            var result = controller.Edit(newCup);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<GeneralInfo>(viewResult.Model);
-            Assert.Equal(GetTestPlayers().ToList().Count, model.Players.Count);
-            Assert.Equal(GetTestTeams().ToList().Count, model.Teams.Count);
-            Assert.Equal(GetTestCups().ToList().Count, model.Tournaments.Count);
-        }
-
-
-        private Tournament TestGetCup(int id)
-        {
-            Tournament APL = new Tournament();
-            APL.TournamentId = 1;
-            APL.Name = "English premier league";
-            APL.MaxCountTeams = 18;
-            APL.StartDate = "01.10.2017";
-            APL.EndDate = "08.08.2018";
-            APL.Password = "apl";
-            APL.Mail = "englishLeague@gmail.com";
-            Tournament euroCup = new Tournament();
-            euroCup.TournamentId = 2;
-            euroCup.Name = "EURO cup";
-            euroCup.MaxCountTeams = 30;
-            euroCup.StartDate = "02.08.2017";
-            euroCup.EndDate = "05.05.2018";
-            euroCup.Password = "eurocup";
-            euroCup.Mail = "euro_cup@gmail.com";
-            Tournament someCup = new Tournament();
-            someCup.TournamentId = 3;
-            someCup.Name = "Some";
-            someCup.MaxCountTeams = 30;
-            someCup.StartDate = "02.08.2017";
-            someCup.EndDate = "05.05.2018";
-            someCup.Password = "some";
-            someCup.Mail = "some_cup@gmail.com";
-
-
-            switch (id)
-            {
-                case 1: return APL;
-                case 2: return euroCup;
-                case 3: return someCup;
-                default: return null;
-            }
-        }
-        [Fact]
-        public void CupReturnCorrectCup()
-        {
-            // Arrange
-            var moqLowService = new Mock<ILowLevelSoccerManagmentService>();
-            var moqHighService = new Mock<IHighLevelSoccerManagerService>();
-
-            moqHighService.Setup(service => service.GetTournament(It.IsAny<int>())).Returns<int>(id => TestGetCup(id));
-
-            HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
-
-            // Act_1
-            var result1 = controller.Cup(1);
-            // Assert_1
-            var viewResult1 = Assert.IsType<ViewResult>(result1);
-            var model1 = Assert.IsAssignableFrom<Tournament>(viewResult1.Model);
-            Assert.Equal(TestGetCup(1).TournamentId, model1.TournamentId);
-
-            // Act_2
-            var result2 = controller.Cup(2);
-            // Assert_2
-            var viewResult2 = Assert.IsType<ViewResult>(result2);
-            var model2 = Assert.IsAssignableFrom<Tournament>(viewResult2.Model);
-            Assert.Equal(TestGetCup(2).TournamentId, model2.TournamentId);
-
-            // Act_4
-            var result4 = controller.Cup(4);
-            // Assert_4
-            var viewResult4 = Assert.IsType<ViewResult>(result4);
-            Assert.Null(viewResult4.Model);
-        }
-
-        [Fact]
-        public void AboutCorrectViewModel()
-        {
-            //Arrange
-            var moqLowService = new Mock<ILowLevelSoccerManagmentService>();
-            var moqHighService = new Mock<IHighLevelSoccerManagerService>();
-
-            HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
-
-            //Action
-            ViewResult result = controller.About() as ViewResult;
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Equal("Your application description page.", result?.ViewData["Message"]);
-        }
-
-        [Fact]
-        public void ContactCorrectViewModel()
-        {
-            //Arrange
-            var moqLowService = new Mock<ILowLevelSoccerManagmentService>();
-            var moqHighService = new Mock<IHighLevelSoccerManagerService>();
-
-            HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
-
-            //Action
-            ViewResult result = controller.Contact() as ViewResult;
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Equal("Your contact page.", result?.ViewData["Message"]);
+            Assert.Equal(newCup, ((OrganaizerMainInfo)viewResult?.Model).Tournament);
+            Assert.Null(((OrganaizerMainInfo)viewResult?.Model).SelectedTeam);
+            Assert.False(((OrganaizerMainInfo)viewResult?.Model).ShowConfirming);
         }
     }
 }

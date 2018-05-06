@@ -13,8 +13,8 @@ namespace Services
         void RemoveTeamFromTournament(int teamId, int tournamentId);
         bool AddTeamToTournament(int teamId, int tournamentId);
         Team GetTeam(int teamId);
-        IQueryable<Team> GetAllTeam();
-        IQueryable<Tournament> GetAllTournaments();
+        IEnumerable<Team> GetAllTeam();
+        IEnumerable<Tournament> GetAllTournaments();
 
         int CreateTournament(Tournament tournament);
         void UpdateTournament(int tournamentId, Tournament updatedTournament);
@@ -44,7 +44,7 @@ namespace Services
             return _tournamentRepository.Add(tournament);
         }
 
-        public IQueryable<Team> GetAllTeam()
+        public IEnumerable<Team> GetAllTeam()
         {
             return _teamRepository.GetAll();
         }
@@ -59,7 +59,7 @@ namespace Services
             _teamRepository.Delete(team => team.TeamId == teamId);
         }
 
-        public IQueryable<Tournament> GetAllTournaments()
+        public IEnumerable<Tournament> GetAllTournaments()
         {
             return _tournamentRepository.GetAll();
         }

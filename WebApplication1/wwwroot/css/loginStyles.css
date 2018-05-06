@@ -1,0 +1,70 @@
+﻿
+.partialBlock {
+    width: 45%;
+    margin-top: 3em;
+    display: inline-block;
+}
+
+.head {
+    font-size: 1.5em;
+    text-align: center;
+    color: black;
+}
+
+.login-form {
+
+}
+    .login-form form {
+    }
+
+    .login-form input[type=text], [type=mail], input[type=password] {
+        width: 80%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        border-radius: 2em;
+    }
+
+    .login-form input[type=submit] {
+        width: 80%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        border-radius: 2em;
+        background-color: #60d44a;
+        color: white;
+    }
+        .login-form input[type=submit]:hover {
+            background-color: whitesmoke;
+            color: black;
+        }
+
+/* radio button styles */
+.styled-select {
+    background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
+    width: 80%;
+    padding: 5px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 5em;
+}
+
+    .styled-select select {
+        background: transparent;
+        font-size: 14px;
+        height: 29px;
+        padding: 5px; /* If you add too much padding here, the options won't show in IE */
+        width: 268px;
+    }
+
+.semi-square {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+.blue {
+    background-color: #3b8ec2;
+}

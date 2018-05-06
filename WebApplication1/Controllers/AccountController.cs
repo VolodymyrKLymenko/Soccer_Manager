@@ -33,16 +33,16 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model)
+        public IActionResult Login(LoginModel model)
         {
             if (ModelState.IsValid)
             {
                 if (model.UserType == UserType.Organizer)
                 {
-                    Tournament user = await _highProvider.GetAllTournaments().FirstOrDefaultAsync(u => u.Name == model.Name);
+                    Tournament user = _highProvider.GetAllTournaments().FirstOrDefault(u => u.Name == model.Name);
                     if (user != null)
                     {
-                        await Authenticate(model.Name, OrgRole); // аутентифiкацiя
+                        Authenticate(model.Name, OrgRole); // аутентифiкацiя
 
                         TempData["message"] = $"You have been logged as Organizer: {user.Name}";
 
@@ -52,10 +52,10 @@ namespace WebApplication1.Controllers
                 }
                 else if (model.UserType == UserType.Team)
                 {
-                    Team user = await _highProvider.GetAllTeam().FirstOrDefaultAsync(u => u.Name == model.Name);
+                    Team user = _highProvider.GetAllTeam().FirstOrDefault(u => u.Name == model.Name);
                     if (user != null)
                     {
-                        await Authenticate(model.Name, TeamRole); // аутентифiкацiя
+                        Authenticate(model.Name, TeamRole); // аутентифiкацiя
 
                         TempData["message"] = $"You have been logged as Team: {user.Name}";
 
@@ -74,16 +74,16 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterTeam(WebApplication1.Models.ViewModels.TeamModels.RegisterModel model)
+        public IActionResult RegisterTeam(WebApplication1.Models.ViewModels.TeamModels.RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                Team user = await _highProvider.GetAllTeam().FirstOrDefaultAsync(u => u.Name == model.Name);
+                Team user = _highProvider.GetAllTeam().FirstOrDefault(u => u.Name == model.Name);
                 if (user == null)
                 {
                     _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
 
-                    await Authenticate(model.Name, "Team");
+                    Authenticate(model.Name, "Team");
 
                     TempData["message"] = $"You have been created new team: {model.Name}";
 
@@ -102,17 +102,17 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterCup(WebApplication1.Models.ViewModels.OrganizerModels.RegisterOrganizerModel model)
+        public IActionResult RegisterCup(WebApplication1.Models.ViewModels.OrganizerModels.RegisterOrganizerModel model)
         {
             if (ModelState.IsValid)
             {
-                Tournament user = await _highProvider.GetAllTournaments().FirstOrDefaultAsync(u => u.Name == model.Name);
+                Tournament user = _highProvider.GetAllTournaments().FirstOrDefault(u => u.Name == model.Name);
                 if (user == null)
                 {
                     _highProvider.CreateTournament(new Tournament { Name = model.Name, Mail = model.Email, Password = model.Password,
                                                                     StartDate = model.StartDate, EndDate = model.EndDate, MaxCountTeams = model.MaxCountTeam});
 
-                    await Authenticate(model.Name, OrgRole);
+                    Authenticate(model.Name, OrgRole);
 
                     TempData["message"] = $"You have been created new tournament: {model.Name}";
 
@@ -124,7 +124,7 @@ namespace WebApplication1.Controllers
             return View(model);
         }
 
-        private async Task Authenticate(string userName, string role)
+        public void Authenticate(string userName, string role)
         {
             var claims = new List<Claim>
             {
@@ -134,7 +134,7 @@ namespace WebApplication1.Controllers
 
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
         public async Task<IActionResult> Logout()
