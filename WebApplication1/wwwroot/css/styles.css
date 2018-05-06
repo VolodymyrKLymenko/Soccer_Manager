@@ -4,11 +4,12 @@
 }
 
 header {
-    background-color: #2a293e;
+    background-color: black;
     font-size: 2em;
     padding: .5em;
     color: white;
     border-bottom: 2px solid #333;
+    text-align: right;
 }
 
 .infoBlock header {

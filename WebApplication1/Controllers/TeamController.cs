@@ -182,41 +182,5 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("Index", "Team");
         }
-
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Login(LoginCupModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == model.Name);
-
-                if (team != null && team.Password == model.Password)
-                {
-                    HttpContext.Session.SetInt32(TeamKey, team.TeamId);
-                    TempData["message"] = $"You have been logged as {team.Name}";
-                }
-
-
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return View();
-            }
-        }
-
-        public IActionResult LogOut()
-        {
-            HttpContext.Session.Remove(TeamKey);
-
-            return RedirectToAction("Index");
-        }
     }
 }

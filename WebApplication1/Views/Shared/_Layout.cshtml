@@ -14,9 +14,6 @@
         @if (!User.Identity.IsAuthenticated)
         {
             <div style="float: right; margin-left: 1em;"><a class="btn btn-default" asp-action="Login" asp-controller="Account">Login</a></div>
-            <div style="float: right; margin-left: 1em;"><a class="btn btn-default" asp-action="RegisterTeam" asp-controller="Account">Create Team</a></div>
-            <div style="float: right; margin-left: 1em;"><a class="btn btn-default" asp-action="RegisterCup" asp-controller="Account">Create Cup</a></div>
-
         }
     </header>
     <nav>
