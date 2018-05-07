@@ -24,7 +24,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index(int id = -1)
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
 
             selectedTeam = id != -1 ? highProvider.GetTeam(id) : null;
 
@@ -38,7 +38,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
 
             return View(tournament);
         }
@@ -47,9 +47,9 @@ namespace WebApplication1.Controllers
         public IActionResult Edit(Tournament _tournament)
         {
             var name = User.Identity;
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
             highProvider.UpdateTournament(tournament.TournamentId, _tournament);
-            tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
+            tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
 
             TempData["message"] = $"{_tournament.Name} has been saved";
 
@@ -64,7 +64,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Confirm()
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
 
             return View("Index", new OrganaizerMainInfo()
                 {
@@ -85,7 +85,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult RemoveTeam(int TeamId)
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
             highProvider.RemoveTeamFromTournament(TeamId, tournament.TournamentId);
 
             TempData["message"] = $"{highProvider.GetTeam(TeamId).Name} was removed";

@@ -42,7 +42,7 @@ namespace WebApplication1.Controllers
                     Tournament user = _highProvider.GetAllTournaments().FirstOrDefault(u => u.Name == model.Name);
                     if (user != null)
                     {
-                        Authenticate(model.Name, OrgRole); // аутентифiкацiя
+                        Authenticate(user.TournamentId.ToString(), OrgRole); // аутентифiкацiя
 
                         TempData["message"] = $"You have been logged as Organizer: {user.Name}";
 
@@ -55,7 +55,7 @@ namespace WebApplication1.Controllers
                     Team user = _highProvider.GetAllTeam().FirstOrDefault(u => u.Name == model.Name);
                     if (user != null)
                     {
-                        Authenticate(model.Name, TeamRole); // аутентифiкацiя
+                        Authenticate(user.TeamId.ToString(), TeamRole); // аутентифiкацiя
 
                         TempData["message"] = $"You have been logged as Team: {user.Name}";
 
@@ -81,9 +81,9 @@ namespace WebApplication1.Controllers
                 Team user = _highProvider.GetAllTeam().FirstOrDefault(u => u.Name == model.Name);
                 if (user == null)
                 {
-                    _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
+                    int id = _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
 
-                    Authenticate(model.Name, "Team");
+                    Authenticate(id.ToString(), "Team");
 
                     TempData["message"] = $"You have been created new team: {model.Name}";
 
@@ -109,10 +109,10 @@ namespace WebApplication1.Controllers
                 Tournament user = _highProvider.GetAllTournaments().FirstOrDefault(u => u.Name == model.Name);
                 if (user == null)
                 {
-                    _highProvider.CreateTournament(new Tournament { Name = model.Name, Mail = model.Email, Password = model.Password,
+                    int id = _highProvider.CreateTournament(new Tournament { Name = model.Name, Mail = model.Email, Password = model.Password,
                                                                     StartDate = model.StartDate, EndDate = model.EndDate, MaxCountTeams = model.MaxCountTeam});
 
-                    Authenticate(model.Name, OrgRole);
+                    Authenticate(id.ToString(), OrgRole);
 
                     TempData["message"] = $"You have been created new tournament: {model.Name}";
 

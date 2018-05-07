@@ -21,7 +21,7 @@
 }
 
 <div>
-
+    @Model.Team
     @if (@Model.Team != null)
     {
 
@@ -144,7 +144,7 @@
                             @item.Mail
                         </td>
                         <td>
-                            <a asp-action="RemoveCup" asp-controller="Team" asp-route-Password="@Model.Team.Password"
+                            <a asp-action="RemoveCup" asp-controller="Team" asp-route-CupId="@item.TournamentId"
                                class="btn btn-default glyphicon glyphicon-remove"></a>
                         </td>
                     </tr>

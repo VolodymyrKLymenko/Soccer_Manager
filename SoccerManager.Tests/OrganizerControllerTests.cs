@@ -204,10 +204,19 @@ namespace SoccerManager.Tests
             AccountController accountController = new AccountController(mockHighService.Object);
 
             //accountController.Login(new LoginModel() { Name = "EURO cup", Password = "eurocup", UserType = UserType.Organizer });
-            accountController.Authenticate("EURO cup", "Organizer");
+
+            var mockIIdentyty = new Mock<IIdentity>();
+            mockIIdentyty.Setup(iden => iden.Name).Returns("faasf");
+            mockIIdentyty.Setup(iden => iden.IsAuthenticated).Returns(true);
+            
+            accountController.Authenticate()
+
+            identity.IsAuthenticated.BeFalse();
 
 
-            controller.ModelState.AddModelError("Name", "Required");
+
+
+        controller.ModelState.AddModelError("Name", "Required");
 
             Tournament newCup = new Tournament();
 

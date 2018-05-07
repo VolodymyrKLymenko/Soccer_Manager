@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
             return View(new TeamMainInfo()
             {
@@ -46,7 +46,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult AddPlayer(Player player)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult RemovePlayer(int PlayerId, string Password)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
             if (Password == team.Password)
             {
@@ -102,7 +102,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
             return View(team);
         }
@@ -114,7 +114,8 @@ namespace WebApplication1.Controllers
             {
                 highProvider.UpdateTeam(team.TeamId, team);
 
-                Team _team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+                var teams = highProvider.GetAllTeam();
+                Team _team = teams.FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
                 TempData["message"] = $"{_team.Name} has been saved";
 
@@ -134,7 +135,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Confirm()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
             return View("Index", new TeamMainInfo()
             {
@@ -146,7 +147,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Delete()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
             foreach (var i in team.Players)
             {
@@ -157,22 +158,19 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult RemoveCup(int CupId, string Password)
+        public IActionResult RemoveCup(int CupId)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
-            if (Password == team.Password)
-            {
-                TempData["message"] = $"{highProvider.GetTournament(CupId).Name} was removed";
+                TempData["message"] = $"{highProvider.GetTournament(CupId)?.Name} was removed";
                 highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
-            }
 
             return RedirectToAction("Index", "Team");
         }
 
         public IActionResult RegistrToCup(int CupId, string Password)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.Name == User.Identity.Name);
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
 
             if (Password == team.Password)
             {
