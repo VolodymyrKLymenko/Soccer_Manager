@@ -11,8 +11,8 @@ using System;
 namespace DAL.Migrations
 {
     [DbContext(typeof(SoccerContext))]
-    [Migration("20180505173710_Inital")]
-    partial class Inital
+    [Migration("20180508101444_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,6 +41,24 @@ namespace DAL.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("DAL.Model_Classes.Reward", b =>
+                {
+                    b.Property<int>("RewardId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Date");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("TeamId");
+
+                    b.HasKey("RewardId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Rewards");
                 });
 
             modelBuilder.Entity("DAL.Model_Classes.Team", b =>
@@ -98,6 +116,13 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Model_Classes.Team", "Team")
                         .WithMany("Players")
+                        .HasForeignKey("TeamId");
+                });
+
+            modelBuilder.Entity("DAL.Model_Classes.Reward", b =>
+                {
+                    b.HasOne("DAL.Model_Classes.Team", "Team")
+                        .WithMany("Rewards")
                         .HasForeignKey("TeamId");
                 });
 

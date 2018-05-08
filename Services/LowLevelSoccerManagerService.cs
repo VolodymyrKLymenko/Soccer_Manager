@@ -1,6 +1,7 @@
 ﻿using DAL;
 using DAL.Model_Classes;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Services
 {
@@ -8,6 +9,12 @@ namespace Services
     {
         void CreatePlayerForTeam(int teamId, Player player);
         void RemovePlayer(int playerId);
+        void AddRewardForTeam(int teamId, Reward reward);
+        void UpdateReward(int rewardId, Reward updatedReward);
+        IEnumerable<Reward> GetTeamRewards(int teamId);
+        IEnumerable<Reward> GetAllRewards();
+        Reward GetReward(int rewardId);
+        void RemoveReward(int rewardId);
         Player GetPlayer(int playerId);
         void UpdatePlayer(int playerId, Player updatedPlayer);
         IEnumerable<Player> GetAllPlayers();
@@ -17,11 +24,14 @@ namespace Services
     {
         private readonly IRepository<Player> _payerRepository;
         private readonly IRepository<Team> _teamRepository;
+        private readonly IRepository<Reward> _rewardRepository;
 
-        public LowLevelSoccerManagerService(IRepository<Player> playerRepository, IRepository<Team> teamRepository)
+        public LowLevelSoccerManagerService(IRepository<Player> playerRepository, IRepository<Team> teamRepository, 
+            IRepository<Reward> rewardRepository)
         {
             _payerRepository = playerRepository;
             _teamRepository = teamRepository;
+            _rewardRepository = rewardRepository;
         }
 
         public void CreatePlayerForTeam(int teamId, Player player)
@@ -33,6 +43,49 @@ namespace Services
             }
             team.Players.Add(player);
             _teamRepository.Update(team);
+        }
+
+        public void AddRewardForTeam(int teamId, Reward reward)
+        {
+            var team = _teamRepository.Get(t => t.TeamId == teamId);
+            if (team.Rewards == null)
+            {
+                team.Rewards = new List<Reward>();
+            }
+            team.Rewards.Add(reward);
+            _teamRepository.Update(team);
+        }
+
+        public IEnumerable<Reward> GetTeamRewards(int teamId)
+        {
+            return _rewardRepository.GetAll().Where(r => r.TeamId == teamId);
+        }
+
+        public IEnumerable<Reward> GetAllRewards()
+        {
+            return _rewardRepository.GetAll();
+        }
+
+        public void RemoveReward(int rewardId)
+        {
+            var reward = _rewardRepository.Get(r => r.RewardId == rewardId);
+
+            _rewardRepository.Delete(reward);
+        }
+
+        public Reward GetReward(int rewardId)
+        {
+            return _rewardRepository.Get(rewardId);
+        }
+
+        public void UpdateReward(int rewardId, Reward updatedReward)
+        {
+            var reward = _rewardRepository.Get(r => r.RewardId == rewardId);
+
+            reward.Name = updatedReward.Name;
+            reward.Date = updatedReward.Date;
+
+            _rewardRepository.Update(reward);
         }
 
         public Player GetPlayer(int playerId)

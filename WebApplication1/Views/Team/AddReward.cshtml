@@ -1,0 +1,41 @@
+﻿@model DAL.Model_Classes.Reward
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<div style="margin-left: 100px;">
+
+    <h2>Create</h2>
+
+    <h4>Reward</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4" style="margin-left: 5em;">
+            <form asp-action="AddReward">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <div><span asp-validation-for="Name" class="text-danger"></span></div>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Date" class="control-label"></label>
+                    <div><span asp-validation-for="Date" class="text-danger"></span></div>
+                    <input type="date" asp-for="Date" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                    <a class="btn btn-default" asp-action="ListReward">Cancel</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+</div>

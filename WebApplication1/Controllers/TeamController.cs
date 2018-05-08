@@ -62,6 +62,80 @@ namespace WebApplication1.Controllers
             }
         }
 
+
+        [HttpGet]
+        public IActionResult AddReward()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddReward(Reward reward)
+        {
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+
+            if (ModelState.IsValid)
+            {
+                lowProvider.AddRewardForTeam(team.TeamId, reward);
+                highProvider.UpdateTeam(team.TeamId, team);
+                TempData["message"] = $"{reward.Name} has been added";
+                return RedirectToAction("ListReward");
+            }
+
+            else
+            {
+                return View(reward);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult EditReward(int rewardId)
+        {
+            Reward reward = lowProvider.GetReward(rewardId);
+
+            return View(reward);
+        }
+
+        [HttpPost]
+        public IActionResult EditReward(Reward reward)
+        {
+            if (ModelState.IsValid)
+            {
+                lowProvider.UpdateReward(reward.RewardId, reward);
+                TempData["message"] = $"{reward.Name} has been saved";
+                return RedirectToAction("ListReward");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(reward);
+            }
+        }
+
+        public IActionResult RemoveReward(int RewardId, string Password)
+        {
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            
+            TempData["message"] = $"{lowProvider.GetReward(RewardId).Name} was removed";
+            lowProvider.RemoveReward(RewardId);
+
+            return RedirectToAction("ListReward");
+        }
+
+        public IActionResult ListReward()
+        {
+            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+
+            if (team != null)
+            {
+                return View(lowProvider.GetTeamRewards(team.TeamId));
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
         [HttpGet]
         public IActionResult EditPlayer(int playerId)
         {

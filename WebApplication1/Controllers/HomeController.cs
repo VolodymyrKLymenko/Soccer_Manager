@@ -48,7 +48,32 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Teams(string searchString)
+        {
+            var teams = highService.GetAllTeam().ToList();
 
+            List<Team> _teams = new List<Team>();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                foreach(var r in lowService.GetAllRewards())
+                {
+                    if (r.Name.Contains(searchString))
+                    {
+                        _teams.Add(highService.GetTeam(r.Team.TeamId));
+                        break;
+                    }
+                }
+            }
+
+            else
+            {
+                _teams = teams;
+            }
+
+            return View(_teams);
+        }
 
         public IActionResult Cup(int id)
         {

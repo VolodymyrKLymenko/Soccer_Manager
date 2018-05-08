@@ -14,6 +14,7 @@ namespace DAL
 
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Player> Players { get; set; }
+        public DbSet<Reward> Rewards { get; set; }
         public DbSet<Team> Teams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

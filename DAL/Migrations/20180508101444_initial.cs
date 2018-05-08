@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DAL.Migrations
 {
-    public partial class Inital : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -66,6 +66,27 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Rewards",
+                columns: table => new
+                {
+                    RewardId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Date = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    TeamId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rewards", x => x.RewardId);
+                    table.ForeignKey(
+                        name: "FK_Rewards_Teams_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Teams",
+                        principalColumn: "TeamId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TeamTournament",
                 columns: table => new
                 {
@@ -95,6 +116,11 @@ namespace DAL.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Rewards_TeamId",
+                table: "Rewards",
+                column: "TeamId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TeamTournament_TeamId",
                 table: "TeamTournament",
                 column: "TeamId");
@@ -104,6 +130,9 @@ namespace DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Players");
+
+            migrationBuilder.DropTable(
+                name: "Rewards");
 
             migrationBuilder.DropTable(
                 name: "TeamTournament");

@@ -208,10 +208,10 @@ namespace SoccerManager.Tests
             var mockIIdentyty = new Mock<IIdentity>();
             mockIIdentyty.Setup(iden => iden.Name).Returns("faasf");
             mockIIdentyty.Setup(iden => iden.IsAuthenticated).Returns(true);
-            
-            accountController.Authenticate()
 
-            identity.IsAuthenticated.BeFalse();
+            //accountController.Authenticate();
+
+            //identity.IsAuthenticated.BeFalse();
 
 
 
