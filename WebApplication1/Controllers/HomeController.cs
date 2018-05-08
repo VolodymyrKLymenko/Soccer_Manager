@@ -31,6 +31,8 @@ namespace WebApplication1.Controllers
             general.Teams = highService.GetAllTeam().ToList();
             general.Tournaments = highService.GetAllTournaments().ToList();
 
+            general.RecalculateAge();
+
             return View(general);
         }
 
