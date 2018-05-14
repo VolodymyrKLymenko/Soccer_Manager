@@ -23,7 +23,7 @@ namespace DAL.Initializers
             context.SaveChanges();
 
 
-            Player messi = new Player("Lionel", "Messi", "Middle attacker", 30) { Team = barcelona};
+            Player messi = new Player("Lionel", "Messi", "Middle attacker", 30) { Team = barcelona };
             Player pique = new Player("Adam", "Pique", "Defender", 25) { Team = barcelona };
             Player suarez = new Player("Peter", "Suarez", "Forward", 28) { Team = barcelona };
             Player mane = new Player("Sadio", "Mane", "Middle attacker", 24) { Team = liverpool };
@@ -32,6 +32,17 @@ namespace DAL.Initializers
             Player genrih = new Player("Genrih", "Mikhitarian", "Forward", 29) { Team = arsenal };
             Player cech = new Player("Peter", "Cech", "Goalkeeper", 32) { Team = arsenal };
             Player mustafi = new Player("Skodran", "Mustafi", "Defemder", 33) { Team = arsenal };
+
+            messi.Born = new DateTime(1985, 5, 5);
+            pique.Born = new DateTime(1992, 5, 25);
+            suarez.Born = new DateTime(1954, 5, 5);
+            mane.Born = new DateTime(1993, 9, 15);
+            salah.Born = new DateTime(2001, 5, 5);
+            firmino.Born = new DateTime(2005, 5, 5);
+            genrih.Born = new DateTime(1994, 3, 14);
+            cech.Born = new DateTime(1998, 4, 18);
+            mustafi.Born = new DateTime(1991, 7, 19);
+
 
             context.Players.AttachRange(
                 new List<Player> { messi, pique, suarez, mane, salah, firmino, genrih, cech, mustafi });
