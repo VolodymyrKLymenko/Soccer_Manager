@@ -9,8 +9,12 @@
     <div style="margin-left: 10px;margin-top: 30px; width:45%;" class="alert alert-success">@TempData["message"]</div>
 }
 
-<div class="infoBlock" style="width: 45%; display: inline-block;">
+    <div style="text-align: left; padding: 2em; background-color: white;">
+        <a class="btn btn-default" asp-action="Index" asp-controller="Team">Back</a>
+    </div>
 
+<div class="infoBlock" style="width: 45%; display: inline-block;">
+    
     <header>
         Rewards of @Model.FirstOrDefault().Team.Name
 

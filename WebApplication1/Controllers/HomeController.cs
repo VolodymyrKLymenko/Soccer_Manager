@@ -24,12 +24,26 @@ namespace WebApplication1.Controllers
             lowService  = low;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
             GeneralInfo general = new GeneralInfo();
             general.Players = lowService.GetAllPlayers().ToList();
             general.Teams = highService.GetAllTeam().ToList();
             general.Tournaments = highService.GetAllTournaments().ToList();
+
+            List<Team> _teams = new List<Team>();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                foreach (var r in lowService.GetAllRewards())
+                {
+                    if (r.Name.Contains(searchString) && !_teams.Contains(highService.GetTeam(r.Team.TeamId)))
+                    {
+                        _teams.Add(highService.GetTeam(r.Team.TeamId));
+                    }
+                }
+                general.Teams = _teams;
+            }
 
             general.RecalculateAge();
 
@@ -50,31 +64,11 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Teams(string searchString)
+        public IActionResult Team(int id)
         {
-            var teams = highService.GetAllTeam().ToList();
+            Team t = highService.GetTeam(id);
 
-            List<Team> _teams = new List<Team>();
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                foreach(var r in lowService.GetAllRewards())
-                {
-                    if (r.Name.Contains(searchString))
-                    {
-                        _teams.Add(highService.GetTeam(r.Team.TeamId));
-                        break;
-                    }
-                }
-            }
-
-            else
-            {
-                _teams = teams;
-            }
-
-            return View(_teams);
+            return View("Team", t);
         }
 
         public IActionResult Cup(int id)
