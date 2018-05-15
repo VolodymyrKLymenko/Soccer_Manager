@@ -9,8 +9,8 @@
 
     <div class="tab">
         <button class="tablinks" onclick="openCity(event, 'cups')" id="defaultOpen">Tournaments</button>
-        <button class="tablinks" onclick="openCity(event, 'teams')">Teams</button>
         <button class="tablinks" onclick="openCity(event, 'players')">Players</button>
+        <button class="tablinks" onclick="openCity(event, 'teams')">Teams</button>
     </div>
 
     <div id="cups" class="tabcontent">
@@ -36,29 +36,22 @@
 
 
     <div id="teams" class="tabcontent">
-        <div class="input-sm" style="float:left;">
-            @using (Html.BeginForm("Index", "Home", FormMethod.Get))
-            {
-                <p>
-                    Title: @Html.TextBox("SearchString")
-                    <input type="submit" value="Filter" />
-                </p>
-            }
-        </div>
         <div id="midAge" style="text-align: right; float: right; padding: .5em;"><span>Middle age of all player: </span> @Model.CalculateMiddleAge()</div>
 
         <table>
             <tr>
                 <th>Name</th>
+                <th>Create date</th>
                 <th>Middle Age</th>
             </tr>
             @foreach (Team team in Model.Teams)
-        {
-            <tr>
-                <td><a asp-controller="Home" asp-action="Team" asp-route-id="@team.TeamId">@team.Name</a></td>
-                <td>@Model.CalculateMiddleAgeTeam(team.Players)</td>
-            </tr>
-    }
+            {
+                <tr>
+                    <td>@team.Name</td>
+                    <td>@team.DataCreation.Day.@team.DataCreation.Month.@team.DataCreation.Year</td>
+                    <td>@Model.CalculateMiddleAgeTeam(team.Players)</td>
+                </tr>
+            }
         </table>
     </div>
 

@@ -12,12 +12,15 @@ namespace DAL.Initializers
             Team barcelona = new Team("Barcelona");
             barcelona.Password = "barcelona";
             barcelona.Mail = "barcelona@gmail.com";
+            barcelona.DataCreation = new DateTime(1900, 12, 12);
             Team liverpool = new Team("Liverpool");
             liverpool.Password = "liverpool";
             liverpool.Mail = "liverpool@gmail.com";
+            liverpool.DataCreation = new DateTime(1955, 5, 10);
             Team arsenal = new Team("Arsenal");
             arsenal.Password = "arsenal";
             arsenal.Mail = "arsenal@gmail.com";
+            arsenal.DataCreation = new DateTime(1975, 3, 29);
 
             context.Teams.AddRange(new List<Team> { barcelona, liverpool, arsenal });
             context.SaveChanges();

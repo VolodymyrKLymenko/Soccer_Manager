@@ -4,6 +4,8 @@ using DAL.Model_Classes;
 using WebApplication1.Models.ViewModels;
 using Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System;
 
 namespace WebApplication1.Controllers
 {
@@ -25,14 +27,36 @@ namespace WebApplication1.Controllers
         public IActionResult Index(int id = -1)
         {
             Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            List<Team> teams = highProvider.GetAllTeam().ToList();
+
 
             selectedTeam = id != -1 ? highProvider.GetTeam(id) : null;
 
             return View(new OrganaizerMainInfo()
                 {
                     Tournament = tournament,
-                    SelectedTeam = selectedTeam
+                    SelectedTeam = selectedTeam,
+                    Teams = teams
                 });
+        }
+
+        [HttpPost]
+        public IActionResult SelectDate(int? _id, string year)
+        {
+            int id = _id == null ? -1 : (Int32)_id;
+            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            List<Team> teams = highProvider.GetAllTeam().ToList();
+
+            teams = teams.Where(el => el.DataCreation.Year == Int32.Parse(year)).ToList();
+
+            selectedTeam = id != -1 ? highProvider.GetTeam(id) : null;
+
+            return View("Index", new OrganaizerMainInfo()
+            {
+                Tournament = tournament,
+                SelectedTeam = selectedTeam,
+                Teams = teams
+            });
         }
 
         [HttpGet]

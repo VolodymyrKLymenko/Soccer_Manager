@@ -24,26 +24,12 @@ namespace WebApplication1.Controllers
             lowService  = low;
         }
 
-        public IActionResult Index(string searchString)
+        public IActionResult Index()
         {
             GeneralInfo general = new GeneralInfo();
             general.Players = lowService.GetAllPlayers().ToList();
             general.Teams = highService.GetAllTeam().ToList();
             general.Tournaments = highService.GetAllTournaments().ToList();
-
-            List<Team> _teams = new List<Team>();
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                foreach (var r in lowService.GetAllRewards())
-                {
-                    if (r.Name.Contains(searchString) && !_teams.Contains(highService.GetTeam(r.Team.TeamId)))
-                    {
-                        _teams.Add(highService.GetTeam(r.Team.TeamId));
-                    }
-                }
-                general.Teams = _teams;
-            }
 
             general.RecalculateAge();
 
@@ -64,12 +50,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public IActionResult Team(int id)
-        {
-            Team t = highService.GetTeam(id);
 
-            return View("Team", t);
-        }
 
         public IActionResult Cup(int id)
         {

@@ -46,12 +46,43 @@
                 </div>
             </header>
 
-            <ul style="list-style: none; font-size: 2em;">
+            <ul>
                 <li>Mail: @Model?.Tournament.Mail</li>
                 <li>Max count of teams: @Model?.Tournament.MaxCountTeams</li>
                 <li>Start date: @Model?.Tournament.StartDate</li>
                 <li>End date: @Model?.Tournament.EndDate</li>
             </ul>
+
+            <div style="display:inline-block; margin-right: 2em; margin-top: -6em; float: right;">
+                <form asp-action="SelectDate">
+                    <input name="_id" type="hidden" value="@Model.SelectedTeam?.TeamId" />
+                    <select name="year"  class="styled-select semi-square">
+                        @foreach (var item in Model.Teams)
+                        {
+                            <option value="@item.DataCreation.Year">@item.DataCreation.Year</option>
+                        }
+                    </select>
+                    <input type="submit" class="btn btn-default" value="Select" />
+                </form>
+            </div>
+            <div style="padding: 1em;">
+                <h2>Current team</h2>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mail</th>
+                        <th>Creation</th>
+                    </tr>
+                    @foreach (var item in Model.Teams)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Mail</td>
+                            <td>@item.DataCreation</td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </div>
 
         <div class="infoBlock" style="width: 40%; display: inline-block;">

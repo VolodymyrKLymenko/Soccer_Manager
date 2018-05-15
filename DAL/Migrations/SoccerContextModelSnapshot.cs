@@ -44,28 +44,12 @@ namespace DAL.Migrations
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("DAL.Model_Classes.Reward", b =>
-                {
-                    b.Property<int>("RewardId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Date");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int?>("TeamId");
-
-                    b.HasKey("RewardId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Rewards");
-                });
-
             modelBuilder.Entity("DAL.Model_Classes.Team", b =>
                 {
                     b.Property<int>("TeamId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DataCreation");
 
                     b.Property<string>("Mail");
 
@@ -117,13 +101,6 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Model_Classes.Team", "Team")
                         .WithMany("Players")
-                        .HasForeignKey("TeamId");
-                });
-
-            modelBuilder.Entity("DAL.Model_Classes.Reward", b =>
-                {
-                    b.HasOne("DAL.Model_Classes.Team", "Team")
-                        .WithMany("Rewards")
                         .HasForeignKey("TeamId");
                 });
 

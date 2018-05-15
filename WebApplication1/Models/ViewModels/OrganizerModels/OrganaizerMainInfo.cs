@@ -12,6 +12,7 @@ namespace WebApplication1.Models.ViewModels
         public Tournament Tournament { get; set; }
         public Team SelectedTeam { get; set; }
         public bool ShowConfirming { get; set; }
+        public List<Team> Teams = new List<Team>();
 
         public OrganaizerMainInfo()
         {

@@ -21,6 +21,7 @@
 }
 
 <div>
+    @Model.Team
     @if (@Model.Team != null)
     {
 
@@ -38,8 +39,6 @@
                 <h2 style="display: inline;">Your team: @Model.Team.Name</h2>
 
                 <div class="buttonBlock">
-                    <a asp-action="ListReward" asp-controller="Team"
-                       class="btn btn-success glyphicon" style="background-color: steelblue">List of rewards</a>
                     <a asp-action="Edit" asp-controller="Team"
                        style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></a>
                     <a asp-action="Confirm" asp-controller="Team"

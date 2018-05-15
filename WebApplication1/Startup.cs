@@ -34,12 +34,11 @@ namespace WebApplication1
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
-            
+
             services.AddTransient<DataContextProvider>();
             services.AddTransient<IRepository<Team>, TeamRepository>();
             services.AddTransient<IRepository<Player>, PlayerRepository>();
             services.AddTransient<IRepository<Tournament>, TournamentRepository>();
-            services.AddTransient<IRepository<Reward>, RewardRepository>();
             services.AddTransient<IHighLevelSoccerManagerService, HighLevelSoccerManagerService>();
             services.AddTransient<ILowLevelSoccerManagmentService, LowLevelSoccerManagerService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

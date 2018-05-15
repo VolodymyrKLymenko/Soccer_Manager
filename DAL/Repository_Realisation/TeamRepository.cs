@@ -51,10 +51,10 @@ namespace DAL.Repository_Realisation
 
         public Team Get(long id)
         {
-            var teams = _dbset.Include(t => t.Players).Include(t => t.Rewards)
+            var teams = _dbset.Include(t => t.Players)
                 .Include(t => t.TeamTournaments).ThenInclude(tt => tt.Tournament);
 
-            return teams.FirstOrDefault(t => t.TeamId == id);
+            return teams.First(t => t.TeamId == id);
         }
 
         public Team Get(Expression<Func<Team, bool>> where)
@@ -69,7 +69,7 @@ namespace DAL.Repository_Realisation
 
         public IQueryable<Team> GetAll()
         {
-            var lst = _dbset.Include(t => t.Players).Include(t => t.Rewards)
+            var lst = _dbset.Include(t => t.Players)
                 .Include(t => t.TeamTournaments).ThenInclude(tt => tt.Tournament);
 
             return lst;
