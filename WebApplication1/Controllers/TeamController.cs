@@ -10,25 +10,37 @@ using WebApplication1.Models.ViewModels;
 using Services;
 using WebApplication1.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles = "Team")]
     public class TeamController : Controller
     {
         private IHighLevelSoccerManagerService highProvider;
         private ILowLevelSoccerManagmentService lowProvider;
+        private readonly UserManager<DAL.Model_Classes.User> _userManager;
 
         private const string TeamKey = "team";
 
-        public TeamController(IHighLevelSoccerManagerService high, ILowLevelSoccerManagmentService low)
+        public TeamController(IHighLevelSoccerManagerService high, ILowLevelSoccerManagmentService low, UserManager<DAL.Model_Classes.User> userManager)
         {
             highProvider = high;
             lowProvider = low;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        private Task<DAL.Model_Classes.User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+        private async Task<Team> CurrentTeam()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            int tournament_id = (await GetCurrentUserAsync()).UserId;
+            return highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId == tournament_id);
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            Team team = await CurrentTeam();
 
             return View(new TeamMainInfo()
             {
@@ -44,9 +56,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPlayer(Player player)
+        public async Task<IActionResult> AddPlayer(Player player)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             if (ModelState.IsValid)
             {
@@ -70,9 +82,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddReward(Reward reward)
+        public async Task<IActionResult> AddReward(Reward reward)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             if (ModelState.IsValid)
             {
@@ -112,19 +124,19 @@ namespace WebApplication1.Controllers
             }
         }
 
-        public IActionResult RemoveReward(int RewardId, string Password)
+        public async Task<IActionResult> RemoveReward(int RewardId, string Password)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
-            
+            Team team = await CurrentTeam();
+
             TempData["message"] = $"{lowProvider.GetReward(RewardId).Name} was removed";
             lowProvider.RemoveReward(RewardId);
 
             return RedirectToAction("ListReward");
         }
 
-        public IActionResult ListReward()
+        public async Task<IActionResult> ListReward()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             if (team != null)
             {
@@ -160,9 +172,9 @@ namespace WebApplication1.Controllers
             }
         }
 
-        public IActionResult RemovePlayer(int PlayerId, string Password)
+        public async Task<IActionResult> RemovePlayer(int PlayerId, string Password)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             if (Password == team.Password)
             {
@@ -174,22 +186,20 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             return View(team);
         }
 
         [HttpPost]
-        public IActionResult Edit(Team team)
+        public async Task<IActionResult> Edit(Team team)
         {
             if (ModelState.IsValid)
             {
                 highProvider.UpdateTeam(team.TeamId, team);
-
-                var teams = highProvider.GetAllTeam();
-                Team _team = teams.FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+                Team _team = await CurrentTeam();
 
                 TempData["message"] = $"{_team.Name} has been saved";
 
@@ -207,9 +217,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public IActionResult Confirm()
+        public async Task<IActionResult> Confirm()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             return View("Index", new TeamMainInfo()
             {
@@ -219,9 +229,9 @@ namespace WebApplication1.Controllers
             });
         }
 
-        public IActionResult Delete()
+        public async Task<IActionResult> Delete()
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             foreach (var i in team.Players)
             {
@@ -232,9 +242,9 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult RemoveCup(int CupId)
+        public async Task<IActionResult> RemoveCup(int CupId)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
                 TempData["message"] = $"{highProvider.GetTournament(CupId)?.Name} was removed";
                 highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
@@ -242,9 +252,9 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Team");
         }
 
-        public IActionResult RegistrToCup(int CupId, string Password)
+        public async Task<IActionResult> RegistrToCup(int CupId, string Password)
         {
-            Team team = highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId.ToString() == User.Identity.Name);
+            Team team = await CurrentTeam();
 
             if (Password == team.Password)
             {

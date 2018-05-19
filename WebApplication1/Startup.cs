@@ -11,6 +11,7 @@ using DAL;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApplication1.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApplication1
 {
@@ -28,12 +29,17 @@ namespace WebApplication1
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<SoccerContext>(options => options.UseSqlServer(connection));
+            string authConnection = Configuration.GetConnectionString("AuthConnection");
+            services.AddDbContext<Authentication_Context>(options => options.UseSqlServer(authConnection));
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            /*services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-                });
+                });*/
+
+            services.AddIdentity<DAL.Model_Classes.User, IdentityRole>()
+                .AddEntityFrameworkStores<Authentication_Context>();
             
             services.AddTransient<DataContextProvider>();
             services.AddTransient<IRepository<Team>, TeamRepository>();

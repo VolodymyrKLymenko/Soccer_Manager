@@ -11,7 +11,8 @@ using Microsoft.Extensions.Logging;
 
 using DAL;
 using DAL.Initializers;
-
+using Microsoft.AspNetCore.Identity;
+using DAL.Model_Classes;
 
 namespace WebApplication1
 {
@@ -24,6 +25,8 @@ namespace WebApplication1
             /*using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                var userManager = services.GetRequiredService<UserManager<User>>();
+                var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 try
                 {
                     var context = services.GetRequiredService<SoccerContext>();

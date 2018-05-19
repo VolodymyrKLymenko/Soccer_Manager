@@ -6,6 +6,8 @@ using Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApplication1.Controllers
 {
@@ -13,20 +15,29 @@ namespace WebApplication1.Controllers
     public class OrganizerController : Controller
     {
         private readonly IHighLevelSoccerManagerService highProvider;
+        private readonly UserManager<DAL.Model_Classes.User> _userManager;
 
         private Team selectedTeam = null;
         private const string OrganaizerKey = "organizer";
 
         public Team SelectedTeam { get { return selectedTeam; } }
 
-        public OrganizerController(IHighLevelSoccerManagerService high)
+        public OrganizerController(IHighLevelSoccerManagerService high, UserManager<DAL.Model_Classes.User> userManager)
         {
             highProvider = high;
+            _userManager = userManager;
         }
 
-        public IActionResult Index(int id = -1)
+        private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+        private async Task<Tournament> CurrentCup()
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            int tournament_id = (await GetCurrentUserAsync()).UserId;
+            return highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId == tournament_id);
+        }
+
+        public async Task<IActionResult> Index(int id = -1)
+        {
+            Tournament tournament = await CurrentCup();
             List<Team> teams = highProvider.GetAllTeam().ToList();
 
 
@@ -41,10 +52,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult SelectDate(int? _id, string year)
+        public async Task<IActionResult> SelectDate(int id, string year)
         {
-            int id = _id == null ? -1 : (Int32)_id;
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            Tournament tournament = await CurrentCup();
             List<Team> teams = highProvider.GetAllTeam().ToList();
 
             teams = teams.Where(el => el.DataCreation.Year == Int32.Parse(year)).ToList();
@@ -60,35 +70,31 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit()
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            Tournament tournament = await CurrentCup();
 
             return View(tournament);
         }
 
         [HttpPost]
-        public IActionResult Edit(Tournament _tournament)
+        public async Task<IActionResult> Edit(Tournament _tournament)
         {
-            var name = User.Identity;
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            int tournament_id = (await GetCurrentUserAsync()).UserId;
+            Tournament tournament = await CurrentCup();
+
             highProvider.UpdateTournament(tournament.TournamentId, _tournament);
-            tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
 
             TempData["message"] = $"{_tournament.Name} has been saved";
 
-            return View("Index", new OrganaizerMainInfo()
-                {
-                    Tournament = tournament,
-                    SelectedTeam = selectedTeam,
-                    ShowConfirming = false
-                });
+            return RedirectToAction("Index", "Organizer");
         }
 
         [HttpGet]
-        public IActionResult Confirm()
+        public async Task<IActionResult> Confirm()
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            int tournament_id = (await GetCurrentUserAsync()).UserId;
+            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId == tournament_id);
 
             return View("Index", new OrganaizerMainInfo()
                 {
@@ -99,17 +105,21 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete()
+        public async Task<IActionResult> Delete()
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.Name == User.Identity.Name);
+            int tournament_id = (await GetCurrentUserAsync()).UserId;
+            Tournament tournament = await CurrentCup();
+
             highProvider.RemoveTournament(tournament.TournamentId);
 
             return RedirectToAction("Logout", "Account");
         }
 
-        public IActionResult RemoveTeam(int TeamId)
+        public async Task<IActionResult> RemoveTeam(int TeamId)
         {
-            Tournament tournament = highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId.ToString() == User.Identity.Name);
+            int tournament_id = (await GetCurrentUserAsync()).UserId;
+            Tournament tournament = await CurrentCup();
+
             highProvider.RemoveTeamFromTournament(TeamId, tournament.TournamentId);
 
             TempData["message"] = $"{highProvider.GetTeam(TeamId).Name} was removed";

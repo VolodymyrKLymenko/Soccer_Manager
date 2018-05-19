@@ -38,6 +38,7 @@ namespace WebApplication1.Models.ViewModels
 
         public float CalculateMiddleAgeTeam(List<Player> players)
         {
+            if(players.Count() == 0) { return 0; }
             int res = 0;
 
             foreach (var item in players)

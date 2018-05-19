@@ -201,7 +201,7 @@ namespace SoccerManager.Tests
             var mockHighService = new Mock<IHighLevelSoccerManagerService>();
             mockHighService.Setup(service => service.GetAllTournaments()).Returns(GetTestCups());
             OrganizerController controller = new OrganizerController(mockHighService.Object);
-            AccountController accountController = new AccountController(mockHighService.Object);
+            //AccountController accountController = new AccountController(mockHighService.Object);
 
             //accountController.Login(new LoginModel() { Name = "EURO cup", Password = "eurocup", UserType = UserType.Organizer });
 

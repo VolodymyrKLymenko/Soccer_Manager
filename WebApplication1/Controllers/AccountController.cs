@@ -17,13 +17,20 @@ namespace WebApplication1.Controllers
 {
     public class AccountController : Controller
     {
-        private static string TeamRole = "Team";
-        private static string OrgRole = "Organizer";
         private readonly IHighLevelSoccerManagerService _highProvider;
+        private readonly UserManager<DAL.Model_Classes.User> _userManager;
+        private readonly SignInManager<DAL.Model_Classes.User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(IHighLevelSoccerManagerService high)
+        public AccountController(IHighLevelSoccerManagerService high, 
+            UserManager<DAL.Model_Classes.User> userManager, 
+            SignInManager<DAL.Model_Classes.User> signInManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _highProvider = high;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -33,38 +40,42 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
+
             if (ModelState.IsValid)
             {
                 if (model.UserType == UserType.Organizer)
                 {
-                    Tournament user = _highProvider.GetAllTournaments().FirstOrDefault(u => u.Name == model.Name);
-                    if (user != null)
+                    var result = await _signInManager.PasswordSignInAsync(model.Name, model.Password, true, false);
+
+                    if (result.Succeeded)
                     {
-                        Authenticate(user.TournamentId.ToString(), OrgRole); // аутентифiкацiя
-
-                        TempData["message"] = $"You have been logged as Organizer: {user.Name}";
-
                         return RedirectToAction("Index", "Organizer");
                     }
-                    ModelState.AddModelError("", "Incorrect login or password");
+                    else
+                    {
+                        ModelState.AddModelError("", "Incorrect Login or password");
+                        return View(model);
+                    }
                 }
                 else if (model.UserType == UserType.Team)
                 {
-                    Team user = _highProvider.GetAllTeam().FirstOrDefault(u => u.Name == model.Name);
-                    if (user != null)
+                    var result = await _signInManager.PasswordSignInAsync(model.Name, model.Password, true, false);
+
+                    if (result.Succeeded)
                     {
-                        Authenticate(user.TeamId.ToString(), TeamRole); // аутентифiкацiя
-
-                        TempData["message"] = $"You have been logged as Team: {user.Name}";
-
                         return RedirectToAction("Index", "Team");
                     }
-                    ModelState.AddModelError("", "Incorrect login or password");
+                    else
+                    {
+                        ModelState.AddModelError("", "Incorrect Login or password");
+                        return View(model);
+                    }
                 }
             }
-            return View(model);
+
+            return View();
         }
 
         [HttpGet]
@@ -74,23 +85,29 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult RegisterTeam(WebApplication1.Models.ViewModels.TeamModels.RegisterModel model)
+        public async Task<IActionResult> RegisterTeam(WebApplication1.Models.ViewModels.TeamModels.RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                Team user = _highProvider.GetAllTeam().FirstOrDefault(u => u.Name == model.Name);
-                if (user == null)
+                int id = _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
+
+                DAL.Model_Classes.User user = new DAL.Model_Classes.User { UserId = id, UserName = model.Name };
+                var result = await _userManager.CreateAsync(user, model.Password);
+ 
+                if (result.Succeeded)
                 {
-                    int id = _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
-
-                    Authenticate(id.ToString(), "Team");
-
+                    await _userManager.AddToRoleAsync(user, "Team");
                     TempData["message"] = $"You have been created new team: {model.Name}";
-
+                    await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Team");
                 }
                 else
-                    ModelState.AddModelError("", "Incorrect data");
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
             return View(model);
         }
@@ -102,45 +119,39 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult RegisterCup(WebApplication1.Models.ViewModels.OrganizerModels.RegisterOrganizerModel model)
+        public async Task<IActionResult> RegisterCup(WebApplication1.Models.ViewModels.OrganizerModels.RegisterOrganizerModel model)
         {
             if (ModelState.IsValid)
             {
-                Tournament user = _highProvider.GetAllTournaments().FirstOrDefault(u => u.Name == model.Name);
-                if (user == null)
+                int id = _highProvider.CreateTournament(new Tournament { Name = model.Name, Mail = model.Email, Password = model.Password,
+                    StartDate = model.StartDate, EndDate = model.EndDate, MaxCountTeams = model.MaxCountTeam});
+
+                DAL.Model_Classes.User user = new DAL.Model_Classes.User { UserId = id, UserName = model.Name };
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
                 {
-                    int id = _highProvider.CreateTournament(new Tournament { Name = model.Name, Mail = model.Email, Password = model.Password,
-                                                                    StartDate = model.StartDate, EndDate = model.EndDate, MaxCountTeams = model.MaxCountTeam});
-
-                    Authenticate(id.ToString(), OrgRole);
-
+                    await _userManager.AddToRoleAsync(user, "Organizer");
                     TempData["message"] = $"You have been created new tournament: {model.Name}";
-
+                    await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Organizer");
                 }
                 else
-                    ModelState.AddModelError("", "Incorrect data");
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
             return View(model);
         }
 
-        public void Authenticate(string userName, string role)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
-            };
-
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
-
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 
