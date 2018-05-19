@@ -15,6 +15,7 @@ namespace DAL.Migrations
                 {
                     TeamId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DataCreation = table.Column<DateTime>(nullable: false),
                     Mail = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true)
@@ -49,6 +50,7 @@ namespace DAL.Migrations
                     PlayerId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Age = table.Column<int>(nullable: false),
+                    Born = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Position = table.Column<string>(nullable: true),
                     Surname = table.Column<string>(nullable: true),

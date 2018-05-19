@@ -67,6 +67,8 @@ namespace DAL.Migrations
                     b.Property<int>("TeamId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("DataCreation");
+
                     b.Property<string>("Mail");
 
                     b.Property<string>("Name");

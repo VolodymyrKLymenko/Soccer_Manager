@@ -206,7 +206,7 @@ namespace SoccerManager.Tests
             HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
 
             // Act
-            var result = controller.Index();
+            var result = controller.Index("");
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
