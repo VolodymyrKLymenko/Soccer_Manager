@@ -31,9 +31,9 @@
                 <input asp-for="Position" class="form-control" value="@Model.Position" />
             </div>
             <div class="form-group">
-                <label asp-for="Age" class="control-label"></label>
-                <div><span asp-validation-for="Age" class="text-danger"></span></div>
-                <input asp-for="Age" class="form-control" value="@Model.Age" />
+                <label asp-for="Born" class="control-label"></label>
+                <div><span asp-validation-for="Born" class="text-danger"></span></div>
+                <input asp-for="Born" type="date" class="form-control" value="@string.Format("{0:yyyy-MM-dd}", Model.Born)" />
             </div>
 
             <div class="form-group">

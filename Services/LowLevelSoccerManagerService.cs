@@ -1,5 +1,6 @@
 ﻿using DAL;
 using DAL.Model_Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -90,7 +91,9 @@ namespace Services
 
         public Player GetPlayer(int playerId)
         {
-            return _payerRepository.Get(playerId);
+            var res =_payerRepository.Get(playerId);
+            res.Age = Age(res.Born);
+            return res;
         }
 
         public void RemovePlayer(int playerId)
@@ -107,14 +110,25 @@ namespace Services
             player.Name = updatedPlayer.Name;
             player.Position = updatedPlayer.Position;
             player.Surname = updatedPlayer.Surname;
-            player.Age = updatedPlayer.Age;
+            player.Born = updatedPlayer.Born;
 
             _payerRepository.Update(player);
         }
 
         public IEnumerable<Player> GetAllPlayers()
         {
-            return _payerRepository.GetAll();
+            var res = _payerRepository.GetAll();
+            foreach (var item in res)
+            {
+                item.Age = Age(item.Born);
+            }
+
+            return res;
+        }
+
+        private static int Age(DateTime date)
+        {
+            return DateTime.Now.Year - date.Year;
         }
     }
 }
