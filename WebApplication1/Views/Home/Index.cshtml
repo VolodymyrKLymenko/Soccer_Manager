@@ -50,12 +50,14 @@
         <table>
             <tr>
                 <th>Name</th>
+                <th>Data Creation</th>
                 <th>Middle Age</th>
             </tr>
             @foreach (Team team in Model.Teams)
         {
             <tr>
                 <td><a asp-controller="Home" asp-action="Team" asp-route-id="@team.TeamId">@team.Name</a></td>
+                <td>@team.DataCreation.ToShortDateString()</td>
                 <td>@Model.CalculateMiddleAgeTeam(team.Players)</td>
             </tr>
     }
