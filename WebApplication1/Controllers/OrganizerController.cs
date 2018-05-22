@@ -32,7 +32,8 @@ namespace WebApplication1.Controllers
         private async Task<Tournament> CurrentCup()
         {
             int tournament_id = (await GetCurrentUserAsync()).UserId;
-            return highProvider.GetAllTournaments().FirstOrDefault(t => t.TournamentId == tournament_id);
+            var tour = highProvider.GetAllTournaments();
+            return tour.FirstOrDefault(t => t.TournamentId == tournament_id);
         }
 
         public async Task<IActionResult> Index(int id = -1)
@@ -85,7 +86,10 @@ namespace WebApplication1.Controllers
 
             highProvider.UpdateTournament(tournament.TournamentId, _tournament);
 
-            TempData["message"] = $"{_tournament.Name} has been saved";
+            if (TempData != null && TempData.ContainsKey("message"))
+            {
+                TempData["message"] = $"{_tournament.Name} has been saved";
+            }
 
             return RedirectToAction("Index", "Organizer");
         }

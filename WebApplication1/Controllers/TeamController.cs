@@ -194,7 +194,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Team team)
+        public async Task<ViewResult> Edit(Team team)
         {
             if (ModelState.IsValid)
             {
