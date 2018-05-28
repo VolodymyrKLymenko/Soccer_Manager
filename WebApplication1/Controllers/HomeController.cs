@@ -80,7 +80,14 @@ namespace WebApplication1.Controllers
 
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (HttpContext != null)
+            {
+                return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+            }
+            else
+            {
+                return View(new ErrorViewModel());
+            }
         }
     }
 }

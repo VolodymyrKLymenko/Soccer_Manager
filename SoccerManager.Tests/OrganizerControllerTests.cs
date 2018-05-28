@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Controllers;
 using Xunit;
 using Services;
@@ -82,12 +83,15 @@ namespace SoccerManager.Tests
             Team barcelona = new Team("Barcelona");
             barcelona.Password = "barcelona";
             barcelona.Mail = "barcelona@gmail.com";
+            barcelona.DataCreation = new DateTime(1900, 10, 10);
             Team liverpool = new Team("Liverpool");
             liverpool.Password = "liverpool";
             liverpool.Mail = "liverpool@gmail.com";
+            liverpool.DataCreation = new DateTime(1955, 10, 10);
             Team arsenal = new Team("Arsenal");
             arsenal.Password = "arsenal";
             arsenal.Mail = "arsenal@gmail.com";
+            arsenal.DataCreation = new DateTime(1900, 10, 10);
 
             Player messi = new Player("Lionel", "Messi", "Middle attacker") { Team = barcelona };
             Player pique = new Player("Adam", "Pique", "Defender") { Team = barcelona };
@@ -102,7 +106,7 @@ namespace SoccerManager.Tests
             Tournament APL = new Tournament();
             APL.Name = "English premier league";
             APL.MaxCountTeams = 18;
-            APL.StartDate = "01.10.2017";
+            APL.StartDate = "01.10.2018";
             APL.EndDate = "08.08.2018";
             APL.Password = "apl";
             APL.Mail = "englishLeague@gmail.com";
@@ -308,5 +312,126 @@ namespace SoccerManager.Tests
             Assert.Equal("team", ((OrganaizerMainInfo)viewResult?.Model).SelectedTeam.Name);
             Assert.False(((OrganaizerMainInfo)viewResult?.Model).ShowConfirming);
         }
+
+        [Fact]
+        public void SelectTest()
+        {
+            Tournament cup1 = new Tournament();
+            cup1.Name = "English premier league";
+            cup1.MaxCountTeams = 18;
+            cup1.TournamentId = 1;
+            cup1.StartDate = "01.10.2017";
+            cup1.EndDate = "08.08.2018";
+            cup1.Password = "apl";
+            cup1.Mail = "englishLeague@gmail.com";
+            Tournament cup2 = new Tournament()
+            {
+                Name = "New",
+                Mail = "New@new.new",
+                StartDate = "01-01-2018",
+                EndDate = "01-01-2019",
+                MaxCountTeams = 40
+            };
+
+            // Arrange
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            mockHighService.Setup(service => service.GetAllTournaments()).Returns(new List<Tournament>() { cup1 });
+            mockHighService.Setup(ser => ser.GetAllTeam()).Returns(GetTestTeams());
+            mockHighService.Setup(ser => ser.GetTeam(It.IsAny<int>())).Returns(GetTestTeams().First());
+
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "Euro_cup",
+                    UserId = 1
+                });
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+
+            controller.ModelState.AddModelError("Name", "Required");
+
+            // Act
+            ViewResult result = (ViewResult)controller.SelectDate("1900", 1).Result;
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<OrganaizerMainInfo>(viewResult.Model);
+            Assert.Equal(3, model.Teams.Count);
+            Assert.Equal(2, model.SelectedTeams.Count);
+            Assert.Equal(GetTestTeams().First().TeamId, model.SelectedTeam.TeamId);
+        }
+
+        [Fact]
+        public void DeleteTest()
+        {
+            Tournament cup1 = new Tournament();
+            cup1.Name = "English premier league";
+            cup1.MaxCountTeams = 18;
+            cup1.TournamentId = 1;
+            cup1.StartDate = "01.10.2017";
+            cup1.EndDate = "08.08.2018";
+            cup1.Password = "apl";
+            cup1.Mail = "englishLeague@gmail.com";
+            Tournament cup2 = new Tournament()
+            {
+                Name = "New",
+                Mail = "New@new.new",
+                StartDate = "01-01-2018",
+                EndDate = "01-01-2019",
+                MaxCountTeams = 40
+            };
+            cup2.TournamentId = 2;
+
+            List<Tournament> lst = new List<Tournament>() {cup1, cup2};
+
+            // Arrange
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            mockHighService.Setup(service => service.GetAllTournaments()).Returns(lst);
+            mockHighService.Setup(ser => ser.RemoveTeam(It.IsAny<int>())).Callback(() => lst.RemoveAt(0));
+
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "Euro_cup",
+                    UserId = 1
+                });
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+
+            controller.ModelState.AddModelError("Name", "Required");
+
+            // Act
+            RedirectToActionResult result = (RedirectToActionResult)controller.Delete().Result;
+
+            // Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+        }
+
     }
 }

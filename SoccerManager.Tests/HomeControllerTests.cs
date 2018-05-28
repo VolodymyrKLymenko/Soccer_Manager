@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using DAL.Model_Classes;
 using WebApplication1.Models.ViewModels;
 using System.Linq;
+using WebApplication1.Models;
 
 //Fact - test
 
@@ -206,6 +207,7 @@ namespace SoccerManager.Tests
             HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
 
             // Act
+            var result1 = controller.Index("asff");
             var result = controller.Index("");
 
             // Assert
@@ -215,7 +217,6 @@ namespace SoccerManager.Tests
             Assert.Equal(GetTestTeams().ToList().Count, model.Teams.Count);
             Assert.Equal(GetTestCups().ToList().Count, model.Tournaments.Count);
         }
-
 
         private Tournament TestGetCup(int id)
         {
@@ -285,6 +286,59 @@ namespace SoccerManager.Tests
             Assert.Null(viewResult4.Model);
         }
 
+        private Team TestGetTeam(int id)
+        {
+            Team t1 = new Team();
+            t1.TeamId = 1;
+            t1.Name = "T1";
+            Team t2 = new Team();
+            t2.TeamId = 2;
+            t2.Name = "T2";
+            Team t3 = new Team();
+            t3.TeamId = 3;
+            t3.Name = "T3";
+
+
+            switch (id)
+            {
+                case 1: return t1;
+                case 2: return t2;
+                case 3: return t3;
+                default: return null;
+            }
+        }
+        [Fact]
+        public void TeamReturnCorrectTeam()
+        {
+            // Arrange
+            var moqLowService = new Mock<ILowLevelSoccerManagmentService>();
+            var moqHighService = new Mock<IHighLevelSoccerManagerService>();
+
+            moqHighService.Setup(service => service.GetTeam(It.IsAny<int>())).Returns<int>(id => TestGetTeam(id));
+
+            HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
+
+            // Act_1
+            var result1 = controller.Team(1);
+            // Assert_1
+            var viewResult1 = Assert.IsType<ViewResult>(result1);
+            var model1 = Assert.IsAssignableFrom<Team>(viewResult1.Model);
+            Assert.Equal(TestGetTeam(1).TeamId, model1.TeamId);
+
+            // Act_2
+            var result2 = controller.Team(2);
+            // Assert_2
+            var viewResult2 = Assert.IsType<ViewResult>(result2);
+            var model2 = Assert.IsAssignableFrom<Team>(viewResult2.Model);
+            Assert.Equal(TestGetTeam(2).TeamId, model2.TeamId);
+
+            // Act_4
+            var result4 = controller.Team(4);
+            // Assert_4
+            var viewResult4 = Assert.IsType<ViewResult>(result4);
+            Assert.Null(viewResult4.Model);
+        }
+
         [Fact]
         public void AboutCorrectViewModel()
         {
@@ -317,6 +371,22 @@ namespace SoccerManager.Tests
             //Assert
             Assert.NotNull(result);
             Assert.Equal("Your contact page.", result?.ViewData["Message"]);
+        }
+
+        [Fact]
+        public void ErrotTest()
+        {
+            //Arrange
+            var moqLowService = new Mock<ILowLevelSoccerManagmentService>();
+            var moqHighService = new Mock<IHighLevelSoccerManagerService>();
+
+            HomeController controller = new HomeController(moqHighService.Object, moqLowService.Object);
+
+            //Action
+            ViewResult result = controller.Error() as ViewResult;
+
+            //Assert
+            Assert.IsType<ViewResult>(result);
         }
     }
 }
