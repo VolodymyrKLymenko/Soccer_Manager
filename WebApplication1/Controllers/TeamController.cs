@@ -94,7 +94,7 @@ namespace WebApplication1.Controllers
                 _lowProvider.AddRewardForTeam(team.TeamId, reward);
                 _highProvider.UpdateTeam(team.TeamId, team);
                 TempData["message"] = $"{reward.Name} has been added";
-                return RedirectToAction("ListReward");
+                return RedirectToAction("Index");
             }
 
             else
@@ -118,7 +118,7 @@ namespace WebApplication1.Controllers
             {
                 _lowProvider.UpdateReward(reward.RewardId, reward);
                 TempData["message"] = $"{reward.Name} has been saved";
-                return RedirectToAction("ListReward");
+                return RedirectToAction("Index");
             }
             else
             {
@@ -134,21 +134,7 @@ namespace WebApplication1.Controllers
             TempData["message"] = $"{_lowProvider.GetReward(rewardId).Name} was removed";
             _lowProvider.RemoveReward(rewardId);
 
-            return RedirectToAction("ListReward");
-        }
-
-        public async Task<IActionResult> ListReward()
-        {
-            Team team = await CurrentTeam();
-
-            if (team != null)
-            {
-                return View(_lowProvider.GetTeamRewards(team.TeamId));
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

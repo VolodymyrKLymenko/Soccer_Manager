@@ -11,14 +11,14 @@ using System;
 namespace DAL.Migrations
 {
     [DbContext(typeof(SoccerContext))]
-    [Migration("20180519113705_initial")]
+    [Migration("20180521182209_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
+                .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("DAL.Model_Classes.Player", b =>

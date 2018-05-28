@@ -34,6 +34,7 @@
             <button class="tablinks" onclick="openCity(event, 'general_info')" id="defaultOpen">General info</button>
             <button class="tablinks" onclick="openCity(event, 'players')">Players</button>
             <button class="tablinks" onclick="openCity(event, 'cups')">Current cups</button>
+            <button class="tablinks" onclick="openCity(event, 'rewards')">Rewards</button>
             
             <a class="btn btn-default" style="float: right; margin: .5em;" asp-action="Logout" asp-controller="Account">Log Out</a>
         </div>
@@ -44,8 +45,6 @@
                 <h3 style="display: inline; margin-left: 2em;"> @Model?.Team.Mail</h3>
 
                 <div class="buttonBlock">
-                    <a asp-action="ListReward" asp-controller="Team"
-                       class="btn btn-default glyphicon">List of rewards</a>
                     <a asp-action="Edit" asp-controller="Team"
                        class="btn btn-default glyphicon glyphicon-wrench"></a>
                     <a asp-action="Confirm" asp-controller="Team"
@@ -160,6 +159,51 @@
                         </td>
                         <td>
                             <a asp-action="RemoveCup" asp-controller="Team" asp-route-CupId="@item.TournamentId"
+                               class="btn btn-default glyphicon glyphicon-remove"></a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </table>
+        </div>
+
+        <div id="rewards" class="tabcontent">
+
+            <header>
+                Rewards
+
+                <div style="float:right; margin-right:30px;">
+                    <a asp-action="AddReward" asp-controller="Team"
+                       class="btn btn-default glyphicon">Add Reward</a>
+                </div>
+            </header>
+
+            <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
+                <thead style="font: bold 1.2em arial, verdana">
+                    <tr>
+                        <td>№</td>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                @{i = 1;}
+                @foreach (Reward item in Model?.Team.Rewards)
+                {
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            @item.Name 
+                        </td>
+                        <td>
+                            @item.Date
+                        </td>
+                        <td>
+                            <a asp-action="EditReward" asp-controller="Team" asp-route-rewardId="@item.RewardId"
+                               style="position: inherit;" class="btn btn-default glyphicon glyphicon-wrench"></a>
+                            <a asp-action="RemoveReward" asp-controller="Team" asp-route-rewardId="@item.RewardId" asp-route-Password="@Model.Team.Password"
                                class="btn btn-default glyphicon glyphicon-remove"></a>
                         </td>
                     </tr>
