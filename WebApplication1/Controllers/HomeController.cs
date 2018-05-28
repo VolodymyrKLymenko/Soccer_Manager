@@ -14,32 +14,32 @@ namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
-        private IHighLevelSoccerManagerService highService;
-        private ILowLevelSoccerManagmentService  lowService;
+        private readonly IHighLevelSoccerManagerService _highService;
+        private readonly ILowLevelSoccerManagmentService  _lowService;
 
         public HomeController(IHighLevelSoccerManagerService high,
             ILowLevelSoccerManagmentService low)
         {
-            highService = high;
-            lowService  = low;
+            _highService = high;
+            _lowService = low;
         }
 
         public IActionResult Index(string searchString)
         {
             GeneralInfo general = new GeneralInfo();
-            general.Players = lowService.GetAllPlayers().ToList();
-            general.Teams = highService.GetAllTeam().ToList();
-            general.Tournaments = highService.GetAllTournaments().ToList();
+            general.Players = _lowService.GetAllPlayers().ToList();
+            general.Teams = _highService.GetAllTeam().ToList();
+            general.Tournaments = _highService.GetAllTournaments().ToList();
 
             List<Team> _teams = new List<Team>();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                foreach (var r in lowService.GetAllRewards())
+                foreach (var r in _lowService.GetAllRewards())
                 {
-                    if (r.Name.Contains(searchString) && !_teams.Contains(highService.GetTeam(r.Team.TeamId)))
+                    if (r.Name.Contains(searchString) && !_teams.Contains(_highService.GetTeam(r.Team.TeamId)))
                     {
-                        _teams.Add(highService.GetTeam(r.Team.TeamId));
+                        _teams.Add(_highService.GetTeam(r.Team.TeamId));
                     }
                 }
                 general.Teams = _teams;
@@ -66,14 +66,14 @@ namespace WebApplication1.Controllers
 
         public IActionResult Team(int id)
         {
-            Team t = highService.GetTeam(id);
+            Team t = _highService.GetTeam(id);
 
             return View("Team", t);
         }
 
         public IActionResult Cup(int id)
         {
-            Tournament t = highService.GetTournament(id);
+            Tournament t = _highService.GetTournament(id);
 
             return View("Cup", t);
         }

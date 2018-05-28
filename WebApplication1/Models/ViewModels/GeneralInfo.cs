@@ -20,7 +20,7 @@ namespace WebApplication1.Models.ViewModels
         {
             foreach (var item in Players)
             {
-                item.Age = Age(item.Born);
+                item.Age_ = Age(item.Born);
             }
         }
 

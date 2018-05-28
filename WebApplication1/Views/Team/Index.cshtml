@@ -8,83 +8,99 @@
 {
     <div class="background-field"></div>
 
-    <div class="middleWindow round-border">
+    <div class="middleWindow">
         <h1 class="text-center">Are you sure!</h1>
         <div style="width: 100%;  text-align: center;">
             <a asp-action="Delete"
-               class="btn btn-success glyphicon glyphicon-ok-circle" style="background-color: steelblue"></a>
+               class="btn btn-default glyphicon glyphicon-ok-circle"></a>
 
             <a asp-action="Index" asp-controller="Team"
-               class="btn btn-success glyphicon glyphicon-remove-circle" style="background-color: steelblue"></a>
+               class="btn btn-default glyphicon glyphicon-remove-circle"></a>
         </div>
     </div>
 }
 
-<div>
+<div class="wrapper">
     @if (@Model.Team != null)
     {
 
-        <div style="text-align: right; padding: 2em; background-color: white;">
-            <a class="btn btn-default" asp-action="Logout" asp-controller="Account">Log Out</a>
+        <div class="tab">
+
+            @if (TempData["message"] != null)
+            {
+                <div style="margin-left: 30px;" class="alert alert-default">@TempData["message"]</div>
+            }
+
+            <button class="tablinks" onclick="openCity(event, 'general_info')" id="defaultOpen">General info</button>
+            <button class="tablinks" onclick="openCity(event, 'players')">Players</button>
+            <button class="tablinks" onclick="openCity(event, 'cups')">Current cups</button>
+            
+            <a class="btn btn-default" style="float: right; margin: .5em;" asp-action="Logout" asp-controller="Account">Log Out</a>
         </div>
 
-        @if (TempData["message"] != null)
-        {
-            <div style="margin-left: 30px;" class="alert alert-success">@TempData["message"]</div>
-        }
-
-        <div class="infoBlock" style="width: 97%;">
+        <div id="general_info" class="tabcontent">
             <header>
                 <h2 style="display: inline;">Your team: @Model.Team.Name</h2>
+                <h3 style="display: inline; margin-left: 2em;"> @Model?.Team.Mail</h3>
 
                 <div class="buttonBlock">
                     <a asp-action="ListReward" asp-controller="Team"
-                       class="btn btn-success glyphicon" style="background-color: steelblue">List of rewards</a>
+                       class="btn btn-default glyphicon">List of rewards</a>
                     <a asp-action="Edit" asp-controller="Team"
-                       style="background-color: steelblue; position: inherit;" class="btn btn-success glyphicon glyphicon-wrench"></a>
+                       class="btn btn-default glyphicon glyphicon-wrench"></a>
                     <a asp-action="Confirm" asp-controller="Team"
-                       style="background-color: steelblue;" class="btn btn-success glyphicon glyphicon-trash"></a>
+                       class="btn btn-default glyphicon glyphicon-trash"></a>
                 </div>
-                <h3>Mail: @Model?.Team.Mail</h3>
             </header>
 
-            <table class="detailTabel">
+            <table>
                 <tr>
+                    <th></th>
                     <th></th>
                     <th></th>
                 </tr>
                 @foreach (var cup in Model.Cups)
                 {
-                    <tr>
-                        <td><a asp-action="Cup" asp-controller="Home" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
-                        <td>@cup.Mail</td>
-                        <td><a asp-action="RegistrToCup" asp-route-CupId="@cup.TournamentId" asp-route-Password="@Model.Team.Password" class="btn btn-default">Register</a></td>
-                    </tr>
+                    if(!(bool)Model?.RegisteredCups.Any(el => el.TournamentId == cup.TournamentId))
+                    {
+                        <tr>
+                            <td><a asp-action="Cup" asp-controller="Home" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
+                            <td>@cup.Mail</td>
+                            <td><a asp-action="RegistrToCup" asp-route-CupId="@cup.TournamentId" asp-route-Password="@Model.Team.Password" class="btn btn-default">Register</a></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td><a asp-action="Cup" asp-controller="Home" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
+                            <td>@cup.Mail</td>
+                            <td>Already Register</td>
+                        </tr>
+                    }
                 }
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 45%; display: inline-block;">
+        <div id="players" class="tabcontent">
 
             <header>
                 Players
 
                 <div style="float:right; margin-right:30px;">
                     <a asp-action="AddPlayer" asp-controller="Team"
-                       class="btn btn-success glyphicon" style="background-color: steelblue">Add Player</a>
+                       class="btn btn-default glyphicon">Add Player</a>
                 </div>
             </header>
 
-            <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
+            <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
                 <thead style="font: bold 1.2em arial, verdana">
-                    <tr>
-                        <td>№</td>
-                        <td>Name</td>
-                        <td>Surname</td>
-                        <td>Position</td>
-                        <td>Edit</td>
-                        <td>Remove</td>
-                    </tr>
+                <tr>
+                    <td>№</td>
+                    <td>Player</td>
+                    <td>Age</td>
+                    <td>Position</td>
+                    <td>Actions</td>
+                </tr>
                 </thead>
                 @{int i = 1;}
                 @foreach (Player item in Model?.Team.Players)
@@ -94,10 +110,10 @@
                             @i
                         </td>
                         <td>
-                            <a asp-action="Index" asp-controller="Team" asp-route-id="@item.PlayerId">@item.Name</a>
+                            <a asp-action="Index" asp-controller="Team" asp-route-id="@item.PlayerId">@item.Name @item.Surname</a>
                         </td>
                         <td>
-                            @item.Surname
+                            @item.Age_ 
                         </td>
                         <td>
                             @item.Position
@@ -105,8 +121,6 @@
                         <td>
                             <a asp-action="EditPlayer" asp-controller="Team" asp-route-playerId="@item.PlayerId"
                                style="position: inherit;" class="btn btn-default glyphicon glyphicon-wrench"></a>
-                        </td>
-                        <td>
                             <a asp-action="RemovePlayer" asp-controller="Team" asp-route-PlayerId="@item.PlayerId" asp-route-Password="@Model.Team.Password"
                                class="btn btn-default glyphicon glyphicon-remove"></a>
                         </td>
@@ -116,23 +130,23 @@
             </table>
         </div>
 
-        <div class="infoBlock" style="width: 45%; float: right;">
+        <div id="cups" class="tabcontent">
 
             <header>
                 Current tournament(s)
             </header>
 
-            <table class="table table-striped" style="margin-bottom: 0px; width: 95%; margin-left: 2.5%;">
+            <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
                 <thead style="font: bold 1.2em arial, verdana">
-                    <tr>
-                        <td>№</td>
-                        <td>Name</td>
-                        <td>Mail</td>
-                        <td>Remove</td>
-                    </tr>
+                <tr>
+                    <td>№</td>
+                    <td>Name</td>
+                    <td>Mail</td>
+                    <td>Remove</td>
+                </tr>
                 </thead>
                 @{i = 1;}
-                @foreach (Tournament item in Model?.Team.TeamTournaments.Select(sc => sc.Tournament).ToList())
+                @foreach (Tournament item in Model?.RegisteredCups)
                 {
                     <tr>
                         <td>
@@ -164,3 +178,8 @@
 
 
 </div>
+
+<script>
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+</script>

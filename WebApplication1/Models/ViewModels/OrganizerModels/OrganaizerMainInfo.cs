@@ -13,6 +13,8 @@ namespace WebApplication1.Models.ViewModels
         public Team SelectedTeam { get; set; }
         public bool ShowConfirming { get; set; }
         public List<Team> Teams = new List<Team>();
+        public List<Team> SelectedTeams = new List<Team>();
+        public string TabName { get; set; }
 
         public OrganaizerMainInfo()
         {

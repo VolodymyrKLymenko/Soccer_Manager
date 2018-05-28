@@ -92,7 +92,7 @@ namespace Services
         public Player GetPlayer(int playerId)
         {
             var res =_payerRepository.Get(playerId);
-            res.Age = Age(res.Born);
+            res.Born = res.Born;
             return res;
         }
 
@@ -120,10 +120,19 @@ namespace Services
             var res = _payerRepository.GetAll();
             foreach (var item in res)
             {
-                item.Age = Age(item.Born);
+                item.Age_ = Age(item.Born);
             }
 
             return res;
+        }
+
+
+        public static void RecalculateAge(IEnumerable<Player> players)
+        {
+            foreach (var player in players)
+            {
+                player.Age_ = Age(player.Born);
+            }
         }
 
         private static int Age(DateTime date)

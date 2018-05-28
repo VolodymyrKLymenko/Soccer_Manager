@@ -30,15 +30,15 @@ namespace SoccerManager.Tests
             arsenal.Password = "arsenal";
             arsenal.Mail = "arsenal@gmail.com";
 
-            Player messi = new Player("Lionel", "Messi", "Middle attacker", 30) { Team = barcelona };
-            Player pique = new Player("Adam", "Pique", "Defender", 25) { Team = barcelona };
-            Player suarez = new Player("Peter", "Suarez", "Forward", 28) { Team = barcelona };
-            Player mane = new Player("Sadio", "Mane", "Middle attacker", 24) { Team = liverpool };
-            Player salah = new Player("Muhamed", "Salah", "Middle attacker", 25) { Team = liverpool };
-            Player firmino = new Player("Roberto", "Firmino", "Attacker", 27) { Team = liverpool };
-            Player genrih = new Player("Genrih", "Mikhitarian", "Forward", 29) { Team = arsenal };
-            Player cech = new Player("Peter", "Cech", "Goalkeeper", 32) { Team = arsenal };
-            Player mustafi = new Player("Skodran", "Mustafi", "Defemder", 33) { Team = arsenal };
+            Player messi = new Player("Lionel", "Messi", "Middle attacker") { Team = barcelona };
+            Player pique = new Player("Adam", "Pique", "Defender") { Team = barcelona };
+            Player suarez = new Player("Peter", "Suarez", "Forward") { Team = barcelona };
+            Player mane = new Player("Sadio", "Mane", "Middle attacker") { Team = liverpool };
+            Player salah = new Player("Muhamed", "Salah", "Middle attacker") { Team = liverpool };
+            Player firmino = new Player("Roberto", "Firmino", "Attacker") { Team = liverpool };
+            Player genrih = new Player("Genrih", "Mikhitarian", "Forward") { Team = arsenal };
+            Player cech = new Player("Peter", "Cech", "Goalkeeper") { Team = arsenal };
+            Player mustafi = new Player("Skodran", "Mustafi", "Defemder") { Team = arsenal };
 
             Tournament APL = new Tournament();
             APL.Name = "English premier league";
@@ -89,15 +89,15 @@ namespace SoccerManager.Tests
             arsenal.Password = "arsenal";
             arsenal.Mail = "arsenal@gmail.com";
 
-            Player messi = new Player("Lionel", "Messi", "Middle attacker", 30) { Team = barcelona };
-            Player pique = new Player("Adam", "Pique", "Defender", 25) { Team = barcelona };
-            Player suarez = new Player("Peter", "Suarez", "Forward", 28) { Team = barcelona };
-            Player mane = new Player("Sadio", "Mane", "Middle attacker", 24) { Team = liverpool };
-            Player salah = new Player("Muhamed", "Salah", "Middle attacker", 25) { Team = liverpool };
-            Player firmino = new Player("Roberto", "Firmino", "Attacker", 27) { Team = liverpool };
-            Player genrih = new Player("Genrih", "Mikhitarian", "Forward", 29) { Team = arsenal };
-            Player cech = new Player("Peter", "Cech", "Goalkeeper", 32) { Team = arsenal };
-            Player mustafi = new Player("Skodran", "Mustafi", "Defemder", 33) { Team = arsenal };
+            Player messi = new Player("Lionel", "Messi", "Middle attacker") { Team = barcelona };
+            Player pique = new Player("Adam", "Pique", "Defender") { Team = barcelona };
+            Player suarez = new Player("Peter", "Suarez", "Forward") { Team = barcelona };
+            Player mane = new Player("Sadio", "Mane", "Middle attacker") { Team = liverpool };
+            Player salah = new Player("Muhamed", "Salah", "Middle attacker") { Team = liverpool };
+            Player firmino = new Player("Roberto", "Firmino", "Attacker") { Team = liverpool };
+            Player genrih = new Player("Genrih", "Mikhitarian", "Forward") { Team = arsenal };
+            Player cech = new Player("Peter", "Cech", "Goalkeeper") { Team = arsenal };
+            Player mustafi = new Player("Skodran", "Mustafi", "Defemder") { Team = arsenal };
 
             Tournament APL = new Tournament();
             APL.Name = "English premier league";
@@ -151,15 +151,15 @@ namespace SoccerManager.Tests
             arsenal.TeamId = 3;
             arsenal.Mail = "arsenal@gmail.com";
 
-            Player messi = new Player("Lionel", "Messi", "Middle attacker", 30) { Team = barcelona };
-            Player pique = new Player("Adam", "Pique", "Defender", 25) { Team = barcelona };
-            Player suarez = new Player("Peter", "Suarez", "Forward", 28) { Team = barcelona };
-            Player mane = new Player("Sadio", "Mane", "Middle attacker", 24) { Team = liverpool };
-            Player salah = new Player("Muhamed", "Salah", "Middle attacker", 25) { Team = liverpool };
-            Player firmino = new Player("Roberto", "Firmino", "Attacker", 27) { Team = liverpool };
-            Player genrih = new Player("Genrih", "Mikhitarian", "Forward", 29) { Team = arsenal };
-            Player cech = new Player("Peter", "Cech", "Goalkeeper", 32) { Team = arsenal };
-            Player mustafi = new Player("Skodran", "Mustafi", "Defemder", 33) { Team = arsenal };
+            Player messi = new Player("Lionel", "Messi", "Middle attacker") { Team = barcelona };
+            Player pique = new Player("Adam", "Pique", "Defender") { Team = barcelona };
+            Player suarez = new Player("Peter", "Suarez", "Forward") { Team = barcelona };
+            Player mane = new Player("Sadio", "Mane", "Middle attacker") { Team = liverpool };
+            Player salah = new Player("Muhamed", "Salah", "Middle attacker") { Team = liverpool };
+            Player firmino = new Player("Roberto", "Firmino", "Attacker") { Team = liverpool };
+            Player genrih = new Player("Genrih", "Mikhitarian", "Forward") { Team = arsenal };
+            Player cech = new Player("Peter", "Cech", "Goalkeeper") { Team = arsenal };
+            Player mustafi = new Player("Skodran", "Mustafi", "Defemder") { Team = arsenal };
 
             Tournament APL = new Tournament();
             APL.Name = "English premier league";

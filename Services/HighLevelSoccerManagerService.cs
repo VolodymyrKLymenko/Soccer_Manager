@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DAL;
 using DAL.Model_Classes;
@@ -46,12 +47,22 @@ namespace Services
 
         public IEnumerable<Team> GetAllTeam()
         {
-            return _teamRepository.GetAll();
+            var lst = _teamRepository.GetAll();
+
+            foreach (Team team in lst)
+            {
+                RecalculateAge(team.Players);
+            }
+
+            return lst;
         }
 
         public Team GetTeam(int teamId)
         {
-            return _teamRepository.Get(teamId);
+            var team = _teamRepository.Get(teamId);
+            if(team != null) { RecalculateAge(team.Players);}
+
+            return team;
         }
 
         public void RemoveTeam(int teamId)
@@ -81,6 +92,7 @@ namespace Services
 
             teamFromDb.Name = updatedTeam.Name;
             teamFromDb.Mail = updatedTeam.Mail;
+            teamFromDb.DataCreation = updatedTeam.DataCreation;
 
             _teamRepository.Update(teamFromDb);
         }
@@ -93,6 +105,7 @@ namespace Services
             tournamentFromDb.MaxCountTeams = updatedTournament.MaxCountTeams;
             tournamentFromDb.StartDate = updatedTournament.StartDate;
             tournamentFromDb.EndDate = updatedTournament.EndDate;
+            tournamentFromDb.Mail = updatedTournament.Mail;
 
             _tournamentRepository.Update(tournamentFromDb);
         }
@@ -118,6 +131,19 @@ namespace Services
 
             _tournamentRepository.AddTeamTournaments(teamFromDb, tournamentFromDb);
             return true;
+        }
+
+        public static void RecalculateAge(IEnumerable<Player> players)
+        {
+            foreach (var player in players)
+            {
+                player.Age_ = Age(player.Born);
+            }
+        }
+
+        private static int Age(DateTime date)
+        {
+            return DateTime.Now.Year - date.Year;
         }
     }
 

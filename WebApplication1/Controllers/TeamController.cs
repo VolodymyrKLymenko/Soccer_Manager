@@ -18,16 +18,16 @@ namespace WebApplication1.Controllers
     [Authorize(Roles = "Team")]
     public class TeamController : Controller
     {
-        private IHighLevelSoccerManagerService highProvider;
-        private ILowLevelSoccerManagmentService lowProvider;
+        private readonly IHighLevelSoccerManagerService _highProvider;
+        private readonly ILowLevelSoccerManagmentService _lowProvider;
         private readonly UserManager<DAL.Model_Classes.User> _userManager;
 
         private const string TeamKey = "team";
 
         public TeamController(IHighLevelSoccerManagerService high, ILowLevelSoccerManagmentService low, UserManager<DAL.Model_Classes.User> userManager)
         {
-            highProvider = high;
-            lowProvider = low;
+            _highProvider = high;
+            _lowProvider = low;
             _userManager = userManager;
         }
 
@@ -35,17 +35,20 @@ namespace WebApplication1.Controllers
         private async Task<Team> CurrentTeam()
         {
             int tournament_id = (await GetCurrentUserAsync()).UserId;
-            return highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId == tournament_id);
+            return _highProvider.GetAllTeam().FirstOrDefault(t => t.TeamId == tournament_id);
         }
 
         public async Task<IActionResult> Index()
         {
             Team team = await CurrentTeam();
+            LowLevelSoccerManagerService.RecalculateAge(team.Players);
 
             return View(new TeamMainInfo()
             {
                 Team = team,
-                Cups = highProvider.GetAllTournaments().ToList()
+                Cups = _highProvider.GetAllTournaments().ToList(),
+                RegisteredCups = _highProvider.GetAllTournaments()
+                    .Where(el => el.TeamTournaments.Any(tt => tt.TournamentId == team.TeamId)).ToList()
             });
         }
 
@@ -62,8 +65,8 @@ namespace WebApplication1.Controllers
 
             if (ModelState.IsValid)
             {
-                lowProvider.CreatePlayerForTeam(team.TeamId, player);
-                highProvider.UpdateTeam(team.TeamId, team);
+                _lowProvider.CreatePlayerForTeam(team.TeamId, player);
+                _highProvider.UpdateTeam(team.TeamId, team);
                 TempData["message"] = $"{player.Name} has been added";
                 return RedirectToAction("Index");
             }
@@ -88,8 +91,8 @@ namespace WebApplication1.Controllers
 
             if (ModelState.IsValid)
             {
-                lowProvider.AddRewardForTeam(team.TeamId, reward);
-                highProvider.UpdateTeam(team.TeamId, team);
+                _lowProvider.AddRewardForTeam(team.TeamId, reward);
+                _highProvider.UpdateTeam(team.TeamId, team);
                 TempData["message"] = $"{reward.Name} has been added";
                 return RedirectToAction("ListReward");
             }
@@ -103,7 +106,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult EditReward(int rewardId)
         {
-            Reward reward = lowProvider.GetReward(rewardId);
+            Reward reward = _lowProvider.GetReward(rewardId);
 
             return View(reward);
         }
@@ -113,7 +116,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                lowProvider.UpdateReward(reward.RewardId, reward);
+                _lowProvider.UpdateReward(reward.RewardId, reward);
                 TempData["message"] = $"{reward.Name} has been saved";
                 return RedirectToAction("ListReward");
             }
@@ -124,12 +127,12 @@ namespace WebApplication1.Controllers
             }
         }
 
-        public async Task<IActionResult> RemoveReward(int RewardId, string Password)
+        public async Task<IActionResult> RemoveReward(int rewardId)
         {
             Team team = await CurrentTeam();
 
-            TempData["message"] = $"{lowProvider.GetReward(RewardId).Name} was removed";
-            lowProvider.RemoveReward(RewardId);
+            TempData["message"] = $"{_lowProvider.GetReward(rewardId).Name} was removed";
+            _lowProvider.RemoveReward(rewardId);
 
             return RedirectToAction("ListReward");
         }
@@ -140,7 +143,7 @@ namespace WebApplication1.Controllers
 
             if (team != null)
             {
-                return View(lowProvider.GetTeamRewards(team.TeamId));
+                return View(_lowProvider.GetTeamRewards(team.TeamId));
             }
             else
             {
@@ -151,7 +154,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult EditPlayer(int playerId)
         {
-            Player player = lowProvider.GetPlayer(playerId);
+            Player player = _lowProvider.GetPlayer(playerId);
 
             return View(player);
         }
@@ -161,7 +164,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                lowProvider.UpdatePlayer(player.PlayerId, player);
+                _lowProvider.UpdatePlayer(player.PlayerId, player);
                 TempData["message"] = $"{player.Name} has been saved";
                 return RedirectToAction("Index");
             }
@@ -172,15 +175,12 @@ namespace WebApplication1.Controllers
             }
         }
 
-        public async Task<IActionResult> RemovePlayer(int PlayerId, string Password)
+        public async Task<IActionResult> RemovePlayer(int playerId)
         {
             Team team = await CurrentTeam();
 
-            if (Password == team.Password)
-            {
-                TempData["message"] = $"{lowProvider.GetPlayer(PlayerId).Name} was removed";
-                lowProvider.RemovePlayer(PlayerId);
-            }
+            TempData["message"] = $"{_lowProvider.GetPlayer(playerId).Name} was removed";
+            _lowProvider.RemovePlayer(playerId);
 
             return RedirectToAction("Index");
         }
@@ -198,7 +198,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                highProvider.UpdateTeam(team.TeamId, team);
+                _highProvider.UpdateTeam(team.TeamId, team);
                 Team _team = await CurrentTeam();
 
                 TempData["message"] = $"{_team.Name} has been saved";
@@ -207,7 +207,7 @@ namespace WebApplication1.Controllers
                 {
                     Team = _team,
                     ShowConfirming = false,
-                    Cups = highProvider.GetAllTournaments().ToList()
+                    Cups = _highProvider.GetAllTournaments().ToList()
                 });
             }
             else
@@ -225,7 +225,7 @@ namespace WebApplication1.Controllers
             {
                 Team = team,
                 ShowConfirming = true,
-                Cups = highProvider.GetAllTournaments().ToList()
+                Cups = _highProvider.GetAllTournaments().ToList()
             });
         }
 
@@ -235,19 +235,21 @@ namespace WebApplication1.Controllers
 
             foreach (var i in team.Players)
             {
-                lowProvider.RemovePlayer(i.PlayerId);
+                _lowProvider.RemovePlayer(i.PlayerId);
             }
-            highProvider.RemoveTeam(team.TeamId);
+            _highProvider.RemoveTeam(team.TeamId);
+            var user = await GetCurrentUserAsync();
+            await _userManager.DeleteAsync(user);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Logout", "Account");
         }
 
         public async Task<IActionResult> RemoveCup(int CupId)
         {
             Team team = await CurrentTeam();
 
-                TempData["message"] = $"{highProvider.GetTournament(CupId)?.Name} was removed";
-                highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
+                TempData["message"] = $"{_highProvider.GetTournament(CupId)?.Name} was removed";
+                _highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
 
             return RedirectToAction("Index", "Team");
         }
@@ -258,8 +260,8 @@ namespace WebApplication1.Controllers
 
             if (Password == team.Password)
             {
-                TempData["message"] = $"You have been registr for the {highProvider.GetTournament(CupId).Name}";
-                highProvider.AddTeamToTournament(team.TeamId, CupId);
+                TempData["message"] = $"You have been registr for the {_highProvider.GetTournament(CupId).Name}";
+                _highProvider.AddTeamToTournament(team.TeamId, CupId);
             }
 
             return RedirectToAction("Index", "Team");

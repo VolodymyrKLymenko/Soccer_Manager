@@ -5,56 +5,84 @@
 }
 
 <div class="container">
+    <div style="float: right; margin: 2em;">
+        <a class="btn btn-default" asp-action="Index">Back to List</a>
+    </div>
+
     <h2>@Model.Name</h2>
+    <h4>@Model.Mail</h4>
+    <br />
 
     <div>
         <h4>Team</h4>
         <hr />
-        <dl class="dl-horizontal" style="width: 30%; margin: 0; padding: 0;">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.TeamTournaments)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (TeamTournament t in Model.TeamTournaments)
-                    {
-                        <li>@t.Tournament.Name</li>
-                    }
-                </ul>
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Players)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (Player t in Model.Players)
-                    {
-                        <li>@t.Name</li>
-                    }
-                </ul>
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Rewards)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (Reward t in Model.Rewards)
-                    {
-                        <li>@t.Name</li>
-                    }
-                </ul>
-            </dd>
-        </dl>
+        <h4>Register on:</h4>
+        <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
+            <thead style="font: bold 1.2em arial, verdana">
+                <tr>
+                    <td>№</td>
+                    <td>Tournament</td>
+                    <td>Start</td>
+                    <td>End</td>
+                </tr>
+            </thead>
+            @{int i = 1;}
+            @foreach (TeamTournament t in Model.TeamTournaments)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@t.Tournament.Name</td>
+                    <td>@t.Tournament.StartDate</td>
+                    <td>@t.Tournament.EndDate</td>
+                </tr>
+                i++;
+            }
+        </table>
 
-    </div>
-    <div>
-        <a class="btn btn-default" asp-action="Index">Back to List</a>
+        <h4>Players:</h4>
+        <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
+            <thead style="font: bold 1.2em arial, verdana">
+                <tr>
+                    <td>№</td>
+                    <td>Name</td>
+                    <td>Position</td>
+                    <td>Age</td>
+                </tr>
+            </thead>
+            @{i = 1;}
+            @foreach (Player t in Model.Players)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@t.Name @t.Surname</td>
+                    <td>@t.Position</td>
+                    <td>@t.Age_</td>
+                </tr>
+                i++;
+            }
+        </table>
+
+        <h4>Rewards:</h4>
+        <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
+            <thead style="font: bold 1.2em arial, verdana">
+                <tr>
+                    <td>№</td>
+                    <td>Name</td>
+                    <td>Date</td>
+                </tr>
+            </thead>
+            @{i = 1;}
+            @foreach (Reward t in Model.Rewards)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@t.Name</td>
+                    <td>@t.Date</td>
+                </tr>
+                i++;
+            }
+        </table>
+        <br />
     </div>
 </div>

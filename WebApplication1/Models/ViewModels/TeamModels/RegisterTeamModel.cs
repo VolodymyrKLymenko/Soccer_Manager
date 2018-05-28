@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models.ViewModels.TeamModels
 {
@@ -9,6 +10,9 @@ namespace WebApplication1.Models.ViewModels.TeamModels
 
         [Required(ErrorMessage = "Please enter name")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter data creation")]
+        public DateTime DataCreation { get; set; }
 
         [Required(ErrorMessage = "Enter password")]
         [DataType(DataType.Password)]

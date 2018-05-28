@@ -26,6 +26,11 @@
                 <input type="email" asp-for="Mail" class="form-control" value="@Model.Mail" />
             </div>
             <div class="form-group">
+                <label asp-for="DataCreation" class="control-label"></label>
+                <div><span asp-validation-for="DataCreation" class="text-danger"></span></div>
+                <input type="date" asp-for="DataCreation" class="form-control" value=@Model.DataCreation.ToString("yyyy-MM-dd")/>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
                 <a class="btn btn-default" asp-action="Index">Cancel</a>
             </div>

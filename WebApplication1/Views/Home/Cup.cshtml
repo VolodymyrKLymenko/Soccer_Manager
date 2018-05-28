@@ -5,12 +5,14 @@
 }
 
 <div class="container">
-    <h2>@Model.Name</h2>
+    <h2>@Model.Name 
+    <a class="btn btn-default" style="float: right;" asp-action="Index">Back to List</a></h2>
+
 
     <div>
         <h4>Tournament</h4>
         <hr />
-        <dl class="dl-horizontal" style="width: 30%; margin: 0; padding: 0;">
+        <dl class="dl-horizontal" style="font-size: 1.3em; width: 30%; margin: 0; padding: 0; float: left;">
             <dt>
                 @Html.DisplayNameFor(model => model.Name)
             </dt>
@@ -36,21 +38,25 @@
                 @Html.DisplayFor(model => model.MaxCountTeams)
             </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.TeamTournaments)
-            </dt>
-            <dd>
-                <ul>
-                    @foreach (TeamTournament t in Model.TeamTournaments)
-                    {
-                        <li>@t.Team.Name</li>
-                    }
-                </ul>
-            </dd>
         </dl>
 
-    </div>
-    <div>
-        <a class="btn btn-default" asp-action="Index">Back to List</a>
+        <h4>Registered teams:</h4>
+        <table class="table table-striped" style="margin-bottom: 0px; width: 70%;">
+            <thead style="font: bold 1.2em arial, verdana">
+                <tr>
+                    <td>№</td>
+                    <td>Team</td>
+                </tr>
+            </thead>
+            @{int i = 1;}
+            @foreach (TeamTournament t in Model.TeamTournaments)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@t.Team.Name</td>
+                </tr>
+                i++;
+            }
+        </table>
     </div>
 </div>

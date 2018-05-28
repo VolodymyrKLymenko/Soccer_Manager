@@ -89,7 +89,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                int id = _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password });
+                int id = _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password, DataCreation = model.DataCreation });
 
                 DAL.Model_Classes.User user = new DAL.Model_Classes.User { UserId = id, UserName = model.Name };
                 var result = await _userManager.CreateAsync(user, model.Password);

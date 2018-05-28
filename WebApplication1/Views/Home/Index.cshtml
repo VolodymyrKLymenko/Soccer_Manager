@@ -45,19 +45,22 @@
                 </p>
             }
         </div>
-        <div id="midAge" style="text-align: right; float: right; padding: .5em;"><span>Middle age of all player: </span> @Model.CalculateMiddleAge()</div>
 
         <table>
             <tr>
                 <th>Name</th>
-                <th>Data Creation</th>
-                <th>Middle Age</th>
+                <th>Mail</th>
+                <th>Creation</th>
+                <th>Middle Age<br>
+                    <span id="midAge" style="padding: .5em;"><span>(Middle age of all player: </span> @Model.CalculateMiddleAge() )</span>
+                </th>
             </tr>
             @foreach (Team team in Model.Teams)
         {
             <tr>
                 <td><a asp-controller="Home" asp-action="Team" asp-route-id="@team.TeamId">@team.Name</a></td>
-                <td>@team.DataCreation.ToShortDateString()</td>
+                <td>@team.Mail</td>
+                <td>@team.DataCreation.ToString("yyyy-MM-dd")</td>
                 <td>@Model.CalculateMiddleAgeTeam(team.Players)</td>
             </tr>
     }
@@ -65,7 +68,6 @@
     </div>
 
     <div id="players" class="tabcontent">
-        <div id="midAge" style="text-align: right; float: right; padding: .5em;"><span>Middle age of all player: </span> @Model.CalculateMiddleAge()</div>
 
         <table>
             <tr>
@@ -80,7 +82,7 @@
                     <td>@player.Name @player.Surname</td>
                     <td>@player.Team.Name</td>
                     <td>@player.Position</td>
-                    <td>@player.Age</td>
+                    <td>@player.Age_</td>
                 </tr>
             }
         </table>
