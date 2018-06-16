@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Moq;
-using WebApplication1.Controllers;
-using WebApplication1.Models;
-using Xunit;
-using WebApplication1.Models.ViewModels;
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Controllers;
+using Xunit;
 using Services;
-using DAL;
+using Moq;
+using System.Collections.Generic;
 using DAL.Model_Classes;
+using WebApplication1.Models.ViewModels;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Security.Principal;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using System.Threading;
 
 namespace SoccerManager.Tests
 {
@@ -194,9 +198,198 @@ namespace SoccerManager.Tests
         }
 
         [Fact]
-        public void Test()
+        public void EditCupReturnsViewResultWithCupModel()
         {
-            //...
+            Team _team = new Team();
+            _team.Name = "Barcelona";
+            _team.TeamId = 1;
+            _team.Password = "barc";
+            _team.Mail = "barc@gmail.com";
+
+            Team new_team = _team;
+            new_team.Name = "New";
+            new_team.Mail = "new@gmail.com";
+
+            Player player = new Player();
+            player.Name = "Messi";
+            player.PlayerId = 1;
+            player.Born = new DateTime(1987, 12, 23);
+            player.Position = "Middle Attacker";
+            player.Surname = "Lionel";
+            player.TeamId = 1;
+
+            Reward reward = new Reward();
+            reward.Name = "Reward";
+            reward.Date = "1987-01-23";
+            reward.TeamId = 1;
+
+            // Arrange
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            var mockLowService = new Mock<ILowLevelSoccerManagmentService>();
+            mockHighService.Setup(service => service.GetAllTeam()).Returns(new List<Team>() { _team });
+            mockHighService.Setup(service => service.UpdateTeam(It.IsAny<int>(), It.IsAny<Team>()))
+                .Callback(() =>
+                {
+                    _team = new_team;
+                });
+            mockLowService.Setup(service => service.GetAllPlayers()).Returns(new List<Player>() { player });
+            mockLowService.Setup(service => service.GetAllRewards()).Returns(new List<Reward>() { reward });
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "Barcelona",
+                    UserId = 1
+                });
+            TeamController controller = new TeamController(mockHighService.Object, mockLowService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+            
+            // Act
+            ViewResult result = (ViewResult)controller.Edit(new_team).Result;
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public void IndexReturnsAViewResultWithALists()
+        {
+            Team _team = new Team();
+            _team.Name = "Barcelona";
+            _team.TeamId = 1;
+            _team.Password = "barc";
+            _team.Mail = "barc@gmail.com";
+
+            Player player = new Player();
+            player.Name = "Messi";
+            player.PlayerId = 1;
+            player.Born = new DateTime(1987, 12, 23);
+            player.Position = "Middle Attacker";
+            player.Surname = "Lionel";
+            player.TeamId = 1;
+
+            Reward reward = new Reward();
+            reward.Name = "Reward";
+            reward.Date = "1987-01-23";
+            reward.TeamId = 1;
+
+            // Arrange
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            var mockLowService = new Mock<ILowLevelSoccerManagmentService>();
+            mockHighService.Setup(service => service.GetAllTeam()).Returns(new List<Team>() { _team });
+            mockLowService.Setup(service => service.GetAllPlayers()).Returns(new List<Player>() { player });
+            mockLowService.Setup(service => service.GetAllRewards()).Returns(new List<Reward>() { reward });
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "Barcelona",
+                    UserId = 1
+                });
+            TeamController controller = new TeamController(mockHighService.Object, mockLowService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+
+            // Act
+            ViewResult result = (ViewResult)controller.Index().Result;
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal(_team, ((TeamMainInfo)viewResult?.Model).Team);
+            Assert.False(((TeamMainInfo)viewResult?.Model).ShowConfirming);
+        }
+
+        [Fact]
+        public void DeleteTest()
+        {
+            Team team1 = new Team();
+            team1.Name = "Barcelona";
+            team1.TeamId = 1;
+            team1.Password = "barc";
+            team1.Mail = "barc@gmail.com";
+
+            Team team2 = new Team()
+            {
+                Name = "New",
+                Mail = "New@new.new"
+            };
+            team2.TeamId = 2;
+
+            List<Team> lst = new List<Team>() { team1, team2 };
+
+            Player player = new Player();
+            player.Name = "Messi";
+            player.PlayerId = 1;
+            player.Born = new DateTime(1987, 12, 23);
+            player.Position = "Middle Attacker";
+            player.Surname = "Lionel";
+            player.TeamId = 1;
+
+            Reward reward = new Reward();
+            reward.Name = "Reward";
+            reward.Date = "1987-01-23";
+            reward.TeamId = 1;
+
+            // Arrange
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            var mockLowService = new Mock<ILowLevelSoccerManagmentService>();
+            mockHighService.Setup(service => service.GetAllTeam()).Returns(lst);
+            mockHighService.Setup(ser => ser.RemoveTeam(It.IsAny<int>())).Callback(() => lst.RemoveAt(0));
+            mockLowService.Setup(service => service.GetAllPlayers()).Returns(new List<Player>() { player });
+            mockLowService.Setup(service => service.GetAllRewards()).Returns(new List<Reward>() { reward });
+
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "Barcelona",
+                    UserId = 1
+                });
+            TeamController controller = new TeamController(mockHighService.Object, mockLowService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+
+            controller.ModelState.AddModelError("Name", "Required");
+
+            // Act
+            RedirectToActionResult result = (RedirectToActionResult)controller.Delete().Result;
+
+            // Assert
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
         }
     }
 }

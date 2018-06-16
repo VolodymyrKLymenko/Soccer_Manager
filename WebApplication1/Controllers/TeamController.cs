@@ -62,19 +62,12 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> AddPlayer(Player player)
         {
             Team team = await CurrentTeam();
+            
+            _lowProvider.CreatePlayerForTeam(team.TeamId, player);
+            _highProvider.UpdateTeam(team.TeamId, team);
+            TempData["message"] = $"{player.Name} has been added";
 
-            if (ModelState.IsValid)
-            {
-                _lowProvider.CreatePlayerForTeam(team.TeamId, player);
-                _highProvider.UpdateTeam(team.TeamId, team);
-                TempData["message"] = $"{player.Name} has been added";
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                // there is something wrong with the data values
-                return View(player);
-            }
+            return RedirectToAction("Index");
         }
 
 
@@ -89,18 +82,11 @@ namespace WebApplication1.Controllers
         {
             Team team = await CurrentTeam();
 
-            if (ModelState.IsValid)
-            {
-                _lowProvider.AddRewardForTeam(team.TeamId, reward);
-                _highProvider.UpdateTeam(team.TeamId, team);
-                TempData["message"] = $"{reward.Name} has been added";
-                return RedirectToAction("Index");
-            }
+            _lowProvider.AddRewardForTeam(team.TeamId, reward);
+            _highProvider.UpdateTeam(team.TeamId, team);
+            TempData["message"] = $"{reward.Name} has been added";
 
-            else
-            {
-                return View(reward);
-            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -114,17 +100,10 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult EditReward(Reward reward)
         {
-            if (ModelState.IsValid)
-            {
-                _lowProvider.UpdateReward(reward.RewardId, reward);
-                TempData["message"] = $"{reward.Name} has been saved";
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                // there is something wrong with the data values
-                return View(reward);
-            }
+            _lowProvider.UpdateReward(reward.RewardId, reward);
+            TempData["message"] = $"{reward.Name} has been saved";
+
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> RemoveReward(int rewardId)
@@ -148,17 +127,10 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult EditPlayer(Player player)
         {
-            if (ModelState.IsValid)
-            {
-                _lowProvider.UpdatePlayer(player.PlayerId, player);
-                TempData["message"] = $"{player.Name} has been saved";
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                // there is something wrong with the data values
-                return View(player);
-            }
+            _lowProvider.UpdatePlayer(player.PlayerId, player);
+            TempData["message"] = $"{player.Name} has been saved";
+
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> RemovePlayer(int playerId)
@@ -182,24 +154,17 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<ViewResult> Edit(Team team)
         {
-            if (ModelState.IsValid)
-            {
-                _highProvider.UpdateTeam(team.TeamId, team);
-                Team _team = await CurrentTeam();
+            _highProvider.UpdateTeam(team.TeamId, team);
+            Team _team = await CurrentTeam();
 
-                TempData["message"] = $"{_team.Name} has been saved";
+            TempData["message"] = $"{_team.Name} has been saved";
 
-                return View("Index", new TeamMainInfo()
-                {
-                    Team = _team,
-                    ShowConfirming = false,
-                    Cups = _highProvider.GetAllTournaments().ToList()
-                });
-            }
-            else
+            return View("Index", new TeamMainInfo()
             {
-                return View(team);
-            }
+                Team = _team,
+                ShowConfirming = false,
+                Cups = _highProvider.GetAllTournaments().ToList()
+            });
         }
 
         [HttpGet]
