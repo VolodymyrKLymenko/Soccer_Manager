@@ -41,7 +41,11 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Index()
         {
             Team team = await CurrentTeam();
-            LowLevelSoccerManagerService.RecalculateAge(team.Players);
+
+            if (team.Players != null)
+            {
+                LowLevelSoccerManagerService.RecalculateAge(team.Players);
+            }
 
             return View(new TeamMainInfo()
             {
@@ -62,10 +66,14 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> AddPlayer(Player player)
         {
             Team team = await CurrentTeam();
-            
+
             _lowProvider.CreatePlayerForTeam(team.TeamId, player);
             _highProvider.UpdateTeam(team.TeamId, team);
-            TempData["message"] = $"{player.Name} has been added";
+
+            if (TempData != null)
+            {
+                TempData["message"] = $"{player.Name} has been added";
+            }
 
             return RedirectToAction("Index");
         }
@@ -84,7 +92,11 @@ namespace WebApplication1.Controllers
 
             _lowProvider.AddRewardForTeam(team.TeamId, reward);
             _highProvider.UpdateTeam(team.TeamId, team);
-            TempData["message"] = $"{reward.Name} has been added";
+
+            if (TempData != null)
+            {
+                TempData["message"] = $"{reward.Name} has been added";
+            }
 
             return RedirectToAction("Index");
         }
@@ -98,10 +110,16 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditReward(Reward reward)
+        public async Task<IActionResult> EditReward(Reward reward)
         {
+            Team team = await CurrentTeam();
+
             _lowProvider.UpdateReward(reward.RewardId, reward);
-            TempData["message"] = $"{reward.Name} has been saved";
+
+            if (TempData != null)
+            {
+                TempData["message"] = $"{reward.Name} has been saved";
+            }
 
             return RedirectToAction("Index");
         }
@@ -110,7 +128,11 @@ namespace WebApplication1.Controllers
         {
             Team team = await CurrentTeam();
 
-            TempData["message"] = $"{_lowProvider.GetReward(rewardId).Name} was removed";
+            if (TempData != null)
+            {
+                TempData["message"] = $"{_lowProvider.GetReward(rewardId).Name} was removed";
+            }
+
             _lowProvider.RemoveReward(rewardId);
 
             return RedirectToAction("Index");
@@ -125,10 +147,16 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditPlayer(Player player)
+        public async Task<IActionResult> EditPlayer(Player player)
         {
+            Team team = await CurrentTeam();
+
             _lowProvider.UpdatePlayer(player.PlayerId, player);
-            TempData["message"] = $"{player.Name} has been saved";
+
+            if (TempData != null)
+            {
+                TempData["message"] = $"{player.Name} has been saved";
+            }
 
             return RedirectToAction("Index");
         }
@@ -137,7 +165,10 @@ namespace WebApplication1.Controllers
         {
             Team team = await CurrentTeam();
 
-            TempData["message"] = $"{_lowProvider.GetPlayer(playerId).Name} was removed";
+            if (TempData != null)
+            {
+                TempData["message"] = $"{_lowProvider.GetPlayer(playerId).Name} was removed";
+            }
             _lowProvider.RemovePlayer(playerId);
 
             return RedirectToAction("Index");
@@ -157,7 +188,10 @@ namespace WebApplication1.Controllers
             _highProvider.UpdateTeam(team.TeamId, team);
             Team _team = await CurrentTeam();
 
-            TempData["message"] = $"{_team.Name} has been saved";
+            if (TempData != null)
+            {
+                TempData["message"] = $"{_team.Name} has been saved";
+            }
 
             return View("Index", new TeamMainInfo()
             {
@@ -184,10 +218,6 @@ namespace WebApplication1.Controllers
         {
             Team team = await CurrentTeam();
 
-            foreach (var i in team.Players)
-            {
-                _lowProvider.RemovePlayer(i.PlayerId);
-            }
             _highProvider.RemoveTeam(team.TeamId);
             var user = await GetCurrentUserAsync();
             await _userManager.DeleteAsync(user);
@@ -199,8 +229,12 @@ namespace WebApplication1.Controllers
         {
             Team team = await CurrentTeam();
 
+            if (TempData != null)
+            {
                 TempData["message"] = $"{_highProvider.GetTournament(CupId)?.Name} was removed";
-                _highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
+            }
+
+            _highProvider.RemoveTeamFromTournament(team.TeamId, CupId);
 
             return RedirectToAction("Index", "Team");
         }
@@ -211,7 +245,11 @@ namespace WebApplication1.Controllers
 
             if (Password == team.Password)
             {
-                TempData["message"] = $"You have been registr for the {_highProvider.GetTournament(CupId).Name}";
+                if (TempData != null)
+                {
+                    TempData["message"] = $"You have been registr for the {_highProvider.GetTournament(CupId).Name}";
+                }
+
                 _highProvider.AddTeamToTournament(team.TeamId, CupId);
             }
 
