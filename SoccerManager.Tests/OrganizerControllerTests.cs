@@ -84,14 +84,17 @@ namespace SoccerManager.Tests
             barcelona.Password = "barcelona";
             barcelona.Mail = "barcelona@gmail.com";
             barcelona.DataCreation = new DateTime(1900, 10, 10);
+            barcelona.TeamId = 1;
             Team liverpool = new Team("Liverpool");
             liverpool.Password = "liverpool";
             liverpool.Mail = "liverpool@gmail.com";
             liverpool.DataCreation = new DateTime(1955, 10, 10);
+            liverpool.TeamId = 2;
             Team arsenal = new Team("Arsenal");
             arsenal.Password = "arsenal";
             arsenal.Mail = "arsenal@gmail.com";
             arsenal.DataCreation = new DateTime(1900, 10, 10);
+            arsenal.TeamId = 3;
 
             Player messi = new Player("Lionel", "Messi", "Middle attacker") { Team = barcelona };
             Player pique = new Player("Adam", "Pique", "Defender") { Team = barcelona };
@@ -190,8 +193,8 @@ namespace SoccerManager.Tests
             someCup.Password = "some";
             someCup.Mail = "some_cup@gmail.com";
 
-            APL.TeamTournaments.Add(new TeamTournament { Tournament = APL, Team = liverpool });
-            APL.TeamTournaments.Add(new TeamTournament { Team = arsenal, Tournament = APL });
+            APL.TeamTournaments.Add(new TeamTournament { Tournament = APL, TournamentId = APL.TournamentId, Team = liverpool, TeamId = liverpool.TeamId });
+            APL.TeamTournaments.Add(new TeamTournament { Team = arsenal, TeamId = arsenal.TeamId, TournamentId = APL.TournamentId, Tournament = APL });
             euroCup.TeamTournaments.Add(new TeamTournament { Team = liverpool, Tournament = euroCup });
             euroCup.TeamTournaments.Add(new TeamTournament { Team = arsenal, Tournament = euroCup });
             euroCup.TeamTournaments.Add(new TeamTournament { Team = barcelona, Tournament = euroCup });
@@ -433,5 +436,202 @@ namespace SoccerManager.Tests
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
         }
 
+        [Fact]
+        public async void RemoveTeamTest()
+        {
+            var testTeam = this.GetTestCups();
+
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            mockHighService.Setup(service => service.RemoveTeamFromTournament(It.IsAny<int>(), It.IsAny<int>())).Callback<int, int>(
+                (a, b) =>
+                {
+                    foreach (var team in testTeam)
+                    {
+                        if (team.TournamentId == b)
+                        {
+                            team.TeamTournaments.RemoveAll(e => e.TeamId == a);
+                        }
+                    }
+                });
+            mockHighService.Setup(service => service.GetAllTournaments()).Returns(testTeam);
+            mockHighService.Setup(service => service.GetTeam(It.IsAny<int>())).Returns<int>(a =>
+            {
+                return new Team() { Name = "Name" };
+            });
+
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "APL",
+                    UserId = 1
+                });
+
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+
+            var result = await controller.RemoveTeam(2);
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<OrganaizerMainInfo>(viewResult.Model);
+            Assert.Empty(model.Tournament.TeamTournaments.Where(el => el.TeamId == 2));
+            Assert.Single(model.Tournament.TeamTournaments);
+            Assert.Equal(3, model.Tournament.TeamTournaments.Find(el => el.TournamentId == 1).TeamId);
+        }
+
+        [Fact]
+        public async void EditCupTest()
+        {
+            var testCup = new Tournament() {
+                Name = "APL",
+                Mail = "Mail@mail.mail",
+                TournamentId = 1,
+                Password = "1111",
+                MaxCountTeams = 10,
+                EndDate = "end",
+                StartDate = "start"
+            };
+            var updatedCup = new Tournament()
+            {
+                Name = "UAPL",
+                Mail = "UMail@mail.mail",
+                TournamentId = 1,
+                Password = "U1111",
+                MaxCountTeams = 100,
+                EndDate = "Uend",
+                StartDate = "Ustart"
+            };
+
+
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            mockHighService.Setup(service => service.UpdateTournament(It.IsAny<int>(), It.IsAny<Tournament>())).Callback<int, Tournament>(
+                (a, b) =>
+                {
+                    testCup = b;
+                });
+            mockHighService.Setup(service => service.GetAllTournaments()).Returns(new List<Tournament>() { testCup});
+            mockHighService.Setup(service => service.GetTeam(It.IsAny<int>())).Returns<int>(a =>
+            {
+                return new Team() { Name = "Name" };
+            });
+
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "APL",
+                    UserId = 1
+                });
+
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+
+            var result = await controller.Edit(updatedCup, true);
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<OrganaizerMainInfo>(viewResult.Model);
+            Assert.Equal(model.Tournament.Name, updatedCup.Name);
+            Assert.Equal(model.Tournament.MaxCountTeams, updatedCup.MaxCountTeams);
+            Assert.Equal(model.Tournament.Mail, updatedCup.Mail);
+            Assert.Equal(model.Tournament.EndDate, updatedCup.EndDate);
+            Assert.Equal(model.Tournament.StartDate, updatedCup.StartDate);
+            Assert.Equal(model.Tournament.Password, updatedCup.Password);
+        }
+
+        [Fact]
+        public async void ConfirmTest()
+        {
+            var testCup = new Tournament()
+            {
+                Name = "APL",
+                Mail = "Mail@mail.mail",
+                TournamentId = 1,
+                Password = "1111",
+                MaxCountTeams = 10,
+                EndDate = "end",
+                StartDate = "start"
+            };
+            var updatedCup = new Tournament()
+            {
+                Name = "UAPL",
+                Mail = "UMail@mail.mail",
+                TournamentId = 1,
+                Password = "U1111",
+                MaxCountTeams = 100,
+                EndDate = "Uend",
+                StartDate = "Ustart"
+            };
+
+
+            var mockHighService = new Mock<IHighLevelSoccerManagerService>();
+            mockHighService.Setup(service => service.UpdateTournament(It.IsAny<int>(), It.IsAny<Tournament>())).Callback<int, Tournament>(
+                (a, b) =>
+                {
+                    testCup = b;
+                });
+            mockHighService.Setup(service => service.GetAllTournaments()).Returns(new List<Tournament>() { testCup });
+            mockHighService.Setup(service => service.GetTeam(It.IsAny<int>())).Returns<int>(a =>
+            {
+                return new Team() { Name = "Name" };
+            });
+
+            var store = new Mock<IUserStore<User>>();
+            var mockUserStore = new Mock<IUserStore<User>>();
+            var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
+            var userManager = new Mock<UserManager<User>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            userManager.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(
+                new User()
+                {
+                    UserName = "APL",
+                    UserId = 1
+                });
+
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Test")
+                    }))
+                }
+            };
+
+            var result = await controller.Confirm();
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<OrganaizerMainInfo>(viewResult.Model);
+            Assert.Equal(model.Tournament.Name, testCup.Name);
+            Assert.Equal(model.Tournament.MaxCountTeams, testCup.MaxCountTeams);
+            Assert.Equal(model.Tournament.Mail, testCup.Mail);
+            Assert.Equal(model.Tournament.EndDate, testCup.EndDate);
+            Assert.Equal(model.Tournament.StartDate, testCup.StartDate);
+            Assert.Equal(model.Tournament.Password, testCup.Password);
+        }
     }
 }

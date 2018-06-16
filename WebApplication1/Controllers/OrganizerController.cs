@@ -90,7 +90,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Tournament _tournament)
+        public async Task<IActionResult> Edit(Tournament _tournament, bool forTest = false)
         {
             int tournament_id = (await GetCurrentUserAsync()).UserId;
             Tournament tournament = await CurrentCup();
@@ -102,7 +102,17 @@ namespace WebApplication1.Controllers
                 TempData["message"] = $"{_tournament.Name} has been saved";
             }
 
-            return RedirectToAction("Index", "Organizer");
+            if (!forTest)
+            {
+                return RedirectToAction("Index", "Organizer");
+            }
+
+            return View("Index", new OrganaizerMainInfo()
+            {
+                Tournament = _tournament,
+                SelectedTeam = selectedTeam,
+                ShowConfirming = true
+            });
         }
 
         [HttpGet]
@@ -139,7 +149,10 @@ namespace WebApplication1.Controllers
 
             _highProvider.RemoveTeamFromTournament(TeamId, tournament.TournamentId);
 
-            TempData["message"] = $"{_highProvider.GetTeam(TeamId).Name} was removed";
+            if (TempData != null)
+            {
+                TempData["message"] = $"{_highProvider.GetTeam(TeamId).Name} was removed";
+            }
 
             return View("Index",  new OrganaizerMainInfo()
                 {
