@@ -11,8 +11,8 @@ using System;
 namespace DAL.Migrations
 {
     [DbContext(typeof(SoccerContext))]
-    [Migration("20180521182209_initial")]
-    partial class initial
+    [Migration("20180617162913_final")]
+    partial class final
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,8 +25,6 @@ namespace DAL.Migrations
                 {
                     b.Property<int>("PlayerId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Age");
 
                     b.Property<DateTime>("Born");
 
@@ -67,6 +65,8 @@ namespace DAL.Migrations
                 {
                     b.Property<int>("TeamId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<byte[]>("Avatar");
 
                     b.Property<DateTime>("DataCreation");
 

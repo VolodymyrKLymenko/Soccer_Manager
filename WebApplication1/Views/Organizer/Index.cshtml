@@ -77,6 +77,7 @@
                         <th>Name</th>
                         <th>Mail</th>
                         <th>Creation</th>
+                        <th>Sent Mail</th>
                     </tr>
                     @foreach (var item in Model.SelectedTeams)
                     {
@@ -84,6 +85,15 @@
                             <td>@item.Name</td>
                             <td>@item.Mail</td>
                             <td>@item.DataCreation.ToShortDateString()</td>
+                            <td id="mailButton_@item.Name" style="width: 30%;"><button class="btn btn-default" onclick="showEmailInput('@item.Name')">Sent</button></td>
+                            <td id="@item.Name" class="text-center" style="display: none;"><form asp-action="SendEmailAsync">
+                                    <input type="hidden" name="email" value="@item.Mail" />
+                                    <input type="hidden" name="subject" value="@item.Name Cup" />
+                                    <textarea rows="4" cols="30" name="message">Common Let`s join us!!!</textarea><br />
+                                    <button class="btn btn-default" type="submit">Sent</button>
+                                    <button class="btn btn-default" type="reset" onclick="hideEmailInput('@item.Name')">Cancel</button>
+                                </form>
+                            </td>
                         </tr>
                     }
                 </table>

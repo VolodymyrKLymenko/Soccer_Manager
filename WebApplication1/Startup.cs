@@ -48,6 +48,7 @@ namespace WebApplication1
             services.AddTransient<IRepository<Reward>, RewardRepository>();
             services.AddTransient<IHighLevelSoccerManagerService, HighLevelSoccerManagerService>();
             services.AddTransient<ILowLevelSoccerManagmentService, LowLevelSoccerManagerService>();
+            services.AddTransient<IEmailService, EmailService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMemoryCache();
 

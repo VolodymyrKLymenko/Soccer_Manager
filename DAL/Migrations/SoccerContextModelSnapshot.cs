@@ -17,15 +17,13 @@ namespace DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
+                .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("DAL.Model_Classes.Player", b =>
                 {
                     b.Property<int>("PlayerId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Age");
 
                     b.Property<DateTime>("Born");
 
@@ -66,6 +64,8 @@ namespace DAL.Migrations
                 {
                     b.Property<int>("TeamId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<byte[]>("Avatar");
 
                     b.Property<DateTime>("DataCreation");
 

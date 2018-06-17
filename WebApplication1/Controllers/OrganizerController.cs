@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using WebApplication1.Infrastructure;
 
 namespace WebApplication1.Controllers
 {
@@ -16,16 +17,20 @@ namespace WebApplication1.Controllers
     {
         private readonly IHighLevelSoccerManagerService _highProvider;
         private readonly UserManager<DAL.Model_Classes.User> _userManager;
+        private readonly IEmailService _emailService;
 
         private Team selectedTeam = null;
         private const string OrganaizerKey = "organizer";
 
         public Team SelectedTeam { get { return selectedTeam; } }
 
-        public OrganizerController(IHighLevelSoccerManagerService high, UserManager<DAL.Model_Classes.User> userManager)
+        public OrganizerController( IHighLevelSoccerManagerService high,
+            UserManager<DAL.Model_Classes.User> userManager,
+            IEmailService emailService)
         {
             _highProvider = high;
             _userManager = userManager;
+            _emailService = emailService;
         }
 
         private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -159,6 +164,19 @@ namespace WebApplication1.Controllers
                     Tournament = tournament,
                     SelectedTeam = selectedTeam
                 });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
+        {
+            await _emailService.SendEmail(email, subject, message);
+
+            if (TempData != null)
+            {
+                TempData["message"] = $"Your message has been send to: {email}";
+            }
+
+            return RedirectToAction("Index", "Organizer");
         }
 
     }

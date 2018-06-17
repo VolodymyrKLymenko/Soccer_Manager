@@ -12,6 +12,8 @@ using WebApplication1.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using WebApplication1.Models.ViewModels.TeamModels;
+using System.IO;
 
 namespace WebApplication1.Controllers
 {
@@ -179,13 +181,25 @@ namespace WebApplication1.Controllers
         {
             Team team = await CurrentTeam();
 
-            return View(team);
+            return View(new EditTeamModel() { Team = team, File = null});
         }
 
         [HttpPost]
-        public async Task<ViewResult> Edit(Team team)
+        public async Task<ViewResult> Edit(EditTeamModel model)
         {
-            _highProvider.UpdateTeam(team.TeamId, team);
+            Team newTeam = model.Team;
+
+            if(model.File != null)
+            {
+                byte[] imageData = null;
+                using (var binaryReader = new BinaryReader(model.File.OpenReadStream()))
+                {
+                    imageData = binaryReader.ReadBytes((int)model.File.Length);
+                }
+                newTeam.Avatar = imageData;
+            }
+
+            _highProvider.UpdateTeam(newTeam.TeamId, newTeam);
             Team _team = await CurrentTeam();
 
             if (TempData != null)

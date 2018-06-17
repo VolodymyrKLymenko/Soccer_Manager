@@ -13,6 +13,7 @@ namespace DAL.Model_Classes
         public string Password { get; set; }
         public List<Reward> Rewards { get; set; }
         public DateTime DataCreation { get; set; }
+        public byte[] Avatar { get; set; }
 
         public List<Player> Players { get; set; }
         public List<TeamTournament> TeamTournaments { get; set; }

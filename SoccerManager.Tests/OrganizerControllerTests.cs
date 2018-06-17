@@ -247,7 +247,7 @@ namespace SoccerManager.Tests
                     UserName = "Euro_cup",
                     UserId = 1
                 });
-            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object, null);
             controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -294,7 +294,7 @@ namespace SoccerManager.Tests
                     UserName = "APL",
                     UserId = 1
                 });
-            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object, null);
             controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -355,7 +355,7 @@ namespace SoccerManager.Tests
                     UserName = "Euro_cup",
                     UserId = 1
                 });
-            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object, null);
             controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -421,7 +421,7 @@ namespace SoccerManager.Tests
                     UserName = "Euro_cup",
                     UserId = 1
                 });
-            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object, null);
             controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -475,7 +475,7 @@ namespace SoccerManager.Tests
                     UserId = 1
                 });
 
-            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object, null);
             controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -543,7 +543,7 @@ namespace SoccerManager.Tests
                     UserId = 1
                 });
 
-            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object, null);
             controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext
@@ -616,7 +616,7 @@ namespace SoccerManager.Tests
                     UserId = 1
                 });
 
-            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object);
+            OrganizerController controller = new OrganizerController(mockHighService.Object, userManager.Object, null);
             controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext

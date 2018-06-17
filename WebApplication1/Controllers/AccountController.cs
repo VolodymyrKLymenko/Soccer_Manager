@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -89,7 +90,13 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                int id = _highProvider.CreateTeam(new Team { Name = model.Name, Mail = model.Email, Password = model.Password, DataCreation = model.DataCreation });
+                byte[] imageData = null;
+                using (var binaryReader = new BinaryReader(model.Avatar.OpenReadStream()))
+                {
+                    imageData = binaryReader.ReadBytes((int)model.Avatar.Length);
+                }
+
+                int id = _highProvider.CreateTeam(new Team { Avatar = imageData, Name = model.Name, Mail = model.Email, Password = model.Password, DataCreation = model.DataCreation });
 
                 DAL.Model_Classes.User user = new DAL.Model_Classes.User { UserId = id, UserName = model.Name };
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -158,7 +165,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
     }
 

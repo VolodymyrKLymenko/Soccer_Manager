@@ -1,4 +1,4 @@
-﻿@model DAL.Model_Classes.Team
+﻿@model WebApplication1.Models.ViewModels.TeamModels.EditTeamModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,26 +10,32 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <input type="hidden" asp-for="TeamId" value="@Model.TeamId" />
+            <input type="hidden" asp-for="Team.TeamId" value="@Model.Team.TeamId" />
 
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <div><span asp-validation-for="Name" class="text-danger"></span></div>
-                <input asp-for="Name" class="form-control" value="@Model.Name" />
+                <label asp-for="Team.Name" class="control-label"></label>
+                <div><span asp-validation-for="Team.Name" class="text-danger"></span></div>
+                <input asp-for="Team.Name" class="form-control" value="@Model.Team.Name" />
             </div>
             <div class="form-group">
-                <label asp-for="Mail" class="control-label"></label>
-                <div><span asp-validation-for="Mail" class="text-danger"></span></div>
-                <input type="email" asp-for="Mail" class="form-control" value="@Model.Mail" />
+                <label asp-for="Team.Mail" class="control-label"></label>
+                <div><span asp-validation-for="Team.Mail" class="text-danger"></span></div>
+                <input type="email" asp-for="Team.Mail" class="form-control" value="@Model.Team.Mail" />
             </div>
             <div class="form-group">
-                <label asp-for="DataCreation" class="control-label"></label>
-                <div><span asp-validation-for="DataCreation" class="text-danger"></span></div>
-                <input type="date" asp-for="DataCreation" class="form-control" value=@Model.DataCreation.ToString("yyyy-MM-dd")/>
+                <label asp-for="Team.DataCreation" class="control-label"></label>
+                <div><span asp-validation-for="Team.DataCreation" class="text-danger"></span></div>
+                <input type="date" asp-for="Team.DataCreation" class="form-control" value=@Model.Team.DataCreation.ToString("yyyy-MM-dd") />
             </div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label"></label>
+                <input type="file" asp-for="File" class="form-control" />
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
                 <a class="btn btn-default" asp-action="Index">Cancel</a>

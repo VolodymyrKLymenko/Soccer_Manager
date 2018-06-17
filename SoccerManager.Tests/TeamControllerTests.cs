@@ -79,7 +79,7 @@ namespace SoccerManager.Tests
             };
 
             // Act
-            ViewResult result = (ViewResult)controller.Edit(new_team).Result;
+            ViewResult result = (ViewResult)controller.Edit(new WebApplication1.Models.ViewModels.TeamModels.EditTeamModel() { Team = new_team, File = null}).Result;
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);

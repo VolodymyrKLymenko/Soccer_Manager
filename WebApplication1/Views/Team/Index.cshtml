@@ -20,28 +20,33 @@
     </div>
 }
 
+@if (TempData["message"] != null)
+{
+    <div style="margin-left: 30px;" class="alert alert-default">@TempData["message"]</div>
+}
+
 <div class="wrapper">
     @if (@Model.Team != null)
     {
 
         <div class="tab">
-
-            @if (TempData["message"] != null)
-            {
-                <div style="margin-left: 30px;" class="alert alert-default">@TempData["message"]</div>
-            }
-
             <button class="tablinks" onclick="openCity(event, 'general_info')" id="defaultOpen">General info</button>
             <button class="tablinks" onclick="openCity(event, 'players')">Players</button>
             <button class="tablinks" onclick="openCity(event, 'cups')">Current cups</button>
             <button class="tablinks" onclick="openCity(event, 'rewards')">Rewards</button>
-            
+
             <a class="btn btn-default" style="float: right; margin: .5em;" asp-action="Logout" asp-controller="Account">Log Out</a>
         </div>
 
         <div id="general_info" class="tabcontent">
             <header>
-                <h2 style="display: inline;">Your team: @Model.Team.Name</h2>
+                <h2 style="display: inline;">
+                    Your team: @Model.Team.Name
+                    @if (Model?.Team?.Avatar != null)
+                    {
+                        <img style='width:80px; height:60px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model?.Team?.Avatar))" />
+                    }
+                </h2>
                 <h3 style="display: inline; margin-left: 2em;"> @Model?.Team.Mail</h3>
 
                 <div class="buttonBlock">
@@ -60,7 +65,7 @@
                 </tr>
                 @foreach (var cup in Model.Cups)
                 {
-                    if(!(bool)Model?.RegisteredCups.Any(el => el.TournamentId == cup.TournamentId))
+                    if (!(bool)Model?.RegisteredCups.Any(el => el.TournamentId == cup.TournamentId))
                     {
                         <tr>
                             <td><a asp-action="Cup" asp-controller="Home" asp-route-id="@cup.TournamentId">@cup.Name</a></td>
@@ -93,13 +98,13 @@
 
             <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
                 <thead style="font: bold 1.2em arial, verdana">
-                <tr>
-                    <td>№</td>
-                    <td>Player</td>
-                    <td>Age</td>
-                    <td>Position</td>
-                    <td>Actions</td>
-                </tr>
+                    <tr>
+                        <td>№</td>
+                        <td>Player</td>
+                        <td>Age</td>
+                        <td>Position</td>
+                        <td>Actions</td>
+                    </tr>
                 </thead>
                 @{int i = 1;}
                 @foreach (Player item in Model?.Team.Players)
@@ -112,7 +117,7 @@
                             <a asp-action="Index" asp-controller="Team" asp-route-id="@item.PlayerId">@item.Name @item.Surname</a>
                         </td>
                         <td>
-                            @item.Age_ 
+                            @item.Age_
                         </td>
                         <td>
                             @item.Position
@@ -137,12 +142,12 @@
 
             <table class="table table-striped" style="margin-bottom: 0px; width: 100%;">
                 <thead style="font: bold 1.2em arial, verdana">
-                <tr>
-                    <td>№</td>
-                    <td>Name</td>
-                    <td>Mail</td>
-                    <td>Remove</td>
-                </tr>
+                    <tr>
+                        <td>№</td>
+                        <td>Name</td>
+                        <td>Mail</td>
+                        <td>Remove</td>
+                    </tr>
                 </thead>
                 @{i = 1;}
                 @foreach (Tournament item in Model?.RegisteredCups)
@@ -195,7 +200,7 @@
                             @i
                         </td>
                         <td>
-                            @item.Name 
+                            @item.Name
                         </td>
                         <td>
                             @item.Date

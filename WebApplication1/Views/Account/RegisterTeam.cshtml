@@ -13,7 +13,7 @@
     <hr />
     <div class="row">
         <div class="col-md-4" style="margin-left: 5em;">
-            <form asp-action="RegisterTeam">
+            <form asp-action="RegisterTeam" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
@@ -40,6 +40,10 @@
                     <label asp-for="ConfirmPassword" class="control-label"></label>
                     <input type="password" asp-for="ConfirmPassword" class="form-control" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Avatar" class="control-label"></label>
+                    <input type="file" asp-for="Avatar" class="form-control" />
                 </div>
 
                 <div class="form-group">

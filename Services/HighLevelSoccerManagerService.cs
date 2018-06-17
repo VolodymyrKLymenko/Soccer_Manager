@@ -93,6 +93,7 @@ namespace Services
             teamFromDb.Name = updatedTeam.Name;
             teamFromDb.Mail = updatedTeam.Mail;
             teamFromDb.DataCreation = updatedTeam.DataCreation;
+            teamFromDb.Avatar = updatedTeam.Avatar==null ? teamFromDb.Avatar : updatedTeam.Avatar;
 
             _teamRepository.Update(teamFromDb);
         }

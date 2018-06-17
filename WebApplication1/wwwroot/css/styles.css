@@ -4,11 +4,11 @@
 }
 
 header {
-    background-color: black;
+    background-color: #001f3f;
     font-size: 2em;
     padding: .5em;
-    color: white;
-    border-bottom: 2px solid #333;
+    color: hsla(210, 100%, 75%, 1.0);
+    border-bottom: 2px solid hsla(210, 100%, 75%, 1.0);
     text-align: left;
 }
 
@@ -46,8 +46,8 @@ nav ul {
         font-size: 1.5em;
     }
         nav li a:hover {
-            background-color: #555;
-            color: white;
+            background-color: #001f3f;
+            color: hsla(210, 100%, 75%, 1.0);
             text-decoration: none;
         }
 
@@ -92,7 +92,7 @@ a.glyphicon {
 
 .buttonBlock {
     text-align: right;
-    display: inline;
+    display: block;
     float: right;
     margin-right: .5em;
 }

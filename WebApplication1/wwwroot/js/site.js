@@ -20,3 +20,15 @@ function openCity(evt, cityName) {
     document.getElementById(cityName).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+function showEmailInput(id) {
+    document.getElementById(id).style.display = "block";
+    document.getElementById('mailButton_' + id).style.display = "none";
+}
+
+function hideEmailInput(id) {
+    console.log("It work")
+    document.getElementById(id).style.display = "none";
+    document.getElementById('mailButton_' + id).style.display = "block";
+    document.getElementById('mailButton_' + id).style.width = "100%";
+}
