@@ -283,7 +283,7 @@ namespace SoccerManager.Tests
             // Arrange
             var mockHighService = new Mock<IHighLevelSoccerManagerService>();
             mockHighService.Setup(service => service.GetAllTournaments()).Returns(new List<Tournament>() { _cup });
-            mockHighService.Setup(service => service.GetTeam(It.IsAny<int>())).Returns(new Team() { Name = "team" });
+            mockHighService.Setup(service => service.GetTeam(It.IsAny<int>())).Returns(new Team() { Name = "team", TeamId = 1});
             var store = new Mock<IUserStore<User>>();
             var mockUserStore = new Mock<IUserStore<User>>();
             var mockUserRoleStore = mockUserStore.As<IUserRoleStore<User>>();
@@ -308,12 +308,15 @@ namespace SoccerManager.Tests
 
             // Act
             ViewResult result = (ViewResult)controller.Index(1).Result;
+            Team selectedTeam = controller.SelectedTeam;
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal(_cup, ((OrganaizerMainInfo)viewResult?.Model).Tournament);
             Assert.Equal("team", ((OrganaizerMainInfo)viewResult?.Model).SelectedTeam.Name);
             Assert.False(((OrganaizerMainInfo)viewResult?.Model).ShowConfirming);
+            Assert.Equal(1, selectedTeam.TeamId);
+            Assert.Equal("team", selectedTeam.Name);
         }
 
         [Fact]
@@ -378,7 +381,7 @@ namespace SoccerManager.Tests
         }
 
         [Fact]
-        public void DeleteTest()
+        public async void DeleteTest()
         {
             Tournament cup1 = new Tournament();
             cup1.Name = "English premier league";
@@ -403,7 +406,10 @@ namespace SoccerManager.Tests
             // Arrange
             var mockHighService = new Mock<IHighLevelSoccerManagerService>();
             mockHighService.Setup(service => service.GetAllTournaments()).Returns(lst);
-            mockHighService.Setup(ser => ser.RemoveTeam(It.IsAny<int>())).Callback(() => lst.RemoveAt(0));
+            mockHighService.Setup(ser => ser.RemoveTournament(It.IsAny<int>())).Callback(() =>
+            {
+                lst.RemoveAt(0);
+            });
 
             var store = new Mock<IUserStore<User>>();
             var mockUserStore = new Mock<IUserStore<User>>();
@@ -427,13 +433,12 @@ namespace SoccerManager.Tests
                 }
             };
 
-            controller.ModelState.AddModelError("Name", "Required");
-
             // Act
-            RedirectToActionResult result = (RedirectToActionResult)controller.Delete().Result;
+            var result = await controller.Delete();
 
             // Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Single(lst);
         }
 
         [Fact]
@@ -550,6 +555,7 @@ namespace SoccerManager.Tests
                 }
             };
 
+            await controller.Edit();
             var result = await controller.Edit(updatedCup, true);
 
             var viewResult = Assert.IsType<ViewResult>(result);

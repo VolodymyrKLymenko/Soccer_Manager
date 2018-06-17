@@ -216,6 +216,9 @@ namespace SoccerManager.Tests
             Assert.Equal(GetTestPlayers().ToList().Count, model.Players.Count);
             Assert.Equal(GetTestTeams().ToList().Count, model.Teams.Count);
             Assert.Equal(GetTestCups().ToList().Count, model.Tournaments.Count);
+            var viewResult1 = Assert.IsType<ViewResult>(result1);
+            var model1 = Assert.IsAssignableFrom<GeneralInfo>(viewResult1.Model);
+            Assert.Empty(model.Teams.Where(el => el.Name.Contains("asff")));
         }
 
         private Tournament TestGetCup(int id)
