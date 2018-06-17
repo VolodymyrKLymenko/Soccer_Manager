@@ -97,8 +97,12 @@ namespace WebApplication1.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Team");
-                    TempData["message"] = $"You have been created new team: {model.Name}";
-                    await _signInManager.SignInAsync(user, false);
+                    if (TempData != null)
+                    {
+                        TempData["message"] = $"You have been created new team: {model.Name}";
+                    
+                        await _signInManager.SignInAsync(user, false);
+                    }
                     return RedirectToAction("Index", "Team");
                 }
                 else
@@ -132,8 +136,11 @@ namespace WebApplication1.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Organizer");
-                    TempData["message"] = $"You have been created new tournament: {model.Name}";
-                    await _signInManager.SignInAsync(user, false);
+                    if (TempData != null)
+                    {
+                        TempData["message"] = $"You have been created new tournament: {model.Name}";
+                        await _signInManager.SignInAsync(user, false);
+                    }
                     return RedirectToAction("Index", "Organizer");
                 }
                 else
