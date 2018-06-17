@@ -98,6 +98,11 @@ namespace SoccerManager.Tests
             _cup.Password = "apl";
             _cup.Mail = "englishLeague@gmail.com";
 
+            Tournament cup = _cup;
+            _cup.Name = "New";
+            _cup.TournamentId = 2;
+            _cup.Password = "new";
+
             Team _team = new Team();
             _team.Name = "Barcelona";
             _team.TeamId = 1;
@@ -117,11 +122,14 @@ namespace SoccerManager.Tests
             reward.Date = "1987-01-23";
             reward.TeamId = 1;
 
+            _team.Players = new List<Player>() { player };
+            _team.Rewards = new List<Reward>() { reward };
+
             // Arrange
             var mockHighService = new Mock<IHighLevelSoccerManagerService>();
             var mockLowService = new Mock<ILowLevelSoccerManagmentService>();
             mockHighService.Setup(service => service.GetAllTeam()).Returns(new List<Team>() { _team });
-            mockHighService.Setup(service => service.GetAllTournaments()).Returns(new List<Tournament> { _cup });
+            mockHighService.Setup(service => service.GetAllTournaments()).Returns(new List<Tournament> { cup, _cup });
             mockLowService.Setup(service => service.GetAllPlayers()).Returns(new List<Player>() { player });
             mockLowService.Setup(service => service.GetAllRewards()).Returns(new List<Reward>() { reward });
             var store = new Mock<IUserStore<User>>();
@@ -152,7 +160,9 @@ namespace SoccerManager.Tests
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal(_team, ((TeamMainInfo)viewResult?.Model).Team);
-            Assert.Equal(_cup, ((TeamMainInfo)viewResult?.Model).Cups.FirstOrDefault());
+            Assert.Equal(new List<Tournament>() { cup, _cup }, ((TeamMainInfo)viewResult?.Model).Cups);
+            Assert.Equal(new List<Player>() { player }, ((TeamMainInfo)viewResult?.Model).Team.Players);
+            Assert.Equal(new List<Reward>() { reward }, ((TeamMainInfo)viewResult?.Model).Team.Rewards);
         }
 
         [Fact]
@@ -254,6 +264,9 @@ namespace SoccerManager.Tests
             reward.Name = "Reward";
             reward.Date = "1987-01-23";
             reward.TeamId = 1;
+
+            _team.Players = new List<Player>() { player1 };
+            _team.Rewards = new List<Reward>() { reward };
 
             // Arrange
             var mockHighService = new Mock<IHighLevelSoccerManagerService>();
